@@ -1,0 +1,23 @@
+[URI of the OWL(RDF/XML) output file]
+http://arachnolingua.org/IAO_import.owl
+
+[Source ontology]
+IAO
+
+[Low level source term URIs]
+http://purl.obolibrary.org/obo/IAO_0000009 #label (IAO)
+http://purl.obolibrary.org/obo/IAO_0000312 #publication about an investigation (IAO)
+http://purl.obolibrary.org/obo/IAO_0000219 #denotes (IAO)
+http://purl.obolibrary.org/obo/IAO_0000142 #mentions (IAO)
+
+[Top level source term URIs and target direct superclass URIs]
+http://www.ifomis.org/bfo/1.1/snap#DependentContinuant #dependent_continuant (IAO)
+subClassOf
+http://purl.obolibrary.org/obo/IAO_0000136 #is about (IAO)
+subClassOf
+
+[Source term retrieval setting]
+includeComputedIntermediates
+
+[Source annotation URIs]
+includeAllAnnotationProperties

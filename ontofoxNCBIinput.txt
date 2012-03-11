@@ -1,0 +1,27 @@
+[URI of the OWL(RDF/XML) output file]
+http://arachnolingua.org/NCBI_import.owl
+
+[Source ontology]
+NCBITaxon
+
+[Low level source term URIs]
+http://purl.obolibrary.org/obo/NCBITaxon_94017 #Salticidae (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_336608 #Tetragnatha straminea (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_27395 #Tetragnatha (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_500645 #Tetragnatha montana (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_6928 #Cupiennius salei (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_327110 #Deinopis (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_1100095 #Misumena vatia (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_329898 #Cheiracanthium inclusum (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_256736 #Latrodectus hasselti (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_128028 #Pardosa milvina (NCBITaxon)
+
+[Top level source term URIs and target direct superclass URIs]
+http://purl.obolibrary.org/obo/NCBITaxon_6893 #Araneae (NCBITaxon)
+subClassOf
+
+[Source term retrieval setting]
+includeAllIntermediates
+
+[Source annotation URIs]
+includeAllAnnotationProperties
