@@ -1,5 +1,5 @@
 [URI of the OWL(RDF/XML) output file]
-http://arachnolingua.org/IAO_import.owl
+http://arachnolingua.net/ontologies/IAO_import.owl
 
 [Source ontology]
 IAO

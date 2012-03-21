@@ -1,5 +1,5 @@
 [URI of the OWL(RDF/XML) output file]
-http://arachnolingua.org/NCBI_import.owl
+http://arachnolingua.net/ontologies/NCBI_import.owl
 
 [Source ontology]
 NCBITaxon
@@ -15,6 +15,8 @@ http://purl.obolibrary.org/obo/NCBITaxon_1100095 #Misumena vatia (NCBITaxon)
 http://purl.obolibrary.org/obo/NCBITaxon_329898 #Cheiracanthium inclusum (NCBITaxon)
 http://purl.obolibrary.org/obo/NCBITaxon_256736 #Latrodectus hasselti (NCBITaxon)
 http://purl.obolibrary.org/obo/NCBITaxon_128028 #Pardosa milvina (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_569937 #Yllenus arenarius (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_6932 #Pholcus phalangioides (NCBITaxon)
 
 [Top level source term URIs and target direct superclass URIs]
 http://purl.obolibrary.org/obo/NCBITaxon_6893 #Araneae (NCBITaxon)
