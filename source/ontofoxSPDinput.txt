@@ -1,0 +1,17 @@
+[URI of the OWL(RDF/XML) output file]
+http://arachnolingua.net/ontologies/SPD_import.owl
+
+[Source ontology]
+SPD
+
+[Low level source term URIs]
+http://purl.obolibrary.org/obo/SPD_0000021 #leg 1 (SPD)
+
+[Top level source term URIs and target direct superclass URIs]
+
+
+[Source term retrieval setting]
+includeAllIntermediates
+
+[Source annotation URIs]
+rdfs:label
