@@ -8,10 +8,10 @@ SPD
 http://purl.obolibrary.org/obo/SPD_0000021 #leg 1 (SPD)
 
 [Top level source term URIs and target direct superclass URIs]
-
+http://purl.obolibrary.org/obo/SPD_0000000 #anatomical entity (SPD)
 
 [Source term retrieval setting]
 includeAllIntermediates
 
 [Source annotation URIs]
-rdfs:label
+includeAllAnnotationProperties
