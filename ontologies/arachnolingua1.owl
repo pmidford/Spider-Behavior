@@ -19,7 +19,9 @@
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
     <owl:Ontology rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl">
         <owl:imports rdf:resource="http://arachnolingua.net/ontologies/IAO_import.owl"/>
+        <owl:imports rdf:resource="http://arachnolingua.net/ontologies/NBO_import.owl"/>
         <owl:imports rdf:resource="http://arachnolingua.net/ontologies/NCBI_import.owl"/>
+        <owl:imports rdf:resource="http://arachnolingua.net/ontologies/SPD_import.owl"/>
     </owl:Ontology>
     
 
