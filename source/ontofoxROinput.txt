@@ -1,0 +1,18 @@
+[URI of the OWL(RDF/XML) output file]
+http://arachnolingua.net/ontologies/RO_import.owl
+
+[Source ontology]
+BFO
+
+[Low level source term URIs]
+http://purl.obolibrary.org/obo/BFO_0000056 #participates_in (RO)
+http://purl.obolibrary.org/obo/BFO_0000057 #has_participant (RO)
+
+[Top level source term URIs and target direct superclass URIs]
+
+
+[Source term retrieval setting]
+includeAllIntermediates
+
+[Source annotation URIs]
+includeAllAnnotationProperties

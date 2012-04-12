@@ -21,6 +21,7 @@
         <owl:imports rdf:resource="http://arachnolingua.net/ontologies/IAO_import.owl"/>
         <owl:imports rdf:resource="http://arachnolingua.net/ontologies/NBO_import.owl"/>
         <owl:imports rdf:resource="http://arachnolingua.net/ontologies/NCBI_import.owl"/>
+        <owl:imports rdf:resource="http://arachnolingua.net/ontologies/RO_import.owl"/>
         <owl:imports rdf:resource="http://arachnolingua.net/ontologies/SPD_import.owl"/>
     </owl:Ontology>
     
@@ -45,6 +46,62 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.obolibrary.org/obo/BFO_0000057 -->
+
+    <rdf:Description rdf:about="&obo;BFO_0000057">
+        <rdfs:label xml:lang="en">has_participant</rdfs:label>
+    </rdf:Description>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLClass_01334198338632049000 -->
+
+    <owl:Class rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLClass_01334198338632049000">
+        <rdfs:label xml:lang="en"></rdfs:label>
+        <rdfs:label xml:lang="en">OWLClass_01334198338632049000</rdfs:label>
+        <owl:equivalentClass>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&obo;IAO_0000219"/>
+                <owl:someValuesFrom>
+                    <owl:Class>
+                        <owl:intersectionOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="&obo;NBO_0000077"/>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="&obo;BFO_0000057"/>
+                                <owl:someValuesFrom rdf:resource="&obo;NCBITaxon_6928"/>
+                            </owl:Restriction>
+                        </owl:intersectionOf>
+                    </owl:Class>
+                </owl:someValuesFrom>
+            </owl:Restriction>
+        </owl:equivalentClass>
+        <rdfs:subClassOf rdf:resource="&obo;IAO_0000030"/>
+    </owl:Class>
     
 
 
@@ -129,6 +186,39 @@
         <rdf:type rdf:resource="&obo;NBO_0000077"/>
         <rdfs:label xml:lang="en">OWLNamedIndividual_01333848175333544000</rdfs:label>
     </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334198531381455000 -->
+
+    <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334198531381455000">
+        <rdf:type rdf:resource="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLClass_01334198338632049000"/>
+        <rdfs:label xml:lang="en"></rdfs:label>
+        <rdfs:label xml:lang="en">OWLNamedIndividual_01334198531381455000</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334198605772011000 -->
+
+    <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334198605772011000">
+        <rdf:type rdf:resource="&obo;IAO_0000009"/>
+        <rdfs:label xml:lang="en">OWLNamedIndividual_01334198605772011000</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotations
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description rdf:about="&obo;BFO_0000056">
+        <rdfs:label xml:lang="en">participates_in</rdfs:label>
+    </rdf:Description>
 </rdf:RDF>
 
 
