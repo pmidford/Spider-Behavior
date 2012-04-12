@@ -29,6 +29,28 @@
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
     //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Datatypes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
     // Individuals
     //
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -101,18 +123,11 @@
     
 
 
-    <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#Prey_capture -->
+    <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01333848175333544000 -->
 
-    <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#Prey_capture">
-        <rdf:type rdf:resource="&obo;IAO_0000009"/>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#Stick-like_posture -->
-
-    <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#Stick-like_posture">
-        <rdf:type rdf:resource="&obo;IAO_0000009"/>
+    <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01333848175333544000">
+        <rdf:type rdf:resource="&obo;NBO_0000077"/>
+        <rdfs:label xml:lang="en">OWLNamedIndividual_01333848175333544000</rdfs:label>
     </owl:NamedIndividual>
 </rdf:RDF>
 
