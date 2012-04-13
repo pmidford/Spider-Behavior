@@ -6,6 +6,9 @@ NBO
 
 [Low level source term URIs]
 http://purl.obolibrary.org/obo/NBO_0000077 #courtship behavior (NBO)
+http://purl.obolibrary.org/obo/NBO_0000089 #predator behavior (NBO)
+http://purl.obolibrary.org/obo/NBO_0000056 #walking behavior (NBO)
+http://purl.obolibrary.org/obo/NBO_0000016 #jumping behavior (NBO)
 
 [Top level source term URIs and target direct superclass URIs]
 http://purl.obolibrary.org/obo/NBO_0000000 #behavior (NBO)
