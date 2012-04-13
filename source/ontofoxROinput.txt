@@ -7,6 +7,8 @@ BFO
 [Low level source term URIs]
 http://purl.obolibrary.org/obo/BFO_0000056 #participates_in (RO)
 http://purl.obolibrary.org/obo/BFO_0000057 #has_participant (RO)
+http://purl.obolibrary.org/obo/BFO_0000050 #part_of (BFO)
+
 
 [Top level source term URIs and target direct superclass URIs]
 
