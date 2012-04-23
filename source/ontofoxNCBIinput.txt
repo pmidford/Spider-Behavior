@@ -17,6 +17,10 @@ http://purl.obolibrary.org/obo/NCBITaxon_256736 #Latrodectus hasselti (NCBITaxon
 http://purl.obolibrary.org/obo/NCBITaxon_128028 #Pardosa milvina (NCBITaxon)
 http://purl.obolibrary.org/obo/NCBITaxon_569937 #Yllenus arenarius (NCBITaxon)
 http://purl.obolibrary.org/obo/NCBITaxon_6932 #Pholcus phalangioides (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_1107635 #Dolomedes triton (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_299645 #Cyrtophora moluccensis (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_658994 #Delena cancerides (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_389733 #Ummidia (NCBITaxon)
 
 [Top level source term URIs and target direct superclass URIs]
 http://purl.obolibrary.org/obo/NCBITaxon_6893 #Araneae (NCBITaxon)
