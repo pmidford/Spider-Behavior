@@ -21,6 +21,10 @@ http://purl.obolibrary.org/obo/NCBITaxon_1107635 #Dolomedes triton (NCBITaxon)
 http://purl.obolibrary.org/obo/NCBITaxon_299645 #Cyrtophora moluccensis (NCBITaxon)
 http://purl.obolibrary.org/obo/NCBITaxon_658994 #Delena cancerides (NCBITaxon)
 http://purl.obolibrary.org/obo/NCBITaxon_389733 #Ummidia (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_247615 #Erigone atra (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_332532 #Argiope keyserlingi (NCBITaxon)
+http://purl.obolibrary.org/obo/NCBITaxon_196122 #Misgolas (NCBITaxon)
+
 
 [Top level source term URIs and target direct superclass URIs]
 http://purl.obolibrary.org/obo/NCBITaxon_6893 #Araneae (NCBITaxon)
