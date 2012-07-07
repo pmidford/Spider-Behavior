@@ -1,0 +1,76 @@
+    body {
+      margin-top: 1.0em;
+      background-color: #FFFFFF;
+      font-family: Helvetica, Arial, FreeSans, san-serif;
+      color: #000000;
+    }
+    #header {
+    }
+    #toolbar{
+        position: relative;
+        background: #72C0DC;
+        border: 0;
+        width: 80%;
+        left: 10%;
+        border: 0;
+        border-top: 0.1em solid #aaa;
+        border-bottom: 0.1em solid #aaa;
+    }
+    #main{
+        position: relative;
+        left: 10%;
+    }
+    #resources{
+        position:relative;
+    }
+    #tb_about{
+        position:relative;
+        left: 0%;
+    }
+    #tb_taxonomy{
+        position:relative;
+        left: 20%;
+    }
+    #tb_ontology{
+        position:relative;
+        left: 40%
+    }
+    #tb_curation{
+        position:relative;
+        left: 60%        
+    }
+    #ethogram_box{
+        position: absolute;
+        top: 0;
+        border: 1px solid #aaa;
+        margin: 1em;
+        width: 20%;
+    }
+    #function_box{
+        position: absolute;
+        top: 0;
+        border: 1px solid #aaa;
+        margin: 1em;
+        width: 20%;
+        margin-left: 25%;
+    }
+    #participant_box{
+        position: absolute;
+        top: 0;
+        border: 1px solid #aaa;
+        margin: 1em;
+        width: 20%;
+        margin-left: 50%;
+    }
+
+    h1 { font-size: 3.8em; color: #3960c6; margin-bottom: 3px; }
+    h1 .small { font-size: 0.4em; }
+    h1 a { text-decoration: none }
+    h2 { font-size: 1.5em; color: #3960c6; }
+    h3 { text-align: center; color: #3960c6; }
+    a { color: #3960c6; }
+    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .download { float: right; }
+    pre { background: #000; color: #fff; padding: 15px;}
+    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    .footer { text-align:center; padding-top:30px; font-style: italic; }

@@ -237,11 +237,19 @@
     <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334198531381455000">
         <rdf:type rdf:resource="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLClass_01334198338632049000"/>
         <rdfs:label xml:lang="en">OWLNamedIndividual_01334198531381455000</rdfs:label>
+<<<<<<< HEAD
         <obo:BFO_0000050 rdf:resource="doi:10.1078/0944-2006-00082"/>
     </owl:NamedIndividual>
     
 
 
+=======
+        <obo:BFO_0000050 rdf:resource="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334281850657786000"/>
+    </owl:NamedIndividual>
+    
+
+
+>>>>>>> 948932311984992691c79ef12e817cf42a5b9ba1
     <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334198605772011000 -->
 
     <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334198605772011000">
@@ -270,11 +278,20 @@
     
 
 
+<<<<<<< HEAD
     <!-- doi:10.1078/0944-2006-00082 -->
 
     <owl:NamedIndividual rdf:about="doi:10.1078/0944-2006-00082">
         <rdf:type rdf:resource="&obo;IAO_0000312"/>
         <rdfs:label xml:lang="en">Barth_2002</rdfs:label>
+=======
+    <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334281850657786000 -->
+
+    <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334281850657786000">
+        <rdf:type rdf:resource="&obo;IAO_0000312"/>
+        <rdfs:label xml:lang="en">Barth_2002</rdfs:label>
+        <rdfs:label xml:lang="en">OWLNamedIndividual_01334281850657786000</rdfs:label>
+>>>>>>> 948932311984992691c79ef12e817cf42a5b9ba1
     </owl:NamedIndividual>
     
 
@@ -284,8 +301,14 @@
     <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334283831989752000">
         <rdf:type rdf:resource="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLClass_01334281923169527000"/>
         <rdfs:label xml:lang="en">OWLNamedIndividual_01334283831989752000</rdfs:label>
+<<<<<<< HEAD
         <obo:BFO_0000050 rdf:resource="doi:10.1023/A:1015493118836"/>
     </owl:NamedIndividual>
+=======
+        <obo:BFO_0000050 rdf:resource="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#Barnes_et_al_2002"/>
+    </owl:NamedIndividual>
+    
+>>>>>>> 948932311984992691c79ef12e817cf42a5b9ba1
 
 
     <!-- 
