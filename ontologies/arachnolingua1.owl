@@ -27,7 +27,7 @@
      xmlns:doi="http://dx.doi.org/">
     <owl:Ontology rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl">
         <rdfs:comment xml:lang="en">To the extent possible under law, Peter E. Midford has waived all copyright and related or neighboring rights to the Arachnolingua KnowledgeBase.
-This work is published from the United States. It is requested that users of this knowledgebase cite it at the following URI: https://www.arachnolingua.net/</rdfs:comment>
+This work is published from the United States. It is requested that users of this knowledgebase cite it at the following URI: http://www.arachnolingua.net/</rdfs:comment>
         <owl:imports rdf:resource="http://arachnolingua.net/ontologies/IAO_import.owl"/>
         <owl:imports rdf:resource="http://arachnolingua.net/ontologies/NBO_import.owl"/>
         <owl:imports rdf:resource="http://arachnolingua.net/ontologies/NCBI_import.owl"/>
