@@ -2,6 +2,9 @@
 
 
 <!DOCTYPE rdf:RDF [
+    <!ENTITY doi4 "doi:10.1636/" >
+    <!ENTITY doi3 "doi:10.1007/" >
+    <!ENTITY doi2 "doi:10.1126/" >
     <!ENTITY doi "http://dx.doi.org/" >
     <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
     <!ENTITY obo "http://purl.obolibrary.org/obo/" >
@@ -13,13 +16,18 @@
 
 <rdf:RDF xmlns="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#"
      xml:base="http://www.arachnolingua.net/ontologies/arachnolingua1.owl"
+     xmlns:doi2="doi:10.1126/"
      xmlns:obo="http://purl.obolibrary.org/obo/"
+     xmlns:doi3="doi:10.1007/"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:doi4="doi:10.1636/"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:doi="http://dx.doi.org/">
     <owl:Ontology rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl">
+        <rdfs:comment xml:lang="en">To the extent possible under law, Peter E. Midford has waived all copyright and related or neighboring rights to the Arachnolingua KnowledgeBase.
+This work is published from the United States. It is requested that users of this knowledgebase cite it at the following URI: https://www.arachnolingua.net/</rdfs:comment>
         <owl:imports rdf:resource="http://arachnolingua.net/ontologies/IAO_import.owl"/>
         <owl:imports rdf:resource="http://arachnolingua.net/ontologies/NBO_import.owl"/>
         <owl:imports rdf:resource="http://arachnolingua.net/ontologies/NCBI_import.owl"/>
@@ -151,29 +159,29 @@
     
 
 
-    <!-- doi:10.1636/0161-8202(2000)028[0097:HDLHAB]2.0.CO;2 -->
-
-    <owl:NamedIndividual rdf:about="doi:10.1636/0161-8202(2000)028[0097:HDLHAB]2.0.CO;2">
-        <rdf:type rdf:resource="&obo;IAO_0000312"/>
-        <rdfs:label xml:lang="en">Aiken and Coyle 2000</rdfs:label>
-    </owl:NamedIndividual>
-    
-
-
     <!-- doi:10.1007/s003590100202 -->
 
-    <owl:NamedIndividual rdf:about="doi:10.1007/s003590100202">
+    <owl:NamedIndividual rdf:about="&doi3;s003590100202">
         <rdf:type rdf:resource="&obo;IAO_0000312"/>
         <rdfs:label>Albert et al 2001</rdfs:label>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#Amalin_et_al_2001 -->
+    <!-- doi:10.1023/A:1015493118836 -->
 
-    <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#Amalin_et_al_2001">
+    <owl:NamedIndividual rdf:about="doi:10.1023/A:1015493118836">
         <rdf:type rdf:resource="&obo;IAO_0000312"/>
-        <rdfs:label>Amalin et al 2001</rdfs:label>
+        <rdfs:label>Barnes et al 2002</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- doi:10.1078/0944-2006-00082 -->
+
+    <owl:NamedIndividual rdf:about="doi:10.1078/0944-2006-00082">
+        <rdf:type rdf:resource="&obo;IAO_0000312"/>
+        <rdfs:label xml:lang="en">Barth_2002</rdfs:label>
     </owl:NamedIndividual>
     
 
@@ -187,29 +195,38 @@
     
 
 
-    <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#Andrade_1996 -->
+    <!-- doi:10.1126/science.271.5245.70 -->
 
-    <owl:NamedIndividual rdf:about="doi:10.1126/science.271.5245.70">
+    <owl:NamedIndividual rdf:about="&doi2;science.271.5245.70">
         <rdf:type rdf:resource="&obo;IAO_0000312"/>
         <rdfs:label>Andrade 1996</rdfs:label>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#Barnes_et_al_2002 -->
+    <!-- doi:10.1636/0161-8202(2000)028[0097:HDLHAB]2.0.CO;2 -->
 
-    <owl:NamedIndividual rdf:about="doi:10.1023/A:1015493118836">
+    <owl:NamedIndividual rdf:about="&doi4;0161-8202(2000)028[0097:HDLHAB]2.0.CO;2">
         <rdf:type rdf:resource="&obo;IAO_0000312"/>
-        <rdfs:label>Barnes et al 2002</rdfs:label>
+        <rdfs:label xml:lang="en">Aiken and Coyle 2000</rdfs:label>
     </owl:NamedIndividual>
     
 
 
-    <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#Barrantes_and_Weng_2006 -->
+    <!-- doi:10.1636/S05-73.1 -->
 
-    <owl:NamedIndividual rdf:about="doi:10.1636/S05-73.1">
+    <owl:NamedIndividual rdf:about="&doi4;S05-73.1">
         <rdf:type rdf:resource="&obo;IAO_0000312"/>
         <rdfs:label>Barrantes and Weng 2006</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#Amalin_et_al_2001 -->
+
+    <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#Amalin_et_al_2001">
+        <rdf:type rdf:resource="&obo;IAO_0000312"/>
+        <rdfs:label>Amalin et al 2001</rdfs:label>
     </owl:NamedIndividual>
     
 
@@ -237,19 +254,11 @@
     <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334198531381455000">
         <rdf:type rdf:resource="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLClass_01334198338632049000"/>
         <rdfs:label xml:lang="en">OWLNamedIndividual_01334198531381455000</rdfs:label>
-<<<<<<< HEAD
         <obo:BFO_0000050 rdf:resource="doi:10.1078/0944-2006-00082"/>
     </owl:NamedIndividual>
     
 
 
-=======
-        <obo:BFO_0000050 rdf:resource="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334281850657786000"/>
-    </owl:NamedIndividual>
-    
-
-
->>>>>>> 948932311984992691c79ef12e817cf42a5b9ba1
     <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334198605772011000 -->
 
     <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334198605772011000">
@@ -278,37 +287,14 @@
     
 
 
-<<<<<<< HEAD
-    <!-- doi:10.1078/0944-2006-00082 -->
-
-    <owl:NamedIndividual rdf:about="doi:10.1078/0944-2006-00082">
-        <rdf:type rdf:resource="&obo;IAO_0000312"/>
-        <rdfs:label xml:lang="en">Barth_2002</rdfs:label>
-=======
-    <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334281850657786000 -->
-
-    <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334281850657786000">
-        <rdf:type rdf:resource="&obo;IAO_0000312"/>
-        <rdfs:label xml:lang="en">Barth_2002</rdfs:label>
-        <rdfs:label xml:lang="en">OWLNamedIndividual_01334281850657786000</rdfs:label>
->>>>>>> 948932311984992691c79ef12e817cf42a5b9ba1
-    </owl:NamedIndividual>
-    
-
-
     <!-- http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334283831989752000 -->
 
     <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334283831989752000">
         <rdf:type rdf:resource="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLClass_01334281923169527000"/>
         <rdfs:label xml:lang="en">OWLNamedIndividual_01334283831989752000</rdfs:label>
-<<<<<<< HEAD
         <obo:BFO_0000050 rdf:resource="doi:10.1023/A:1015493118836"/>
     </owl:NamedIndividual>
-=======
-        <obo:BFO_0000050 rdf:resource="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#Barnes_et_al_2002"/>
-    </owl:NamedIndividual>
     
->>>>>>> 948932311984992691c79ef12e817cf42a5b9ba1
 
 
     <!-- 
