@@ -2,10 +2,10 @@
 
 
 <!DOCTYPE rdf:RDF [
-    <!ENTITY doi4 "doi:10.1636/" >
-    <!ENTITY doi3 "doi:10.1007/" >
+    <!ENTITY doi3 "doi:10.1023/" >
     <!ENTITY doi2 "doi:10.1126/" >
     <!ENTITY doi "http://dx.doi.org/" >
+    <!ENTITY dx "http://dx.doi.org/10.1636/" >
     <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
     <!ENTITY obo "http://purl.obolibrary.org/obo/" >
     <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
@@ -17,10 +17,10 @@
 <rdf:RDF xmlns="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#"
      xml:base="http://www.arachnolingua.net/ontologies/arachnolingua1.owl"
      xmlns:doi2="doi:10.1126/"
+     xmlns:doi3="doi:10.1023/"
      xmlns:obo="http://purl.obolibrary.org/obo/"
-     xmlns:doi3="doi:10.1007/"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-     xmlns:doi4="doi:10.1636/"
+     xmlns:dx="&doi;10.1636/"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -159,38 +159,21 @@ This work is published from the United States. It is requested that users of thi
     
 
 
-    <!-- doi:10.1007/s003590100202 -->
+    <!-- doi:10.1023/0161-8202%282000%29028%5B0097%3A1015493118836 -->
 
-    <owl:NamedIndividual rdf:about="&doi3;s003590100202">
-        <rdf:type rdf:resource="&obo;IAO_0000312"/>
-        <rdfs:label>Albert et al 2001</rdfs:label>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- doi:10.1023/A:1015493118836 -->
-
-    <owl:NamedIndividual rdf:about="doi:10.1023/A:1015493118836">
+    <owl:NamedIndividual rdf:about="&doi3;0161-8202%282000%29028%5B0097%3A%3A1015493118836">
         <rdf:type rdf:resource="&obo;IAO_0000312"/>
         <rdfs:label>Barnes et al 2002</rdfs:label>
     </owl:NamedIndividual>
+    
     
 
 
     <!-- doi:10.1078/0944-2006-00082 -->
 
-    <owl:NamedIndividual rdf:about="doi:10.1078/0944-2006-00082">
+    <owl:NamedIndividual rdf:about="&doi;10.1078/0944-2006-00082">
         <rdf:type rdf:resource="&obo;IAO_0000312"/>
-        <rdfs:label xml:lang="en">Barth_2002</rdfs:label>
-    </owl:NamedIndividual>
-    
-
-
-    <!-- doi:10.1093/beheco/12.3.360 -->
-
-    <owl:NamedIndividual rdf:about="doi:10.1093/beheco/12.3.360">
-        <rdf:type rdf:resource="&obo;IAO_0000312"/>
-        <rdfs:label>Anderson and Morse 2001</rdfs:label>
+        <rdfs:label xml:lang="en">Barth 2002</rdfs:label>
     </owl:NamedIndividual>
     
 
@@ -204,18 +187,36 @@ This work is published from the United States. It is requested that users of thi
     
 
 
-    <!-- doi:10.1636/0161-8202(2000)028[0097:HDLHAB]2.0.CO;2 -->
+    <!-- http://dx.doi.org/s003590100202 -->
 
-    <owl:NamedIndividual rdf:about="&doi4;0161-8202(2000)028[0097:HDLHAB]2.0.CO;2">
+    <owl:NamedIndividual rdf:about="&doi;s003590100202">
+        <rdf:type rdf:resource="&obo;IAO_0000312"/>
+        <rdfs:label>Albert et al 2001</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://dx.doi.org/10.1093/beheco/12.3.360 -->
+
+    <owl:NamedIndividual rdf:about="&doi;10.1093/beheco/12.3.360">
+        <rdf:type rdf:resource="&obo;IAO_0000312"/>
+        <rdfs:label>Anderson and Morse 2001</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://dx.doi.org/10.1636/0161-8202%282000%29028%5B0097%3AHDLHAB%5D2.0.CO%3B2 -->
+
+    <owl:NamedIndividual rdf:about="&doi;10.1636/0161-8202%282000%29028%5B0097%3AHDLHAB%5D2.0.CO%3B2">
         <rdf:type rdf:resource="&obo;IAO_0000312"/>
         <rdfs:label xml:lang="en">Aiken and Coyle 2000</rdfs:label>
     </owl:NamedIndividual>
     
 
 
-    <!-- doi:10.1636/S05-73.1 -->
+    <!-- http://dx.doi.org/10.1636/S05-73.1 -->
 
-    <owl:NamedIndividual rdf:about="&doi4;S05-73.1">
+    <owl:NamedIndividual rdf:about="&doi;10.1636/S05-73.1">
         <rdf:type rdf:resource="&obo;IAO_0000312"/>
         <rdfs:label>Barrantes and Weng 2006</rdfs:label>
     </owl:NamedIndividual>
@@ -272,8 +273,7 @@ This work is published from the United States. It is requested that users of thi
 
     <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334281820934672000">
         <rdf:type rdf:resource="&obo;IAO_0000312"/>
-        <rdfs:label xml:lang="en">Anthony_2003</rdfs:label>
-        <rdfs:label xml:lang="en">OWLNamedIndividual_01334281820934672000</rdfs:label>
+        <rdfs:label xml:lang="en">Anthony 2003</rdfs:label>
     </owl:NamedIndividual>
     
 
@@ -282,7 +282,7 @@ This work is published from the United States. It is requested that users of thi
 
     <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334281830599351000">
         <rdf:type rdf:resource="&obo;IAO_0000312"/>
-        <rdfs:label xml:lang="en">Barth_2000</rdfs:label>
+        <rdfs:label xml:lang="en">Barth 2000</rdfs:label>
     </owl:NamedIndividual>
     
 
@@ -292,7 +292,7 @@ This work is published from the United States. It is requested that users of thi
     <owl:NamedIndividual rdf:about="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLNamedIndividual_01334283831989752000">
         <rdf:type rdf:resource="http://www.arachnolingua.net/ontologies/arachnolingua1.owl#OWLClass_01334281923169527000"/>
         <rdfs:label xml:lang="en">OWLNamedIndividual_01334283831989752000</rdfs:label>
-        <obo:BFO_0000050 rdf:resource="doi:10.1023/A:1015493118836"/>
+        <obo:BFO_0000050 rdf:resource="&doi3;0161-8202%282000%29028%5B0097%3A1015493118836"/>
     </owl:NamedIndividual>
     
 
