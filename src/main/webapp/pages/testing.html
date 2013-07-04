@@ -1,0 +1,37 @@
+<html>
+<body>
+<pre>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+</script>
+<script>
+$(document).ready(function(){
+  $("#protocol_button").click(function(){
+    $.ajax({
+      url: "http://arachb.org/openrdf-sesame/protocol",
+      dataType: "text"
+      }
+    ).done(function(data, textStatus, jqXHR) {$("#protocol").text("Sesame protocol version: " + data)})
+    .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
+    });
+  $("#size_button").click(function(){
+    $.ajax({
+      url: "http://arachb.org/openrdf-sesame/repositories/test/size",
+      dataType: "text"
+      }
+    ).done(function(data, textStatus, jqXHR) {$("#rep_size").text("Size of test triple store: " + data)})
+    .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
+    });
+});
+
+</script>
+</pre>
+<h1>Sesame Triple Store Testing Page</h1>
+<p id="protocol">Sesame protocol version unknown</p>
+<br/>
+<button id="protocol_button">Get Sesame Protocol Version</button>
+<br/>
+<p id="rep_size">Size of test triple store unknown</p>
+<button id="size_button">Get Size of Test Store</button>
+
+</body>
+</html>

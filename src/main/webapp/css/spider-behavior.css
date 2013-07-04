@@ -29,15 +29,19 @@
     }
     #tb_taxonomy{
         position:relative;
-        left: 20%;
+        left: 15%;
     }
     #tb_ontology{
         position:relative;
-        left: 40%
+        left: 30%
     }
     #tb_curation{
         position:relative;
-        left: 60%        
+        left: 45%        
+    }
+    #tb_testing{
+	position:relative;
+        left: 55%
     }
     #ethogram_box{
         position: absolute;
