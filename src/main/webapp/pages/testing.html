@@ -23,13 +23,36 @@ $(document).ready(function(){
     });
   $("#query_button").click(function(){
     $.ajax({
-      url: encodeURI("http://arachb.org:8080/openrdf-sesame/repositories/test?query=PREFIX obo:<http://purl.obolibrary.obo/obo/> SELECT ?s WHERE{?s rdf:type obo:IAO_0000312}"),
-      dataType: "text"
+      url: encodeURI("http://arachb.org/openrdf-sesame/repositories/test"),
+      data: {query: "prefix obo:<http://purl.obolibrary.org/obo/> select ?publication WHERE{?publication rdf:type obo:IAO_0000312 .}"},
+      dataType: "json",
+      accepts: {json: "application/sparql-results+json"},
+      type: "post"
       }
-    ).done(function(data, textStatus, jqXHR) {$("#test_query").text("Results of test query: \n" + data)})
+    ).done(function(data, textStatus, jqXHR) {$("#test_query").html("<p>Results of query to list publications in triple store: </p>" + queryTable(data))})
     .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
     });
 });
+
+var queryTable = function (resultobj){
+    if (resultobj.results) {
+        var result = "";
+        result = result + "<table border='1'>\n";
+        result = result + "  <tr>\n";
+        result = result + "  <th>" + resultobj.head.vars[0] + "</th>\n";
+        result = result + "  </tr>\n";
+        for(i=0;i < resultobj.results.bindings.length; i += 1){
+           result = result + "  <tr>\n";
+           result = result + "    <td>" + resultobj.results.bindings[i].publication.value + "</td>\n";
+           result = result + "  </tr>\n"
+        }
+        result = result + "</table>";
+        return result;
+    }
+    else {
+        return "<p>No results</p>";
+    }
+}
 
 </script>
 </pre>
@@ -41,8 +64,8 @@ $(document).ready(function(){
 <p id="rep_size">Size of test triple store unknown</p>
 <button id="size_button">Get Size of Test Store</button>
 <br/>
+<button id="query_button">List all publications by id (doi or internal)</button>
 <br/>
-<button id="query_button">Types query</button>
 <p id="test_query">Test query</p>
 
 </body>
