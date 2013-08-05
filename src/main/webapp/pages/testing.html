@@ -4,11 +4,12 @@
   <meta content='text/xthml'/>
   <link type='text/css' rel='stylesheet' href='../static/spider-behavior.css'/>
   <title>Arachnolingua Test Page</title>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+  </script>
+  <script type="text/javascript" src="../static/publicationtable.js">
+  </script>
 </head>
 <body>
-<pre>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
-</script>
 <script>
 $(document).ready(function(){
   $("#protocol_button").click(function(){
@@ -35,33 +36,12 @@ $(document).ready(function(){
       accepts: {json: "application/sparql-results+json"},
       type: "post"
       }
-    ).done(function(data, textStatus, jqXHR) {$("#test_query").html("<p>Results of query to list publications in triple store: </p>" + queryTable(data))})
+    ).done(function(data, textStatus, jqXHR) {$("#test_query").html("<p>Results of query to list publications in triple store: </p>" + publicationtable(data))})
     .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
     });
 });
 
-var queryTable = function (resultobj){
-    if (resultobj.results) {
-        var result = "";
-        result = result + "<table border='1'>\n";
-        result = result + "  <tr>\n";
-        result = result + "  <th>" + resultobj.head.vars[0] + "</th>\n";
-        result = result + "  </tr>\n";
-        for(i=0;i < resultobj.results.bindings.length; i += 1){
-           result = result + "  <tr>\n";
-           result = result + "    <td>" + resultobj.results.bindings[i].publication.value + "</td>\n";
-           result = result + "  </tr>\n"
-        }
-        result = result + "</table>";
-        return result;
-    }
-    else {
-        return "<p>No results</p>";
-    }
-}
-
 </script>
-</pre>
 <h1>Sesame Triple Store Testing Page</h1>
 <p id="protocol">Sesame protocol version unknown</p>
 <br/>
