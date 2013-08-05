@@ -6,7 +6,10 @@
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>spider-behavior Maven Webapp</name>
-  <url>http://maven.apache.org</url>
+  <url>http://arachb.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -24,10 +27,12 @@
 	  <source>1.6</source>
 	  <target>1.6</target>
 	</configuration>
+        <version>2.3.2</version>
       </plugin>
       <plugin>
 	<groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
+        <version>6.1.26</version>
       </plugin>
     </plugins>
   </build>
