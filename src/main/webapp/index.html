@@ -1,47 +1,99 @@
 <!DOCTYPE html "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <title>Arachnolingua</title>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <link type="text/css" rel="stylesheet" href="static/spider-behavior.css"/>
-  <title>Arachnolingua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Peter E. Midford">
+
+  <!-- Le styles -->
+  <link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <style type="text/css">
+    body {
+      padding-top: 60px;
+      padding-bottom: 40px;
+    }
+  </style>
+  <link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
 </head>
 <body>
-  <div id="header">
-    <h1 align="center">Arachnolingua</h1>
-    <h3>"Words about what Spiders do"</h3>
-    <div id="toolbar">
-      <span id="tb_about"><a href="pages/project.html">About</a></span>
-      <span id="tb_taxonomy"><a href="pages/taxonomy.html">Taxonomy Status</a></span>
-      <span id="tb_ontology"><a href="http://www.arachnolingua.net/ontologies/arachnolingua1.owl">Get Ontology</a></span>
-      <span id="tb_curation"><a href="pages/curation.html">Curation Status</a></span>
-      <span id="tb_testing"><a href="pages/testing.html">Test Sesame Server</a></span>
-    </div>
-    <div id="main">
-        <div id="ethogram_box">
-          <p><strong>Ethogram</strong></p>
-          <form action="" method="get">
-            <input type="text" value="taxon"/>
-            <input type="submit" value="Submit" />
-          </form>     
-        </div>
-        <div id="function_box">
-          <p><strong>Function</strong></p>
-          <form action="" method="get">
-            <input type="text" value="function"/>
-            <input type="submit" value="Submit" />
-          </form>     
-        </div>
-        <div id="participant_box">
-          <p><strong>Participant</strong></p>
-          <form action="" method="get">
-            <input type="text" value="anatomical part"/>
-            <input type="submit" value="Submit" />
-          </form>     
-        </div>
-    </div>
-    <div id="footer">
-    </dvi>
 
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <button class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse" type="button">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <img class="brand" src="static/spiderwords_small.jpg" alt="spider words" width="32" height="19">
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            <li class="active">
+              <a href="#">Home</a>
+            </li>
+            <li>
+              <a href="pages/project.html">About</a>
+            </li>
+            <li>
+              <a href="pages/taxonomy.html">Taxonomy Status</a>
+            </li>
+            <li>
+              <a href="http://www.arachnolingua.net/ontologies/arachnolingua1.owl">Get Ontology</a>
+            </li>
+            <li>
+              <a href="pages/curation.html">Curation</a>
+            </li>
+            <li>
+              <a href="pages/testing.html">Test Sesame Server</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+     <div class="hero-unit">
+     <h1 align="center">Arachnolingua</h1>
+       <h3>"Words about what Spiders do"</h3>
+    </div>
+    <div class="row">
+      <div class="span4">
+        <p><strong>Ethogram</strong></p>
+        <form action="" method="get">
+          <input type="text" value="taxon"/>
+          <input type="submit" value="Submit" />
+        </form>     
+      </div>
+      <div class="span4">
+        <p><strong>Function</strong></p>
+        <form action="" method="get">
+          <input type="text" value="function"/>
+          <input type="submit" value="Submit" />
+        </form>     
+      </div>
+      <div class="span4">
+        <p><strong>Participant</strong></p>
+        <form action="" method="get">
+          <input type="text" value="anatomical part"/>
+          <input type="submit" value="Submit" />
+        </form>     
+      </div>
+    </div>
+    <hr>
+    <footer>
+      <p>Last update 4 October 2013</p>
+    </footer> 
+  </div>
+
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+  </script>
+  <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js"
+  </script>
   <script type="text/javascript"> //<![CDATA[
 
    var _gaq = _gaq || [];

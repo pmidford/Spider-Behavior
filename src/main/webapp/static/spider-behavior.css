@@ -10,7 +10,7 @@
         position: relative;
         background: #72C0DC;
         border: 0;
-        width: 80%;
+        width: 800px;
         left: 10%;
         border: 0;
         border-top: 0.1em solid #aaa;
@@ -24,24 +24,24 @@
         position:relative;
     }
     #tb_about{
-        position:relative;
-        left: 0%;
+        position:absolute;
+        left: 0px;
     }
     #tb_taxonomy{
-        position:relative;
-        left: 15%;
+        position:absolute;
+        left: 160px;
     }
     #tb_ontology{
-        position:relative;
-        left: 30%
+        position:absolute;
+        left: 320px
     }
     #tb_curation{
-        position:relative;
-        left: 45%        
+        position:absolute;
+        left: 480px        
     }
     #tb_testing{
 	position:relative;
-        left: 55%
+        left: 640px
     }
     #ethogram_box{
         position: absolute;
