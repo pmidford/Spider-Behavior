@@ -1,58 +1,143 @@
-<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-  <meta content='text/xthml'/>
-  <link type='text/css' rel='stylesheet' href='../static/spider-behavior.css'/>
+  <meta charset="utf-8"/>
+  <link type="text/css" rel='stylesheet' href='../static/spider-behavior.css'/>
   <title>Arachnolingua Test Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Peter E. Midford">
+  <!-- Le styles -->
+  <link href="../static/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <style type="text/css">
+    body {
+      padding-top: 60px;
+      padding-bottom: 40px;
+    }
+  </style>
+  <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+</head>
+<body>
+
+<body>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <button class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse" type="button">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <img class="brand" src="../static/spiderwords_small.jpg" alt="spider words" width="32" height="19">
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            <li>
+              <a href="../index.html">Home</a>
+            </li>
+            <li>
+              <a href="project.html">About</a>
+            </li>
+            <li>
+              <a href="taxonomy.html">Taxonomy Status</a>
+            </li>
+            <li>
+              <a href="http://www.arachnolingua.net/ontologies/arachnolingua1.owl">Get Ontology</a>
+            </li>
+            <li>
+              <a href="curation.html">Curation</a>
+            </li>
+            <li class="active">
+              <a href="#">Test Sesame Server</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="page-header">
+      <h1 class="arachb_headline">Triple Store Testing Page</h1>
+    </div>
+
+    <section id="tests">
+      <div class="row-fluid">
+        <div class="span12">
+           <h3>Test sesame protocol</h3>
+           <p id="protocol">Sesame protocol version unknown</p>
+           <br/>
+           <button id="protocol_button">Get Sesame Protocol Version</button>
+           <br/>
+           <h3>Check count of triples in store</h3>
+           <p id="rep_size">Size of test triple store unknown</p>
+           <button id="size_button">Get Size of Test Store</button>
+           <br/>
+           <h3>Test simple SPARQL query</h3>
+           <button id="query_button">List all publications by id (doi or internal)</button>
+           <br/>
+           <p id="test_query">Test query</p>
+         </div>
+       </div>
+    </section>
+
+    <hr>
+    <footer>
+      <p>Last update 9 October 2013</p>
+    </footer>
+
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
   </script>
   <script type="text/javascript" src="../static/publicationtable.js">
   </script>
-</head>
-<body>
-<script>
-$(document).ready(function(){
-  $("#protocol_button").click(function(){
-    $.ajax({
-      url: "http://arachb.org/openrdf-sesame/protocol",
-      dataType: "text"
-      }
-    ).done(function(data, textStatus, jqXHR) {$("#protocol").text("Sesame protocol version: " + data)})
-    .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
-    });
-  $("#size_button").click(function(){
-    $.ajax({
-      url: "http://arachb.org/openrdf-sesame/repositories/test/size",
-      dataType: "text"
-      }
-    ).done(function(data, textStatus, jqXHR) {$("#rep_size").text("Size of test triple store: " + data)})
-    .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
-    });
-  $("#query_button").click(function(){
-    $.ajax({
-      url: encodeURI("http://arachb.org/openrdf-sesame/repositories/test"),
-      data: {query: "prefix obo:<http://purl.obolibrary.org/obo/> select ?publication WHERE{?publication rdf:type obo:IAO_0000312 .}"},
-      dataType: "json",
-      accepts: {json: "application/sparql-results+json"},
-      type: "post"
-      }
-    ).done(function(data, textStatus, jqXHR) {$("#test_query").html("<p>Results of query to list publications in triple store: </p>" + publicationtable(data))})
-    .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
-    });
-});
+  <script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js">
+  </script>
 
-</script>
-<h1>Sesame Triple Store Testing Page</h1>
-<p id="protocol">Sesame protocol version unknown</p>
-<br/>
-<button id="protocol_button">Get Sesame Protocol Version</button>
-<br/>
-<p id="rep_size">Size of test triple store unknown</p>
-<button id="size_button">Get Size of Test Store</button>
-<br/>
-<button id="query_button">List all publications by id (doi or internal)</button>
-<br/>
-<p id="test_query">Test query</p>
+  <script type="text/javascript"> //<![CDATA[
 
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-30972937-1']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+  //]]>
+
+ </script>
+ <script>
+   $(document).ready(function(){
+     $("#protocol_button").click(function(){
+       $.ajax({
+         url: "http://arachb.org/openrdf-sesame/protocol",
+         dataType: "text"
+         }
+      ).done(function(data, textStatus, jqXHR) {$("#protocol").text("Sesame protocol version: " + data)})
+       .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
+     });
+     $("#size_button").click(function(){
+       $.ajax({
+         url: "http://arachb.org/openrdf-sesame/repositories/test/size",
+         dataType: "text"
+       }
+       ).done(function(data, textStatus, jqXHR) {$("#rep_size").text("Size of test triple store: " + data)})
+       .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
+    });
+    $("#query_button").click(function(){
+      $.ajax({
+        url: encodeURI("http://arachb.org/openrdf-sesame/repositories/test"),
+        data: {query: "prefix obo:<http://purl.obolibrary.org/obo/> select ?publication WHERE{?publication rdf:type obo:IAO_0000312 .}"},
+        dataType: "json",
+        accepts: {json: "application/sparql-results+json"},
+        type: "post"
+        }
+      ).done(function(data, textStatus, jqXHR) {$("#test_query").html("<p>Results of query to list publications in triple store: </p>" + publicationtable(data))})
+      .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
+      });
+    });
+
+  </script>
 </body>
 </html>
