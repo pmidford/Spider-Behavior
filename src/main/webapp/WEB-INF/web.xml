@@ -1,7 +1,27 @@
-<!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
   <display-name>Arachnolingua Web Application</display-name>
+  <servlet>
+    <servlet-name>taxon</servlet-name>
+    <servlet-class>org.arachb.api.Taxon</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>behavior</servlet-name>
+    <servlet-class>org.arachb.api.Behavior</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>startup</servlet-name>
+    <servlet-class>org.arachb.api.Startup</servlet-class>
+    <load-on-startup>5</load-on-startup> 
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>taxon</servlet-name>
+    <url-pattern>/taxon</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>behavior</servlet-name>
+    <url-pattern>/behavior</url-pattern>
+  </servlet-mapping>
 </web-app>
