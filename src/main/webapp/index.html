@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="utf-8"/>
   <title>Arachnolingua</title>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="Peter E. Midford">
-
-  <!-- Le styles -->
   <link href="static/bootstrap/css/bootstrap.css" rel="stylesheet">
   <style type="text/css">
     body {
@@ -64,21 +63,21 @@
     <div class="row">
       <div class="span4">
         <p><strong>Ethogram</strong></p>
-        <form action="pages/ethogram_results.html" method="get">
-          <input type="text" value="taxon"/>
+        <form id="ethogram_form" action="pages/ethogram_results.html" method="get">
+          <input name="taxon" type="text" value="taxon"/>
           <input type="submit" value="Submit" />
         </form>     
       </div>
       <div class="span4">
-        <p><strong>Function</strong></p>
-        <form action="pages/function_results.html" method="get">
+        <p><strong>Behavior Cross Reference</strong></p>
+        <form id="xref_form">
           <input type="text" value="function"/>
           <input type="submit" value="Submit" />
         </form>     
       </div>
       <div class="span4">
         <p><strong>Participant</strong></p>
-        <form action="pages/participant_results.html" method="get">
+        <form id="participant_form">
           <input type="text" value="anatomical part"/>
           <input type="submit" value="Submit" />
         </form>     
@@ -94,6 +93,10 @@
   </script>
   <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js">
   </script>
+    
+  
+  
+  
   <script type="text/javascript"> //<![CDATA[
 
    var _gaq = _gaq || [];

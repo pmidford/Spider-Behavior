@@ -4,18 +4,17 @@
   <meta charset="utf-8"/>
   <link type="text/css" rel='stylesheet' href='../static/spider-behavior.css'/>
   <title>Arachnolingua Test Page</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="Peter E. Midford">
-  <!-- Le styles -->
-  <link href="../static/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content=""/>
+  <meta name="author" content="Peter E. Midford"/>
+  <link href="../static/bootstrap/css/bootstrap.css" rel="stylesheet"/>
   <style type="text/css">
     body {
       padding-top: 60px;
       padding-bottom: 40px;
     }
   </style>
-  <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet"/>
 </head>
 <body>
 
@@ -76,6 +75,9 @@
            <button id="query_button">List all publications by id (doi or internal)</button>
            <br/>
            <p id="test_query">Test query</p>
+           <h3>Testing API calls</h3>
+           <button id="API_button">Test call to new API</button>
+           <p id="service_test">Testing API call</p>
          </div>
        </div>
     </section>
@@ -125,6 +127,14 @@
        ).done(function(data, textStatus, jqXHR) {$("#rep_size").text("Size of test triple store: " + data)})
        .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
     });
+    $("#API_button").click(function(){
+       $.ajax({
+         url: "http://localhost:8080/spider-behavior/taxon",
+         dataType: "text"
+       }
+       ).done(function(data, testStatus, jqXHR){$("#service_test").text("Test return: " + data)})
+       .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
+     });
     $("#query_button").click(function(){
       $.ajax({
         url: encodeURI("http://arachb.org/openrdf-sesame/repositories/test"),

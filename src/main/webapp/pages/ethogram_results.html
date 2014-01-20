@@ -18,10 +18,24 @@
   <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 </head>
 <body>
-Ethogram
+<h2>Ethogram</h2>
+  <p id="results">Ethogram results</p>
+  <br/>
+  
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
   </script>
   <script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js">
+  </script>
+  
+  <script>
+    $(document).ready(function(){
+       $.ajax({
+         url: "http://localhost:8080/spider-behavior/taxon" + $(location).attr('search'),
+         dataType: "text"
+       }
+       ).done(function(data, testStatus, jqXHR){$("#results").text("Test return: " + data)})
+       .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
+      });
   </script>
 
   <script type="text/javascript"> //<![CDATA[
