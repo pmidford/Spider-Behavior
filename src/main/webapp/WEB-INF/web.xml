@@ -12,6 +12,10 @@
     <servlet-class>org.arachb.api.Behavior</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>publication</servlet-name>
+    <servlet-class>org.arachb.api.Publication</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>startup</servlet-name>
     <servlet-class>org.arachb.api.Startup</servlet-class>
     <load-on-startup>5</load-on-startup> 
@@ -24,4 +28,9 @@
     <servlet-name>behavior</servlet-name>
     <url-pattern>/behavior</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>publication</servlet-name>
+    <url-pattern>/publication</url-pattern>
+  </servlet-mapping>
+  
 </web-app>
