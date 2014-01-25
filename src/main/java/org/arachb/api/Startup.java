@@ -2,12 +2,16 @@ package org.arachb.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -26,25 +30,24 @@ import org.openrdf.repository.sail.config.SailRepositoryConfig;
 
 public class Startup extends HttpServlet {
 
-	
+	final static private String USERHOME = System.getProperty("user.home");
+	final static private String ADUNAHOME = USERHOME+"/.aduna/";
+	final static private String baseURI = "http://arachb.org/arachb/arachb.owl";
+
 	
 	@Override
     public void init(ServletConfig config) throws ServletException{
 		System.out.println("Starting init process");
-		File file = new File("/Users/pmidford/Projects/arachtools/owlbuilder/test.owl");
-		File baseDir = new File("/Users/pmidford/temp/sesame/");
-		String repositoryId = "test-db";
+		File baseDir = new File(ADUNAHOME);
+		String repositoryId = "test1";
 		LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
-		String baseURI = "http://arachb.org/arachb/arachb.owl";
 		Repository repo = null;
 		RepositoryConnection con = null;
 		try {
 			manager.initialize();
-			 
-			try{
-				repo = manager.getRepository(repositoryId);
-			}
-			catch (RepositoryException e){
+			repo = manager.getRepository(repositoryId);
+			System.out.println("Found repo " + repo + " from id repositoryId");
+			if (repo == null){
 				// create a configuration for the SAIL stack
 				boolean persist = true;
 				SailImplConfig backendConfig = new MemoryStoreConfig(persist);
@@ -57,12 +60,15 @@ public class Startup extends HttpServlet {
 				repo = manager.getRepository(repositoryId);
 			    con = repo.getConnection();
 
+				URL loadURL = Startup.class.getClassLoader().getResource("arachb.owl");
+				URLConnection loadConnection = loadURL.openConnection();
+				InputStream loadStream = loadConnection.getInputStream();
+			    
 			    System.out.println("Size before loading: " + con.size());
-			    con.add(file, baseURI, RDFFormat.RDFXML);
+			    con.add(loadStream, baseURI, RDFFormat.RDFXML);
 			    System.out.println("Size after loading: " + con.size());
-				
 			}
-		    
+				
 		} catch (RepositoryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -2,8 +2,11 @@ package org.arachb.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,8 +18,14 @@ import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.QueryResultHandler;
 import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.TupleQueryResultHandlerException;
+import org.openrdf.query.resultio.QueryResultIO;
+import org.openrdf.query.resultio.TupleQueryResultFormat;
+import org.openrdf.query.resultio.TupleQueryResultWriter;
+import org.openrdf.query.resultio.sparqljson.SPARQLResultsJSONWriter;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -25,57 +34,38 @@ import org.openrdf.repository.manager.LocalRepositoryManager;
 
 public class Publication extends HttpServlet {
 	
-    String query = 
+    final static private String query = 
     		"prefix obo:<http://purl.obolibrary.org/obo/> select ?publication WHERE{?publication rdf:type obo:IAO_0000312 .}";
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	final static private String USERHOME = System.getProperty("user.home");
+	final static private String ADUNAHOME = USERHOME+"/.aduna/";
+	final static private String baseURI = "http://arachb.org/arachb/arachb.owl";
 
-    		String foo = request.getQueryString();
-            PrintWriter out = response.getWriter();
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    	
+
+    		String userQuery = request.getQueryString();
+    		final OutputStream os = response.getOutputStream();
             response.setContentType("application/json");
-      		File baseDir = new File("/Users/pmidford/temp/sesame/");
-			String repositoryId = "test-db";
+    		File baseDir = new File(ADUNAHOME);
+			String repositoryId = "test1";
 			Repository repo = null;
 			RepositoryConnection con = null;
     		LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
-    		int pubCount = 0;
-    		StringBuffer jsonResult = new StringBuffer(1000);
-    		jsonResult.append("{head: [");
-            jsonResult.append('"');
-    		jsonResult.append("doi");
-    		jsonResult.append('"');
-    		jsonResult.append("]");
-    		jsonResult.append(", results: {bindings: ["); 
     		try {
     			manager.initialize();
     			repo = manager.getRepository(repositoryId);
     		    con = repo.getConnection();
-    			  TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, query);
-
-    			  TupleQueryResult result = tupleQuery.evaluate();
-    			  
-    			  try {
-    					BindingSet bindingSet = result.next();
-    					while (result.hasNext()){
-    						pubCount++;
-    						Value pubId = bindingSet.getValue("publication");
-    						if (pubCount > 1){
-    							jsonResult.append(",");
-    						}
-    						jsonResult.append("[");
-    						jsonResult.append('"');
-    						jsonResult.append(URLEncoder.encode(pubId.stringValue(),"UTF-8"));
-    						jsonResult.append('"');
-    						jsonResult.append("]");
-    						bindingSet = result.next();
-    					}
-    			  }
-    			  finally{
-    				  result.close();
-    			  }
-    		    con.close();
-    			repo.shutDown();
+    			TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, query);
+  			  	TupleQueryResult result = tupleQuery.evaluate();
+    			TupleQueryResultFormat jsonFormat = QueryResultIO.getWriterFormatForMIMEType("application/sparql-results+json");
+    			TupleQueryResultWriter jsonResults = QueryResultIO.createWriter(jsonFormat, os);
+    			jsonResults.startQueryResult(result.getBindingNames());
+    			while(result.hasNext()){
+    		        jsonResults.handleSolution(result.next());
+    			}
+    			jsonResults.endQueryResult();  
     		} catch (RepositoryException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
@@ -86,6 +76,9 @@ public class Publication extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (QueryEvaluationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TupleQueryResultHandlerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -99,9 +92,8 @@ public class Publication extends HttpServlet {
     				e.printStackTrace();
     			}
     		}
-            out.println(jsonResult + " ]}}");
-            out.flush();
-            out.close();
+            os.flush();
+            os.close();
         }
 
 }

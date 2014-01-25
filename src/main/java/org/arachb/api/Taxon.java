@@ -2,6 +2,7 @@ package org.arachb.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 
@@ -10,6 +11,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.openrdf.query.MalformedQueryException;
+import org.openrdf.query.QueryEvaluationException;
+import org.openrdf.query.QueryLanguage;
+import org.openrdf.query.TupleQuery;
+import org.openrdf.query.TupleQueryResult;
+import org.openrdf.query.TupleQueryResultHandlerException;
+import org.openrdf.query.resultio.QueryResultIO;
+import org.openrdf.query.resultio.TupleQueryResultFormat;
+import org.openrdf.query.resultio.TupleQueryResultWriter;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -29,13 +39,29 @@ import org.openrdf.sail.memory.MemoryStore;
  */
 public class Taxon extends HttpServlet {
 	
+	final static private String USERHOME = System.getProperty("user.home");
+	final static private String ADUNAHOME = USERHOME+"/.aduna/";
+	final static private String baseURI = "http://arachb.org/arachb/arachb.owl";
+
+	
+
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	
 
-    		String foo = request.getQueryString();
-            PrintWriter out = response.getWriter();
-      		File baseDir = new File("/Users/pmidford/temp/sesame/");
-			String repositoryId = "test-db";
+    		String name = request.getQueryString();
+    		System.out.print("raw string is: |" + name);
+    		name = name.substring("taxon=".length());
+			final int pos = name.indexOf('+');
+    		if (pos>-1){
+    			name = name.substring(0,pos)+ ' ' + name.substring(pos+1);
+    		}
+    		String finalQuery = getStringLiteralQuery(name);
+    		System.out.print("SPARQL query = " + finalQuery);
+    		final OutputStream os = response.getOutputStream();
+            response.setContentType("application/sparql-results+json");
+    		File baseDir = new File(ADUNAHOME);
+			String repositoryId = "test1";
 			Repository repo = null;
 			RepositoryConnection con = null;
     		LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
@@ -43,13 +69,28 @@ public class Taxon extends HttpServlet {
     			manager.initialize();
     			repo = manager.getRepository(repositoryId);
     		    con = repo.getConnection();
-    		    System.out.println("Size after loading: " + con.size());
-    		    con.close();
-    			repo.shutDown();
+    			TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, finalQuery);
+  			  	TupleQueryResult result = tupleQuery.evaluate();
+    			TupleQueryResultFormat jsonFormat = QueryResultIO.getWriterFormatForMIMEType("application/sparql-results+json");
+    			TupleQueryResultWriter jsonResults = QueryResultIO.createWriter(jsonFormat, os);
+    			jsonResults.startQueryResult(result.getBindingNames());
+    			while(result.hasNext()){
+    		        jsonResults.handleSolution(result.next());
+    			}
+    			jsonResults.endQueryResult();  
     		} catch (RepositoryException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
     		} catch (RepositoryConfigException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MalformedQueryException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (QueryEvaluationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TupleQueryResultHandlerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -63,12 +104,16 @@ public class Taxon extends HttpServlet {
     				e.printStackTrace();
     			}
     		}
-
-            out.println("{'Test works' " + foo + " }");
-            out.flush();
-            out.close();
-        }
+            os.flush();
+            os.close();
     
+    }
     
+    String getStringLiteralQuery(String name){
+        String query = 
+        		"prefix obo:<http://purl.obolibrary.org/obo/> select ?taxon WHERE{?taxon rdfs:label \"%s\"^^xsd:string .}";
+        String result = String.format(query,name);
+        return result;
 
+    }
 }

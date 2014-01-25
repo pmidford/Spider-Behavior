@@ -27,7 +27,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <img class="brand" src="../static/spiderwords_small.jpg" alt="spider words" width="32" height="19">
+        <img class="brand" src="../static/spiderwords_small.jpg" alt="spider words" width="32" height="19"/>
         <div class="nav-collapse collapse">
           <ul class="nav">
             <li>
@@ -62,36 +62,31 @@
     <section id="tests">
       <div class="row-fluid">
         <div class="span12">
-           <h3>Test sesame protocol</h3>
-           <p id="protocol">Sesame protocol version unknown</p>
-           <br/>
-           <button id="protocol_button">Get Sesame Protocol Version</button>
-           <br/>
-           <h3>Check count of triples in store</h3>
-           <p id="rep_size">Size of test triple store unknown</p>
-           <button id="size_button">Get Size of Test Store</button>
-           <br/>
-           <h3>Test simple SPARQL query</h3>
-           <button id="query_button">List all publications by id (doi or internal)</button>
-           <br/>
-           <p id="test_query">Test query</p>
-           <h3>Testing API calls</h3>
-           <button id="API_button">Test call to new API</button>
-           <p id="service_test">Testing API call</p>
-         </div>
-       </div>
+         <p id="test_query">Test query</p>
+          <h3>Testing API calls</h3>
+          <button id="API_button">Test call to taxon API</button>
+          <p id="service_test">Testing API call</p>
+          <br/>
+          <h3>Testing API calls</h3>
+          <p id="test_query2">Test query2</p>
+          <button id="API_button2">Test call to publication API</button>
+          <p id="service_test2">Testing API call</p>
+        </div>
+      </div>
     </section>
-
-    <hr>
-    <footer>
-      <p>Last update 9 October 2013</p>
-    </footer>
+  </div>
+  <hr/>
+  <footer>
+    <p>Last update 24 January 2014</p>
+  </footer>
 
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
   </script>
-  <script type="text/javascript" src="../static/publicationtable.js">
+  <script type="text/javascript" src="../static/resulttable.js">
   </script>
   <script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js">
+  </script>
+  <script type="text/javascript" src="../static/json2.js">
   </script>
 
   <script type="text/javascript"> //<![CDATA[
@@ -108,46 +103,34 @@
   })();
   //]]>
 
- </script>
- <script>
+ </script>  
+      
+ <script type="text/javascript">  //<![CDATA[
+   
    $(document).ready(function(){
-     $("#protocol_button").click(function(){
-       $.ajax({
-         url: "http://arachb.org/openrdf-sesame/protocol",
-         dataType: "text"
-         }
-      ).done(function(data, textStatus, jqXHR) {$("#protocol").text("Sesame protocol version: " + data)})
-       .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
-     });
-     $("#size_button").click(function(){
-       $.ajax({
-         url: "http://arachb.org/openrdf-sesame/repositories/test/size",
-         dataType: "text"
-       }
-       ).done(function(data, textStatus, jqXHR) {$("#rep_size").text("Size of test triple store: " + data)})
-       .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
-    });
     $("#API_button").click(function(){
        $.ajax({
-         url: "http://localhost:8080/spider-behavior/taxon",
+         url: "http://arachb.org/taxon?taxon=Habronattus",
          dataType: "text"
        }
-       ).done(function(data, testStatus, jqXHR){$("#service_test").text("Test return: " + data)})
+       ).done(function(data, testStatus, jqXHR){$("#service_test").html("<p>Test return: </p>"  + resulttable(eval( '(' + data + ')')))})
        .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
-     });
-    $("#query_button").click(function(){
-      $.ajax({
-        url: encodeURI("http://arachb.org/openrdf-sesame/repositories/test"),
-        data: {query: "prefix obo:<http://purl.obolibrary.org/obo/> select ?publication WHERE{?publication rdf:type obo:IAO_0000312 .}"},
-        dataType: "json",
-        accepts: {json: "application/sparql-results+json"},
-        type: "post"
-        }
-      ).done(function(data, textStatus, jqXHR) {$("#test_query").html("<p>Results of query to list publications in triple store: </p>" + publicationtable(data))})
-      .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
       });
+    $("#API_button2").click(function(){
+       $.ajax({
+         url: "http://arachb.org/publication",
+         dataType: "text",
+         accepts: {json: "application/sparql-results+json"},
+         type: "get"
+        }
+      ).done(function(data, textStatus, jqXHR) {
+         $("#service_test2").html("<p>Results of query to list publications in triple store: </p>" + resulttable(eval( '(' + data + ')')));
+      })
+      .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
+     });
     });
+  //]]>
 
-  </script>
+ </script>
 </body>
 </html>

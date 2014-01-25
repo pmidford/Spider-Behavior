@@ -1,6 +1,6 @@
-var publicationtable = function (resultobj) {
+var resulttable = function (resultobj) {
     "use strict";
-    if (1>0) {
+    if (resultobj.results.bindings && resultobj.results.bindings.length>0) {
         var result, i, binding;
         var fieldtype = resultobj.head.vars[0]
         result = "<table border='1'>\n";
@@ -16,5 +16,7 @@ var publicationtable = function (resultobj) {
         result = result + "</table>";
         return result;
     }
-    return "<p>No results</p>";
+    else{
+        return "<p>No results</p>";
+    }
 };

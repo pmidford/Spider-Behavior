@@ -26,14 +26,16 @@
   </script>
   <script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js">
   </script>
+  <script type="text/javascript" src="../static/resulttable.js">
+  </script>
   
   <script>
     $(document).ready(function(){
        $.ajax({
-         url: "http://localhost:8080/spider-behavior/taxon" + $(location).attr('search'),
+         url: "http://arachb.org/taxon" + $(location).attr('search'),
          dataType: "text"
        }
-       ).done(function(data, testStatus, jqXHR){$("#results").text("Test return: " + data)})
+       ).done(function(data, testStatus, jqXHR){$("#results").html("<p>Test return: </p>"  + resulttable(eval( '(' + data + ')')))})
        .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
       });
   </script>
