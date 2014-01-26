@@ -108,17 +108,20 @@
  <script type="text/javascript">  //<![CDATA[
    
    $(document).ready(function(){
+    var myhost = "http://localhost:8080/spider-behavior/";
     $("#API_button").click(function(){
+       var urlstr = myhost+"taxon?taxon=Tetragnatha+straminea"   
        $.ajax({
-         url: "http://arachb.org/taxon?taxon=Habronattus",
+         url: urlstr,      //"http://arachb.org/taxon?taxon=Tetragnatha+straminea",
          dataType: "text"
        }
-       ).done(function(data, testStatus, jqXHR){$("#service_test").html("<p>Test return: </p>"  + resulttable(eval( '(' + data + ')')))})
+       ).done(function(data, testStatus, jqXHR){$("#service_test").html("<p>Test return: </p>"  +  resulttable(eval('(' + data + ')' )))})
        .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
       });
     $("#API_button2").click(function(){
+       var urlstr = myhost+"publication"
        $.ajax({
-         url: "http://arachb.org/publication",
+         url: urlstr,   //"http://arachb.org/publication",
          dataType: "text",
          accepts: {json: "application/sparql-results+json"},
          type: "get"
