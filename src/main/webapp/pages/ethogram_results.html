@@ -4,24 +4,68 @@
   <meta charset="utf-8"/>
   <link type="text/css" rel="stylesheet" href="../static/spider-behavior.css"/>
   <title>Ethogram</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="Peter E. Midford">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content=""/>
+  <meta name="author" content="Peter E. Midford"/>
   <!-- Le styles -->
-  <link href="../static/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="../static/bootstrap/css/bootstrap.css" rel="stylesheet"/>
   <style type="text/css">
     body {
       padding-top: 60px;
       padding-bottom: 40px;
     }
   </style>
-  <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet"/>
 </head>
 <body>
-<h2>Ethogram</h2>
-  <p id="results">Ethogram results</p>
-  <br/>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <button class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse" type="button">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <img class="brand" src="../static/spiderwords_small.jpg" alt="spider words" width="32" height="19">
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li>
+                <a href="../index.html">Home</a>
+              </li>
+              <li>
+                <a href="project.html">About</a>
+              </li>
+              <li>
+                <a href="#">Taxonomy Status</a>
+              </li>
+              <li>
+                <a href="http://www.arachnolingua.net/ontologies/arachnolingua1.owl">Get Ontology</a>
+              </li>
+              <li>
+                <a href="curation.html">Curation</a>
+              </li>
+              <li>
+                <a href="testing.html">Test Sesame Server</a>
+              </li>
+            </ul>
+          </div>
+      </div>
+    </div>
+  </div>
   
+  <div class="container">
+    <div class="page-header">
+      <h1 class="arachb_headline">Ethogram results</h1>
+    </div>  
+      
+    <section id="taxonomy_table">
+      <div class="row-fluid">
+          <div class="span12">
+          <p id="results">Working...</p>
+          </div>
+      </div>
+    </section>
+  </div>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
   </script>
   <script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js">
@@ -31,11 +75,12 @@
   
   <script>
     $(document).ready(function(){
+       var myhost = "http://localhost:8080/spider-behavior/";
        $.ajax({
-         url: "http://arachb.org/taxon" + $(location).attr('search'),
+         url: myhost + "taxon" + $(location).attr('search'),
          dataType: "text"
        }
-       ).done(function(data, testStatus, jqXHR){$("#results").html("<p>Test return: </p>"  + resulttable(eval( '(' + data + ')')))})
+       ).done(function(data, testStatus, jqXHR){$("#results").html(resulttable(eval( '(' + data + ')')))})
        .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
       });
   </script>

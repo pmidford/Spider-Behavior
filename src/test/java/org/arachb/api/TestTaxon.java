@@ -12,17 +12,17 @@ public class TestTaxon extends TestCase {
 		super.setUp();
 	}
 
-	public void testGetName2TaxonQuery() {
+	public void testGetName2EthogramQuery() {
 		Taxon testTaxon = new Taxon();
-		String testQuery = testTaxon.getName2TaxonQuery("Habronattus");
+		String testQuery = testTaxon.getName2EthogramQuery("Habronattus");
 		//System.out.println(testQuery);
 		assert(testQuery.contains("Habronattus"));
 	}
 	
-	public void testGetTaxon2partQuery(){
+	public void testGetName2TaxonIdQuery(){
 		Taxon testTaxon = new Taxon();
-		String testQuery = testTaxon.getTaxon2partQuery(TAXONNCBIID);
-		assert(testQuery.contains(TAXONNCBIID));
+		String testQuery = testTaxon.getName2TaxonIdQuery("Habronattus");
+		assert(testQuery.contains("Habronattus"));
 	}
 
 }
