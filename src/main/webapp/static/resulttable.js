@@ -17,6 +17,8 @@ var resulttable = function (resultobj) {
             result = result + "  <tr>\n";
             for (i = 0; i < resultobj.head.vars.length; i += 1) {
                 fieldtype = resultobj.head.vars[i];
+                //may want to call decodeURIComponent somewhere around here
+                //fielddatatype = binding[fieldtype].type;
                 result = result + "    <td>" + binding[fieldtype].value + "</td>\n";
             }
             result = result + "  </tr>\n";
