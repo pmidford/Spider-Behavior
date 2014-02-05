@@ -25,6 +25,7 @@ import org.openrdf.repository.config.RepositoryConfigException;
 import org.openrdf.repository.manager.LocalRepositoryManager;
 
 
+
 /**
  * This servlet should handle URIs starting with api.arachb.org/taxon
  * @author pmidford
@@ -32,11 +33,8 @@ import org.openrdf.repository.manager.LocalRepositoryManager;
  */
 public class Taxon extends HttpServlet {
 	
-	final static private String USERHOME = System.getProperty("user.home");
-	final static private String ADUNAHOME = USERHOME+"/.aduna/";
 	final static private String baseURI = "http://arachb.org/arachb/arachb.owl";
 
-	final static private String OBOPREFIX = "prefix obo:<http://purl.obolibrary.org/obo/> ";
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
@@ -52,13 +50,13 @@ public class Taxon extends HttpServlet {
 		}
 		name = name.trim();
 		if (!validateTaxonName(name)){
-			returnError(os);
+			Util.returnError(os);
 			os.flush();
 			os.close();
 			return;			
 		}
 		response.setContentType("application/sparql-results+json");
-		File baseDir = new File(ADUNAHOME);
+		File baseDir = new File(Util.ADUNAHOME);
 		String repositoryId = "test1";
 		Repository repo = null;
 		RepositoryConnection con = null;
@@ -69,10 +67,10 @@ public class Taxon extends HttpServlet {
 			con = repo.getConnection();
 			String ethogramQueryString = getName2EthogramQuery(name);
 			//System.out.println("ethogram query = \n" + ethogramQueryString);
-			if (!tryQuery(ethogramQueryString,con,os)){
+			if (!Util.tryQuery(ethogramQueryString,con,os)){
 				String taxonIdQueryString = getName2TaxonIdQuery(name);
-				if (!tryQuery(taxonIdQueryString,con,os)){
-					returnError(os);
+				if (!Util.tryQuery(taxonIdQueryString,con,os)){
+					Util.returnError(os);
 				}
 			}
 		} catch (RepositoryException e) {
@@ -102,54 +100,16 @@ public class Taxon extends HttpServlet {
 		os.close();
 
 	}
-    
-	boolean tryQuery(String queryString, RepositoryConnection con, OutputStream os) 
-			throws RepositoryException, MalformedQueryException, QueryEvaluationException{
-		TupleQuery ethogramQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
-		TupleQueryResult ethogramResult = ethogramQuery.evaluate();
-		if (ethogramResult.hasNext()){
-			jsonFormatResult(ethogramResult,os);
-			return true;
-		}
-		else
-			return false;
-	}
-	
-    void jsonFormatResult(TupleQueryResult r,OutputStream os){
-		TupleQueryResultFormat jsonFormat = QueryResultIO.getWriterFormatForMIMEType("application/sparql-results+json");
-		final TupleQueryResultWriter jsonResults = QueryResultIO.createWriter(jsonFormat, os);
-		try{
-			jsonResults.startQueryResult(r.getBindingNames());
-			while(r.hasNext()){
-				jsonResults.handleSolution(r.next());
-			}
-			jsonResults.endQueryResult();  
-		} catch (QueryEvaluationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (TupleQueryResultHandlerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
-
+    	
     public boolean validateTaxonName(String name){
     	String[]nameList = name.split(" ");
     	return (nameList.length<=3);
     }
     
-    void returnError(OutputStream os) throws IOException{
-		final StringBuilder msgBuffer = new StringBuilder();
-		msgBuffer.append('"');
-		msgBuffer.append("no results");
-		msgBuffer.append('"');
-		os.write(msgBuffer.toString().getBytes("UTF-8"));
-    }
     
     String getName2EthogramQuery(String name){
     	final StringBuilder b = new StringBuilder();
-    	b.append(OBOPREFIX);
+    	b.append(Util.OBOPREFIX);
         b.append("SELECT ?taxon_name ?behavior ?anatomy ?pubid\n");
         b.append("WHERE {?taxon rdfs:label \"%s\"^^xsd:string . \n"); 
         b.append("       ?r1 <http://www.w3.org/2002/07/owl#someValuesFrom> ?taxon . \n");
@@ -181,7 +141,7 @@ public class Taxon extends HttpServlet {
     
     String getName2TaxonIdQuery(String name){
     	final StringBuilder b = new StringBuilder();
-    	b.append(OBOPREFIX);
+    	b.append(Util.OBOPREFIX);
     	b.append("SELECT ?taxon_name ?taxon_id \n");
         b.append("WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . \n");
         b.append("       ?taxon_id rdfs:label ?taxon_name . }\n ");
