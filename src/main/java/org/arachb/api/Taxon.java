@@ -33,7 +33,6 @@ import org.openrdf.repository.manager.LocalRepositoryManager;
  */
 public class Taxon extends HttpServlet {
 	
-	final static private String baseURI = "http://arachb.org/arachb/arachb.owl";
 
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -43,19 +42,18 @@ public class Taxon extends HttpServlet {
 
 		String name = request.getQueryString();
 		//System.out.println("raw string is: |" + name);
-		name = name.substring("taxon=".length());
+		name = name.substring("taxon=".length()).trim();
 		final int pos = name.indexOf('+');
 		if (pos>-1){
 			name = name.substring(0,pos)+ ' ' + name.substring(pos+1);
 		}
-		name = name.trim();
 		if (!validateTaxonName(name)){
 			Util.returnError(os);
 			os.flush();
 			os.close();
 			return;			
 		}
-		response.setContentType("application/sparql-results+json");
+		response.setContentType(Util.SPARQLMIMETYPE);
 		File baseDir = new File(Util.ADUNAHOME);
 		String repositoryId = "test1";
 		Repository repo = null;
@@ -102,8 +100,7 @@ public class Taxon extends HttpServlet {
 	}
     	
     public boolean validateTaxonName(String name){
-    	String[]nameList = name.split(" ");
-    	return (nameList.length<=3);
+    	return (name.split(" ").length<=2);
     }
     
     

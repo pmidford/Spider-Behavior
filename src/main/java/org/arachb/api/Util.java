@@ -21,6 +21,8 @@ public class Util {
 	final static String ADUNAHOME = USERHOME+"/.aduna/";
 	final static String OBOPREFIX = "prefix obo:<http://purl.obolibrary.org/obo/> ";
 	final static String SPARQLMIMETYPE = "application/sparql-results+json";
+	final static String baseURI = "http://arachb.org/arachb/arachb.owl";
+
 
 	public static boolean tryQuery(String queryString, RepositoryConnection con, OutputStream os) 
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException{

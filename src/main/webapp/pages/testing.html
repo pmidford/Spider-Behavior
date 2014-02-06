@@ -115,7 +115,7 @@
          url: urlstr,      //"http://arachb.org/taxon?taxon=Tetragnatha+straminea",
          dataType: "text"
        }
-       ).done(function(data, testStatus, jqXHR){$("#service_test").html("<p>Test return: </p>"  +  resulttable(eval('(' + data + ')' )))})
+       ).done(function(data, testStatus, jqXHR){$("#service_test").html("<p>Test return: </p>"  +  data)})
        .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
       });
     $("#API_button2").click(function(){
