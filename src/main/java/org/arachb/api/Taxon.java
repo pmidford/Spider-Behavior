@@ -127,12 +127,7 @@ public class Taxon extends HttpServlet {
        	b.append("       ?s15 <http://www.w3.org/2002/07/owl#intersectionOf> ?s13 . \n ");
        	b.append("       ?s16 ?p1615 ?s15 . \n ");
        	b.append("       ?s16 obo:BFO_0000050 ?pubid . \n ");
-       	b.append("       ?taxon rdfs:label ?taxon_name . \n ");
-       	b.append("       ?s13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> obo:IAO_0000300 . \n ");
-       	b.append("       ?s12 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> . \n");
-       	b.append("       ?s10 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2002/07/owl#Class> . \n");
-       	b.append("       ?s6 <http://www.w3.org/2002/07/owl#onProperty> obo:BFO_0000057 . \n");
-       	b.append("       ?r1 <http://www.w3.org/2002/07/owl#onProperty> obo:BFO_0000050 . } \n");
+       	b.append("       ?taxon rdfs:label ?taxon_name . }\n ");
         return String.format(b.toString(),name);
     }
     
