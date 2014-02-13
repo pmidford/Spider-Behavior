@@ -3,7 +3,6 @@ package org.arachb.api;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,8 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
 import org.openrdf.query.TupleQueryResultHandlerException;
 import org.openrdf.query.resultio.QueryResultIO;
@@ -57,15 +54,14 @@ public class Behavior extends HttpServlet {
 			os.close();
 			return;			
 		}
-		response.setContentType("application/sparql-results+json");
-		String repositoryId = "test1";
+		response.setContentType(Util.SPARQLMIMETYPE);
 		Repository repo = null;
 		RepositoryConnection con = null;
 		LocalRepositoryManager manager = new LocalRepositoryManager(new File(Util.ADUNAHOME));
 
 		try {
 			manager.initialize();
-			repo = manager.getRepository(repositoryId);
+			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
 			String behaviorQueryString = getName2BehaviorReportQuery(name);
 			System.out.println("ethogram query = \n" + behaviorQueryString);
@@ -104,7 +100,7 @@ public class Behavior extends HttpServlet {
     
     
     void jsonFormatResult(TupleQueryResult r,OutputStream os){
-		TupleQueryResultFormat jsonFormat = QueryResultIO.getWriterFormatForMIMEType("application/sparql-results+json");
+		TupleQueryResultFormat jsonFormat = QueryResultIO.getWriterFormatForMIMEType(Util.SPARQLMIMETYPE);
 		final TupleQueryResultWriter jsonResults = QueryResultIO.createWriter(jsonFormat, os);
 		try{
 			jsonResults.startQueryResult(r.getBindingNames());
@@ -122,8 +118,13 @@ public class Behavior extends HttpServlet {
 		}
     }
 
+    /**
+     * 
+     * @param name
+     * @return true if a behavior name
+     */
     public boolean validateBehaviorName(String name){
-    	String[]nameList = name.split(" ");
+    	String[]nameList = name.split(" ");   //TODO better validation
     	return (nameList.length<=3);
     }
 

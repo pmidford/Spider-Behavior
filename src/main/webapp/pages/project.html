@@ -1,23 +1,21 @@
 <!DOCTYPE html> 
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8"/>
   <link type="text/css" rel="stylesheet" href="../static/spider-behavior.css"/>
   <title>About Arachnolingua</title>
   <link type="text/css" rel="stylesheet" href="../static/spider-behavior.css"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="">
-  <meta name="author" content="Peter E. Midford">
-  <!-- Le styles -->
-  <link href="../static/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content=""/>
+  <meta name="author" content="Peter E. Midford"/>
+  <link href="../static/bootstrap/css/bootstrap.css" rel="stylesheet"/>
   <style type="text/css">
     body {
       padding-top: 60px;
       padding-bottom: 40px;
     }
   </style>
-  <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-
+  <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet"/>
 </head>
 
 <body>
@@ -29,7 +27,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <img class="brand" src="../static/spiderwords_small.jpg" alt="spider words" width="32" height="19">
+        <img class="brand" src="../static/spiderwords_small.jpg" alt="spider words" width="32" height="19"/>
         <div class="nav-collapse collapse">
           <ul class="nav">
             <li>
@@ -40,9 +38,6 @@
             </li>
             <li>
               <a href="taxonomy.html">Taxonomy Status</a>
-            </li>
-            <li>
-              <a href="http://www.arachnolingua.net/ontologies/arachnolingua1.owl">Get Ontology</a>
             </li>
             <li>
               <a href="curation.html">Curation</a>
@@ -67,14 +62,19 @@
           <h3>Frequently Asked (or should be frequently asked) Questions</h3>
           <dl>
             <dt> What does this do?</dt>
-            <dd> At the moment you can try entering an Arachnid taxon in the Ethogram box - it will return
-              a table listing an identifier based on the NCBI taxonomy id.  Best species to try is <i>Tetragnatha straminea</i>
-              as there are a few behavior annotations for this taxon in the knowledge base and those will be appearing in resposes
-              to this query shortly.
+            <dd> Current there are a few annotations for three taxa (<i>Tetragnatha straminea</i>,<i>Tetragnatha</i>, and <i>Deinopis</i>).
+              You can enter a taxon name in the taxon box and if there are behavior annotations for the taxon, they will be listed.  If the taxon
+              is in the current taxonomy (a chunk of NCBI) but no behavior is listed, it will return a table with the taxon's id.  There are also
+              a couple of behavior terms that are available in a taxon cross-reference table (try 'posture' or 'predator behavior').  Note that there 
+              have been a number of corrections and improvements to site recently.  In particular, the taxonomy status page actually has some useful 
+              information on species in curation and the ontology link below links to the actual OWL file loaded into the server - the menu item that points
+              to a very out-of-data hand coded file has been removed.
+            </dd>
           </dl>
           <dl>
             <dt> What about the other Arachnids? </dt>
             <dd> There are a couple of mite and scorpion papers in the initial collection.  More will be added.  The initial taxonomy includes all arachnids listed in NCBI plus additional taxa as needed by curation.
+            </dd>
           </dl>
         </div>
       </div>
@@ -83,37 +83,46 @@
     <section id="imports">
       <div class="row-fluid">
         <div class="span12">
-          <h3>Imported MIREOT Files from other Ontologies</h3>
+          <h3>OWL source (RDF/XML) for current KB</h3>
+             <p>
+               <a href="../ontologies/arachb.owl">here</a>
+             </p>
+          <h3>Arachnolingua imports terms from these Ontologies </h3>
           <dl>
             <dt>
-              <a href="../ontologies/IAO_import.owl">IAO</a> 
+              <a href="http://purl.obolibrary.org/obo/iao.owl">
+                Information Artifact Ontology
+              </a> 
             </dt>
-            <dd>terms imported from the Information Artifact Ontology
-            </dd>
             <dt>
-              <a href="../ontologies/NBO_import.owl">NBO</a> 
-	    </dt>
-              <dd>terms imported from the NeuroBehavior Ontology
-            </dd>
+              <a href="http://behavior-ontology.googlecode.com/svn/trunk/behavior.owl">
+                NeuroBehavior Ontology
+              </a> 
+	          </dt>
             <dt>
-              <a href="../ontologies/IAO_import.owl">NCBI</a>
+              <a href="http://purl.obolibrary.org/obo/ncbitaxon.owl">
+                NCBI taxonomy (generated OWL file in OBO foundry)
+              </a>
             </dt>
-            <dd>
-              terms imported from the NCBI taxonomy
-            </dd>
             <dt>
-              <a href="../ontologies/IAO_import.owl">RO</a> 
+              <a href="http://purl.obolibrary.org/obo/spd.owl">
+                Spider Biology Ontology
+              </a> 
             </dt>
-            <dd>
-              terms imported from the Relations Ontology
-            </dd>
             <dt>
-              <a href="../ontologies/IAO_import.owl">SPD</a> 
+              <a href="http://purl.obolibrary.org/obo/ro.owl">
+                Relations Ontology
+              </a> 
             </dt>
-            <dd>
-              terms imported from the Spider Anatomy Ontology
-            </dd>
+            <dt>
+              <a href="http://purl.obolibrary.org/obo/bfo.owl">
+                Basic Formal Ontology
+              </a> 
+            </dt>
           </dl>
+          <p>
+          In addition, several other ontologies (ECO, GO, PATO, CHEBI, UBERON) provide terms available to curators.  Other ontologies (e.g., ENV, PCO) will be added later.
+          </p>
         </div>
       </div>
     </section>
@@ -129,9 +138,9 @@
       </div>
     </section>
 
-    <hr>
+    <hr/>
     <footer>
-      <p>Last update 24 January 2014</p>
+      <p>Last update 12 February 2014</p>
     </footer>
   </div>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">

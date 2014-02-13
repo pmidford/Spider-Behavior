@@ -54,19 +54,18 @@ public class Taxon extends HttpServlet {
 			return;			
 		}
 		response.setContentType(Util.SPARQLMIMETYPE);
-		File baseDir = new File(Util.ADUNAHOME);
-		String repositoryId = "test1";
+		final File baseDir = new File(Util.ADUNAHOME);
 		Repository repo = null;
 		RepositoryConnection con = null;
-		LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
+		final LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
 		try {
 			manager.initialize();
-			repo = manager.getRepository(repositoryId);
+			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
-			String ethogramQueryString = getName2EthogramQuery(name);
+			final String ethogramQueryString = getName2EthogramQuery(name);
 			//System.out.println("ethogram query = \n" + ethogramQueryString);
 			if (!Util.tryQuery(ethogramQueryString,con,os)){
-				String taxonIdQueryString = getName2TaxonIdQuery(name);
+				final String taxonIdQueryString = getName2TaxonIdQuery(name);
 				if (!Util.tryQuery(taxonIdQueryString,con,os)){
 					Util.returnError(os);
 				}
@@ -96,11 +95,16 @@ public class Taxon extends HttpServlet {
 		}
 		os.flush();
 		os.close();
-
 	}
     	
+	/**
+	 * 
+	 * @param name either monomial or binomial (only one space)
+	 * @return true if valid
+	 * 
+	 */
     public boolean validateTaxonName(String name){
-    	return (name.split(" ").length<=2);
+    	return (name.split(" ").length<=2);  //TODO be more selective (also consider common names)
     }
     
     
