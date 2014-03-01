@@ -73,7 +73,7 @@
   </div>
   <hr/>
   <footer>
-    <p>Last update 24 January 2014</p>
+    <p>Last update 1 March 2014</p>
   </footer>
 
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
@@ -101,12 +101,14 @@
 
  </script>  
       
+<script type="text/javascript" src="../static/env.js">    
+</script>
+  
  <script type="text/javascript">  //<![CDATA[
    
    $(document).ready(function(){
-    var myhost = "http://localhost:8080/spider-behavior/";
     $("#API_button").click(function(){
-       var urlstr = myhost+"taxon?taxon=Tetragnatha+straminea"   
+       var urlstr = myhost+"taxon?taxon=Cupiennius+salei"   
        $.ajax({
          url: urlstr,      //"http://arachb.org/taxon?taxon=Tetragnatha+straminea",
          dataType: "text"

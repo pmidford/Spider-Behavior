@@ -69,9 +69,11 @@
   <script type="text/javascript" src="../static/resulttable.js">
   </script>
   
+  <script type="text/javascript" src="../static/env.js">    
+  </script>
+  
   <script>
     $(document).ready(function(){
-       var myhost = "http://arachb.org/";
        $.ajax({
          url: myhost + "taxon" + $(location).attr('search'),
          dataType: "text"
