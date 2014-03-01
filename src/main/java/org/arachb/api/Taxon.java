@@ -63,7 +63,7 @@ public class Taxon extends HttpServlet {
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
 			final String ethogramQueryString = getName2EthogramQuery(name);
-			//System.out.println("ethogram query = \n" + ethogramQueryString);
+			System.out.println("ethogram query = \n" + ethogramQueryString);
 			if (!Util.tryQuery(ethogramQueryString,con,os)){
 				final String taxonIdQueryString = getName2TaxonIdQuery(name);
 				if (!Util.tryQuery(taxonIdQueryString,con,os)){

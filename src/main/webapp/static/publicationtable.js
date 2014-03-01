@@ -1,6 +1,6 @@
 var publicationtable = function (resultobj) {
     "use strict";
-    if (1>0) {
+    if (resultobj && resultobj !== 'no results') {
         var result, i, binding;
         var fieldtype = resultobj.head.vars[0]
         result = "<table border='1'>\n";
