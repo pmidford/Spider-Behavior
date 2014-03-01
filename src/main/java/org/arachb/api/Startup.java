@@ -47,8 +47,8 @@ public class Startup extends HttpServlet {
 			manager.initialize();
 			repo = manager.getRepository(repositoryId);
 			System.out.println("Found repo " + repo + " from id repositoryId");
+			boolean needsLoading = false;
 			if (repo == null){
-				// create a configuration for the SAIL stack
 				boolean persist = true;
 				SailImplConfig backendConfig = new MemoryStoreConfig(persist);
 
@@ -58,7 +58,20 @@ public class Startup extends HttpServlet {
 				RepositoryConfig repConfig = new RepositoryConfig(repositoryId, repositoryTypeSpec);
 				manager.addRepositoryConfig(repConfig);
 				repo = manager.getRepository(repositoryId);
+				needsLoading = true;
+				con = repo.getConnection();
+			}
+			else {
 			    con = repo.getConnection();
+			    long size = con.size();
+				System.out.println("Found repo " + repo + " of size " + size + " from id repositoryId");
+			    if (size <1000) {
+			    	//fake, need to load
+			    	needsLoading = true;
+			    }
+			    	
+			}
+			if (needsLoading){
 
 				URL loadURL = Startup.class.getClassLoader().getResource("arachb.owl");
 				URLConnection loadConnection = loadURL.openConnection();
