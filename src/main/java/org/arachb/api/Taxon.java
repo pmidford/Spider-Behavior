@@ -63,7 +63,6 @@ public class Taxon extends HttpServlet {
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
 			final String ethogramQueryString = getName2EthogramQuery(name);
-			System.out.println("ethogram query = \n" + ethogramQueryString);
 			if (!Util.tryQuery(ethogramQueryString,con,os)){
 				final String taxonIdQueryString = getName2TaxonIdQuery(name);
 				if (!Util.tryQuery(taxonIdQueryString,con,os)){
@@ -111,27 +110,28 @@ public class Taxon extends HttpServlet {
     String getName2EthogramQuery(String name){
     	final StringBuilder b = new StringBuilder();
     	b.append(Util.OBOPREFIX);
-        b.append("SELECT ?taxon_name ?behavior ?anatomy ?pubid\n");
+        b.append("SELECT ?taxon_name ?behavior ?anatomy ?publication ?pubid\n");
         b.append("WHERE {?taxon rdfs:label \"%s\"^^xsd:string . \n"); 
         b.append("       ?r1 <http://www.w3.org/2002/07/owl#someValuesFrom> ?taxon . \n");
         b.append("       ?res1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?r1 . \n"); 
         b.append("       ?n3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> ?res1 . \n");
         b.append("       ?n3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?o4 . \n");
-        b.append("       ?o4 rdfs:label ?anatomy . \n ");
+        b.append("       ?o4 rdfs:label ?anatomy . \n");
         b.append("       ?s5 <http://www.w3.org/2002/07/owl#intersectionOf> ?n3 . \n");
         b.append("       ?s6 <http://www.w3.org/2002/07/owl#someValuesFrom> ?s5 . \n");
         b.append("       ?s7 ?p7 ?s6 . \n");
         b.append("       ?s8 ?p8 ?s7 . \n");
         b.append("       ?s8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?o9 . \n");
-        b.append("       ?o9 rdfs:label ?behavior . \n ");
+        b.append("       ?o9 rdfs:label ?behavior . \n");
         b.append("       ?s10 ?p108 ?s8 . \n");
         b.append("       ?s11 <http://www.w3.org/2002/07/owl#someValuesFrom> ?s10 . \n");
         b.append("       ?s12 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?s11 . \n");
-        b.append("       ?s13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> ?s12 . \n ");
-       	b.append("       ?s15 <http://www.w3.org/2002/07/owl#intersectionOf> ?s13 . \n ");
-       	b.append("       ?s16 ?p1615 ?s15 . \n ");
-       	b.append("       ?s16 obo:BFO_0000050 ?pubid . \n ");
-       	b.append("       ?taxon rdfs:label ?taxon_name . }\n ");
+        b.append("       ?s13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> ?s12 . \n");
+       	b.append("       ?s15 <http://www.w3.org/2002/07/owl#intersectionOf> ?s13 . \n");
+       	b.append("       ?s16 ?p1615 ?s15 . \n");
+       	b.append("       ?s16 obo:BFO_0000050 ?pubid . \n");
+       	b.append("       ?pubid rdfs:label ?publication . \n");
+       	b.append("       ?taxon rdfs:label ?taxon_name . } \n");
         return String.format(b.toString(),name);
     }
     
