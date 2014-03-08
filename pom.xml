@@ -72,10 +72,15 @@
       <version>2.2.1</version>
     </dependency> 
     <dependency>
-	  <groupId>org.openrdf.sesame</groupId>
-	  <artifactId>sesame</artifactId>	
+      <groupId>org.openrdf.sesame</groupId>
+      <artifactId>sesame</artifactId>	
       <version>2.7.9</version>
-	</dependency>
+    </dependency>
+    <dependency>
+      <groupId>com.thetransactioncompany</groupId>
+      <artifactId>cors-filter</artifactId>
+      <version>1.7</version>
+    </dependency>
   </dependencies>
   <build>
     <finalName>spider-behavior</finalName>
