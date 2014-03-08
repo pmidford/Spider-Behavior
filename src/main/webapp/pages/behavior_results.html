@@ -66,13 +66,18 @@
         </div>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
   </script>
-        <script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js">
+        
+  <script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js">      
   </script>
-        <script type="text/javascript" src="../static/resulttable.js">
+        
+  <script type="text/javascript" src="../static/resulttable.js">
   </script>
+        
+  <script type="text/javascript" src="../static/env.js">
+  </script>    
+              
   <script>
     $(document).ready(function(){
-       var myhost = "http://localhost:8080/spider-behavior/";
        $.ajax({
          url: myhost + "behavior" + $(location).attr('search'),
          dataType: "text"

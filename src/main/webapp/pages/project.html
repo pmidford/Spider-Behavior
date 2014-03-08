@@ -62,18 +62,31 @@
           <h3>Frequently Asked (or should be frequently asked) Questions</h3>
           <dl>
             <dt> What does this do?</dt>
-            <dd> Current there are a few annotations for four taxa (<i>Tetragnatha straminea</i>,<i>Tetragnatha</i>, <i>Deinopis</i> and
-              <i>Cupiennius salei</i>).You can enter a taxon name in the taxon box and if there are behavior annotations for the taxon, they will be listed.  If the taxon
-              is in the current taxonomy (a chunk of NCBI) but no behavior is listed, it will return a table with the taxon's id.  There are also
-              a couple of behavior terms that are available in a taxon cross-reference table (try 'posture' or 'predator behavior').  Note that there 
-              have been a number of corrections and improvements to site recently.  In particular, the taxonomy status page actually has some useful 
-              information on species in curation and the ontology link below links to the actual OWL file loaded into the server - the menu item that points
-              to a very out-of-data hand coded file has been removed.
+            <dd> This is a database of published descriptions of behavior of spiders and other arachnids (mites, scorpions, etc.)  You can
+                 enter a taxon name (mostly species) in the taxon search box and see a list of published behaviors for that taxon and 
+                 links to the publication where they were mentioned.</dd>
+            <dt> OK, but what does it really do right now?</dt>
+            <dd>
+              Currently there are a few annotations for four taxa (<i>Tetragnatha straminea</i>,<i>Tetragnatha</i>, <i>Deinopis</i> and
+              <i>Cupiennius salei</i>). You can enter a taxon name in the taxon box and if there are behavior annotations for the taxon, they will be listed.  If the taxon
+              is in the current taxonomy (a chunk of NCBI) but no behavior is listed, it will return a table with a link to the taxon term - 
+              currently this is the entry in OntoBee (not very useful), but this will change to point to the NBCI or alternative taxonomy page.
+              Note that the publication links are now live and point to the publication's doi which will redirect to the publisher's page.
+              Eventually each pub will have it's own generated page both to handle pubs without doi's or other URL's but also to provide information
+              about the publication relative to this database.
+              There are also a couple of behavior terms that are available in a taxon cross-reference table (try 'posture' or 'predator behavior').  Note that there 
+              have been a number of corrections and improvements to site recently.  The third form will have cross references for participants (either
+              anatomical parts or components of the environment - prey, substrates, etc.)
             </dd>
           </dl>
           <dl>
             <dt> What about the other Arachnids? </dt>
             <dd> There are a couple of mite and scorpion papers in the initial collection.  More will be added.  The initial taxonomy includes all arachnids listed in NCBI plus additional taxa as needed by curation.
+            </dd>
+          </dl>
+          <dl>
+            <dt> Can I report a bug or problem with the website or the data?</dt>
+            <dd> For the moment, send your bug reports <a href="https://github.com/pmidford/Spider-Behavior/issues">here</a>
             </dd>
           </dl>
         </div>
@@ -86,19 +99,16 @@
           <h3>OWL source (RDF/XML) for current KB</h3>
              <p>
                <a href="../ontologies/arachb.owl">here</a>
+               <br/>
+               Note: this will dump rdf-xml format direct to your browser so you may want to have a plugin installed for formating all that xml.
              </p>
           <h3>Arachnolingua imports terms from these Ontologies </h3>
           <dl>
             <dt>
-              <a href="http://purl.obolibrary.org/obo/iao.owl">
-                Information Artifact Ontology
-              </a> 
-            </dt>
-            <dt>
               <a href="http://behavior-ontology.googlecode.com/svn/trunk/behavior.owl">
                 NeuroBehavior Ontology
               </a> 
-	          </dt>
+            </dt>
             <dt>
               <a href="http://purl.obolibrary.org/obo/ncbitaxon.owl">
                 NCBI taxonomy (generated OWL file in OBO foundry)
@@ -107,6 +117,11 @@
             <dt>
               <a href="http://purl.obolibrary.org/obo/spd.owl">
                 Spider Biology Ontology
+              </a> 
+            </dt>
+            <dt>
+              <a href="http://purl.obolibrary.org/obo/iao.owl">
+                Information Artifact Ontology
               </a> 
             </dt>
             <dt>
@@ -140,7 +155,7 @@
 
     <hr/>
     <footer>
-      <p>Last update 2 March 2014</p>
+      <p>Last update 6 March 2014</p>
     </footer>
   </div>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
