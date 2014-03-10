@@ -73,12 +73,12 @@
   </div>
   <hr/>
   <footer>
-    <p>Last update 1 March 2014</p>
+    <p>Last update 9 March 2014</p>
   </footer>
 
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
   </script>
-  <script type="text/javascript" src="../static/resulttable.js">
+  <script type="text/javascript" src="../static/publicationtable.js">
   </script>
   <script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js">
   </script>
@@ -110,7 +110,7 @@
     $("#API_button").click(function(){
        var urlstr = myhost+"taxon?taxon=Cupiennius+salei"   
        $.ajax({
-         url: urlstr,      //"http://arachb.org/taxon?taxon=Tetragnatha+straminea",
+         url: urlstr,
          dataType: "text"
        }
        ).done(function(data, testStatus, jqXHR){$("#service_test").html("<p>Test return: </p>"  +  data)})
@@ -125,7 +125,7 @@
          type: "get"
         }
       ).done(function(data, textStatus, jqXHR) {
-         $("#service_test2").html("<p>Results of query to list publications in triple store: </p>" + resulttable(eval( '(' + data + ')')));
+         $("#service_test2").html("<p>Results of query to list publications in triple store: </p>" + publicationtable(eval( '(' + data + ')')));
       })
       .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
      });
