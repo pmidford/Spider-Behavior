@@ -2,6 +2,7 @@ package org.arachb.api;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
@@ -37,6 +38,18 @@ public class Util {
 			return false;
 	}
 	
+	public static List<TupleQueryResult> tryAndAccumulateQueryResult(List<TupleQueryResult> results,
+			                                                         String queryString, 
+			                                                         RepositoryConnection con)
+	       throws RepositoryException, MalformedQueryException, QueryEvaluationException{
+		final TupleQuery tQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
+		final TupleQueryResult qResult = tQuery.evaluate();
+		if (qResult.hasNext()){  //worth saving?
+			results.add(qResult);
+		}
+		return results;
+	}
+	
     public static void jsonFormatResult(TupleQueryResult r,OutputStream os){
 		final TupleQueryResultFormat jsonFormat = QueryResultIO.getWriterFormatForMIMEType(SPARQLMIMETYPE);
 		final TupleQueryResultWriter jsonResults = QueryResultIO.createWriter(jsonFormat, os);
@@ -56,7 +69,27 @@ public class Util {
 		}
     }
 
-
+    public static void jsonFormatResultList(List<TupleQueryResult> results, OutputStream os){
+		final TupleQueryResultFormat jsonFormat = QueryResultIO.getWriterFormatForMIMEType(SPARQLMIMETYPE);
+		final TupleQueryResultWriter jsonResults = QueryResultIO.createWriter(jsonFormat, os);
+		try {
+			TupleQueryResult r = results.get(0);
+			jsonResults.startQueryResult(r.getBindingNames());
+			for(TupleQueryResult rn : results){
+				while (rn.hasNext()){
+					jsonResults.handleSolution(rn.next());
+				}
+			}
+			jsonResults.endQueryResult();
+		} catch (QueryEvaluationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (TupleQueryResultHandlerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 
 	
     public static void returnError(OutputStream os) throws IOException{

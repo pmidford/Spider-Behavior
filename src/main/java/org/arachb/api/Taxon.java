@@ -3,12 +3,16 @@ package org.arachb.api;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.openrdf.query.Binding;
+import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.QueryLanguage;
@@ -41,7 +45,7 @@ public class Taxon extends HttpServlet {
 		final OutputStream os = response.getOutputStream();
 
 		String name = request.getQueryString();
-		//System.out.println("raw string is: |" + name);
+		System.out.println("raw string is: |" + name);
 		name = name.substring("taxon=".length()).trim();
 		final int pos = name.indexOf('+');
 		if (pos>-1){
@@ -62,12 +66,19 @@ public class Taxon extends HttpServlet {
 			manager.initialize();
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
+			List <String> NameList = buildSubClassClosure(name,con); 
 			final String ethogramQueryString = getName2EthogramQuery(name);
-			if (!Util.tryQuery(ethogramQueryString,con,os)){
+			List<TupleQueryResult> resultList = new ArrayList<TupleQueryResult>();
+			resultList = Util.tryAndAccumulateQueryResult(resultList, ethogramQueryString, con);
+			System.out.println("Result list is " + resultList);
+			if (resultList.isEmpty()){
 				final String taxonIdQueryString = getName2TaxonIdQuery(name);
 				if (!Util.tryQuery(taxonIdQueryString,con,os)){
 					Util.returnError(os);
 				}
+			}
+			else{
+				Util.jsonFormatResultList(resultList,os);
 			}
 		} catch (RepositoryException e) {
 			// TODO Auto-generated catch block
@@ -143,4 +154,38 @@ public class Taxon extends HttpServlet {
         b.append("       ?taxon_id rdfs:label ?taxon_name . }\n ");
     	return String.format(b.toString(), name);
     }
+    
+    List<String> buildSubClassClosure(String name, RepositoryConnection con) throws RepositoryException, MalformedQueryException, QueryEvaluationException{
+    	final List<String> result = new ArrayList<String>();
+    	String queryStr = getName2SubClassQuery(name);
+    	System.out.println("subclass query is " + queryStr);
+		List<TupleQueryResult>resultList = new ArrayList<TupleQueryResult>(); 
+		resultList = Util.tryAndAccumulateQueryResult(resultList, queryStr, con);
+		System.out.println("Result count = " + resultList.size());
+		try {
+			for(TupleQueryResult rn : resultList){
+				while (rn.hasNext()){
+					BindingSet foo = rn.next();
+					Binding b = foo.getBinding("child_name");
+					//Binding b2 = foo.getBinding("p2");
+					System.out.println("child is " + b.getValue()); // + "; prediate = " + b2.getValue());
+				}
+			}
+		} catch (QueryEvaluationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return result;
+    }
+    
+    String getName2SubClassQuery(String name){
+    	final StringBuilder b = new StringBuilder();
+    	b.append(Util.OBOPREFIX);
+    	b.append("SELECT ?child_name \n");
+    	b.append("WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . \n");
+    	b.append("       ?child_id rdfs:subClassOf ?taxon_id .\n");
+    	b.append("       ?child_id rdfs:label ?child_name . }\n");
+    	return String.format(b.toString(), name);
+    }
+    
 }
