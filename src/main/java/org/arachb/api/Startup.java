@@ -9,23 +9,19 @@ import java.net.URLConnection;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.sail.memory.MemoryStore;
-import org.openrdf.repository.manager.LocalRepositoryManager;
 import org.openrdf.repository.config.RepositoryConfig;
 import org.openrdf.repository.config.RepositoryConfigException;
+import org.openrdf.repository.config.RepositoryImplConfig;
+import org.openrdf.repository.manager.LocalRepositoryManager;
+import org.openrdf.repository.sail.config.SailRepositoryConfig;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFParseException;
 import org.openrdf.sail.config.SailImplConfig;
 import org.openrdf.sail.memory.config.MemoryStoreConfig;
-import org.openrdf.repository.config.RepositoryImplConfig;
-import org.openrdf.repository.sail.config.SailRepositoryConfig;
 
 
 public class Startup extends HttpServlet {

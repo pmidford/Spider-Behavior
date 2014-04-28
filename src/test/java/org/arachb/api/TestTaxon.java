@@ -1,7 +1,5 @@
 package org.arachb.api;
 
-import java.net.URI;
-
 import junit.framework.TestCase;
 
 public class TestTaxon extends TestCase {

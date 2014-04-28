@@ -85,8 +85,16 @@ public class Behavior extends HttpServlet {
 		}
 		finally {
 			try{
-				con.close();
-				repo.shutDown();
+				if (con != null){
+					con.close();
+				}
+				if (repo != null){
+					repo.shutDown();
+				}
+			}
+			catch (NullPointerException e){
+				System.out.println("Error trying to close null repository");
+				e.printStackTrace();
 			}
 			catch (RepositoryException e){
 				System.out.println("Error while trying to close repository");

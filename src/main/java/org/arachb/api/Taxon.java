@@ -17,13 +17,7 @@ import org.openrdf.query.Binding;
 import org.openrdf.query.BindingSet;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
 import org.openrdf.query.TupleQueryResult;
-import org.openrdf.query.TupleQueryResultHandlerException;
-import org.openrdf.query.resultio.QueryResultIO;
-import org.openrdf.query.resultio.TupleQueryResultFormat;
-import org.openrdf.query.resultio.TupleQueryResultWriter;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -99,6 +93,10 @@ public class Taxon extends HttpServlet {
 			try{
 				con.close();
 				repo.shutDown();
+			}
+			catch (NullPointerException e){
+				System.out.println("Error trying to close null repository");
+				e.printStackTrace();
 			}
 			catch (RepositoryException e){
 				System.out.println("Error while trying to close repository");
