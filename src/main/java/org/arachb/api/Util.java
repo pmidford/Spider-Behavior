@@ -29,7 +29,11 @@ public class Util {
 	public static boolean tryQuery(String queryString, RepositoryConnection con, OutputStream os) 
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException{
 		final TupleQuery tQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
+		long startTime = System.nanoTime();
 		final TupleQueryResult qResult = tQuery.evaluate();
+		long endTime = System.nanoTime();
+		long duration = endTime - startTime;
+		//System.out.println("Query " + queryString + " \n\n took " + duration + " nanosec");
 		if (qResult.hasNext()){
 			jsonFormatResult(qResult,os);
 			return true;
@@ -43,7 +47,11 @@ public class Util {
 			                                                         RepositoryConnection con)
 	       throws RepositoryException, MalformedQueryException, QueryEvaluationException{
 		final TupleQuery tQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
+		long startTime = System.nanoTime();
 		final TupleQueryResult qResult = tQuery.evaluate();
+		long endTime = System.nanoTime();
+		long duration = endTime - startTime;
+		//System.out.println("Query " + queryString + " \n\n took " + duration + " nanosec");
 		if (qResult.hasNext()){  //worth saving?
 			results.add(qResult);
 		}

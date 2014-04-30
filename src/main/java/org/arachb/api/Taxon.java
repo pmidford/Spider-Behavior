@@ -118,38 +118,36 @@ public class Taxon extends HttpServlet {
     }
     
     final static String ETHOGRAMQUERYBASE = Util.OBOPREFIX +
-           "SELECT ?taxon_name ?behavior ?anatomy ?publication ?pubid\n" +
-           "WHERE {?taxon rdfs:label \"%s\"^^xsd:string . \n" +
-           "       ?r1 <http://www.w3.org/2002/07/owl#someValuesFrom> ?taxon . \n" +
-           "       ?res1 rdf:first ?r1 . \n" +
-           "       ?n3 rdf:rest ?res1 . \n" +
+           "SELECT ?taxon_name ?behavior ?anatomy ?publication ?pubid \n" +
+           "WHERE {?r1 owl:someValuesFrom <%s> . \n" +
+           "       ?res1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?r1 . \n" +
+           "       ?n3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> ?res1 . \n" +
            "       ?n3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?o4 . \n" +
            "       ?o4 rdfs:label ?anatomy . \n" +
-           "       ?s5 <http://www.w3.org/2002/07/owl#intersectionOf> ?n3 . \n" +
-           "       ?s6 <http://www.w3.org/2002/07/owl#someValuesFrom> ?s5 . \n" +
-           "       ?s7 ?p7 ?s6 . \n" +
-           "       ?s8 ?p8 ?s7 . \n" +
+           "       ?s5 owl:intersectionOf ?n3 . \n" +
+           "       ?s6 owl:someValuesFrom ?s5 . \n" +
+           "       ?s7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?s6 . \n" +
+           "       ?s8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> ?s7 . \n" +
            "       ?s8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?o9 . \n" +
            "       ?o9 rdfs:label ?behavior . \n" +
-           "       ?s10 ?p108 ?s8 . \n" +
+           "       ?s10 owl:intersectionOf ?s8 . \n" +
            "       ?s11 <http://www.w3.org/2002/07/owl#someValuesFrom> ?s10 . \n" +
            "       ?s12 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?s11 . \n" +
            "       ?s13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> ?s12 . \n" +
            "       ?s15 <http://www.w3.org/2002/07/owl#intersectionOf> ?s13 . \n" +
-           "       ?s16 ?p1615 ?s15 . \n" +
+           "       ?s16 rdf:type ?s15 . \n" +
            "       ?s16 obo:BFO_0000050 ?pubid . \n" +
            "       ?pubid rdfs:label ?publication . \n" +
-           "       ?taxon rdfs:label ?taxon_name . } \n";
+           "       <%s> rdfs:label ?taxon_name . } \n";
     		
-    
-    String getName2EthogramQuery(String name){
-        return String.format(ETHOGRAMQUERYBASE,name);
+   
+    String getName2EthogramQuery(String id){
+        return String.format(ETHOGRAMQUERYBASE,id,id);
     }
     
-    final static String NAME2TAXONQUERYBASE = Util.OBOPREFIX +
-        	"SELECT ?taxon_name ?taxon_id \n" +
-        	"WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . \n" +
-        	"       ?taxon_id rdfs:label ?taxon_name . }\n ";
+    final static String NAME2TAXONQUERYBASE = 
+        	"SELECT ?taxon_id \n" +
+        	"WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . } \n";
     		
     
     String getName2TaxonIdQuery(String name){
@@ -158,22 +156,26 @@ public class Taxon extends HttpServlet {
     
     List<String> buildSubClassClosure(String name, RepositoryConnection con) throws RepositoryException, MalformedQueryException, QueryEvaluationException{
     	final List<String> result = new ArrayList<String>();
+		final String taxonIdQueryString = getName2TaxonIdQuery(name);
+		List<TupleQueryResult>queryResults = new ArrayList<TupleQueryResult>(); 
+		queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonIdQueryString, con);
+		String rootId = getOneResult(queryResults,"taxon_id");
     	final Deque<String> worklist = new ArrayDeque<String>();
-    	worklist.add(name);
+    	worklist.add(rootId);
     	while(worklist.peek() != null){
-    		final String thisname = worklist.poll();
-    		final String queryStr = getName2SubClassQuery(thisname);
-    		List<TupleQueryResult>queryResults = new ArrayList<TupleQueryResult>(); 
-    		queryResults = Util.tryAndAccumulateQueryResult(queryResults, queryStr, con);
-    		result.add(thisname);
+    		final String nextId = worklist.poll();
+    		result.add(nextId);
+    		final String taxonSubClassQueryString = getName2SubClassQuery(nextId);
+    		queryResults.clear(); 
+    		queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonSubClassQueryString, con);
     		try{
     			for(TupleQueryResult rn : queryResults){
     				while (rn.hasNext()){
     					final BindingSet bSet = rn.next();
-    					final Binding b = bSet.getBinding("child_name");
+    					final Binding b = bSet.getBinding("child_id");
     					if (b != null){
-    						final String child_name = b.getValue().stringValue();
-    						worklist.add(child_name);
+    						final String child_id = b.getValue().stringValue();
+    						worklist.add(child_id);
     					}
     				}
     			}
@@ -186,15 +188,38 @@ public class Taxon extends HttpServlet {
     }
 
     
-    final static String NAME2SUBCLASSQUERYBASE = Util.OBOPREFIX +
-        	"SELECT ?child_name \n" + 
-        	"WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . \n" +
-        	"       ?child_id rdfs:subClassOf ?taxon_id .\n" +
-        	"       ?child_id rdfs:label ?child_name . }\n";
+    private String getOneResult(List<TupleQueryResult> queryResults, String bindingKey){
+    	try {
+    		for(TupleQueryResult rn : queryResults){
+    			if (rn.hasNext()){
+    				final BindingSet bSet = rn.next();
+    				final Binding b = bSet.getBinding(bindingKey);
+    				if (b!= null){
+    					return b.getValue().stringValue();
+    				}
+    				else {
+    					return null;
+    				}
+    			}
+    			else{
+    				return null;
+    			}
+    		}
+    	}
+    	catch (QueryEvaluationException e){
+    		return null;
+    	}
+    	return null;
+    }
+    
+    final static String NAME2SUBCLASSQUERYBASE = 
+        	"SELECT ?child_id \n" + 
+        	"WHERE {?child_id rdfs:subClassOf <%s> . } \n";
     		
     
-    String getName2SubClassQuery(String name){
-    	return String.format(NAME2SUBCLASSQUERYBASE, name);
+    String getName2SubClassQuery(String id){
+    	return String.format(NAME2SUBCLASSQUERYBASE, id);
     }
+    
     
 }

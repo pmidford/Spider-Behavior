@@ -60,6 +60,7 @@ public class Behavior extends HttpServlet {
 		LocalRepositoryManager manager = new LocalRepositoryManager(new File(Util.ADUNAHOME));
 
 		try {
+			System.out.println("About to query");
 			manager.initialize();
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
