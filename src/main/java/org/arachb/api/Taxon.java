@@ -68,7 +68,7 @@ public class Taxon extends HttpServlet {
 				resultList = Util.tryAndAccumulateQueryResult(resultList, ethogramQueryString, con);
 			}
 			if (resultList.isEmpty()){
-				final String taxonIdQueryString = getName2TaxonIdQuery(name);
+				final String taxonIdQueryString = getName2TaxonNameAndId(name);
 				if (!Util.tryQuery(taxonIdQueryString,con,os)){
 					Util.returnError(os);
 				}
@@ -154,35 +154,48 @@ public class Taxon extends HttpServlet {
     	return String.format(NAME2TAXONQUERYBASE, name);
     }
     
+    final static String NAME2TAXONNAMEANDIDQUERYBASE =
+        	"SELECT ?taxon_name ?taxon_id \n" +
+        	"WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . \n" +
+        	"       ?taxon_id rdfs:label ?taxon_name . } \n";
+    		
+    String getName2TaxonNameAndId(String name){
+    	return String.format(NAME2TAXONNAMEANDIDQUERYBASE, name);
+    }
+
+    
+    
     List<String> buildSubClassClosure(String name, RepositoryConnection con) throws RepositoryException, MalformedQueryException, QueryEvaluationException{
     	final List<String> result = new ArrayList<String>();
 		final String taxonIdQueryString = getName2TaxonIdQuery(name);
 		List<TupleQueryResult>queryResults = new ArrayList<TupleQueryResult>(); 
 		queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonIdQueryString, con);
 		String rootId = getOneResult(queryResults,"taxon_id");
-    	final Deque<String> worklist = new ArrayDeque<String>();
-    	worklist.add(rootId);
-    	while(worklist.peek() != null){
-    		final String nextId = worklist.poll();
-    		result.add(nextId);
-    		final String taxonSubClassQueryString = getName2SubClassQuery(nextId);
-    		queryResults.clear(); 
-    		queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonSubClassQueryString, con);
-    		try{
-    			for(TupleQueryResult rn : queryResults){
-    				while (rn.hasNext()){
-    					final BindingSet bSet = rn.next();
-    					final Binding b = bSet.getBinding("child_id");
-    					if (b != null){
-    						final String child_id = b.getValue().stringValue();
-    						worklist.add(child_id);
-    					}
-    				}
-    			}
-    		} catch (QueryEvaluationException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
+		if (rootId != null){
+			final Deque<String> worklist = new ArrayDeque<String>();
+			worklist.add(rootId);
+			while(worklist.peek() != null){
+				final String nextId = worklist.poll();
+				result.add(nextId);
+				final String taxonSubClassQueryString = getName2SubClassQuery(nextId);
+				queryResults.clear(); 
+				queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonSubClassQueryString, con);
+				try{
+					for(TupleQueryResult rn : queryResults){
+						while (rn.hasNext()){
+							final BindingSet bSet = rn.next();
+							final Binding b = bSet.getBinding("child_id");
+							if (b != null){
+								final String child_id = b.getValue().stringValue();
+								worklist.add(child_id);
+							}
+						}
+					}
+				} catch (QueryEvaluationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
     	}
     	return result;
     }
