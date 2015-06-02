@@ -26,13 +26,19 @@ import org.openrdf.repository.manager.LocalRepositoryManager;
 
 public class Publication extends HttpServlet {
 	
-    final static private String query = 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	final static private String query = 
     		"prefix obo:<http://purl.obolibrary.org/obo/> select ?publication WHERE{?publication rdf:type obo:IAO_0000312 .}";
 
 	final static private String USERHOME = System.getProperty("user.home");
 	final static private String ADUNAHOME = USERHOME+"/.aduna/";
 	final static private String baseURI = "http://arachb.org/arachb/arachb.owl";
 
+	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
     	

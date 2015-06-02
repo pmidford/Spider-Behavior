@@ -26,6 +26,11 @@ import org.openrdf.sail.memory.config.MemoryStoreConfig;
 
 public class Startup extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	final static private String USERHOME = System.getProperty("user.home");
 	final static private String ADUNAHOME = USERHOME+"/.aduna/";
 	final static private String baseURI = "http://arachb.org/arachb/arachb.owl";

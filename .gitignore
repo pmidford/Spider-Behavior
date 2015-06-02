@@ -1,3 +1,4 @@
 target
 sesame-test
-
+.DS_Store
+.settings

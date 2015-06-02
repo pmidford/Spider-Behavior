@@ -34,7 +34,13 @@ import org.openrdf.repository.manager.LocalRepositoryManager;
 public class Taxon extends HttpServlet {
 	
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
+
+	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 
@@ -91,8 +97,12 @@ public class Taxon extends HttpServlet {
 		}
 		finally {
 			try{
-				con.close();
-				repo.shutDown();
+				if (con != null){
+					con.close();
+				}
+				if (repo != null){
+					repo.shutDown();
+				}
 			}
 			catch (NullPointerException e){
 				System.out.println("Error trying to close null repository");

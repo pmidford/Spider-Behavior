@@ -11,6 +11,8 @@ import javax.servlet.http.*;
  */
 
 public class Behaviorbrowser extends HttpServlet {
+	
+	@Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
 

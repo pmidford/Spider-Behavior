@@ -30,7 +30,12 @@ import org.openrdf.repository.manager.LocalRepositoryManager;
 public class Behavior extends HttpServlet {
 	
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
+	@Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
