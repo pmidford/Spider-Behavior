@@ -3,9 +3,7 @@ package org.arachb.api;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -128,27 +126,27 @@ public class Taxon extends HttpServlet {
     }
     
     final static String ETHOGRAMQUERYBASE = Util.OBOPREFIX +
-           "SELECT ?taxon_name ?behavior ?anatomy ?publication ?pubid \n" +
-           "WHERE {?r1 owl:someValuesFrom <%s> . \n" +
-           "       ?res1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?r1 . \n" +
-           "       ?n3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> ?res1 . \n" +
-           "       ?n3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?o4 . \n" +
-           "       ?o4 rdfs:label ?anatomy . \n" +
-           "       ?s5 owl:intersectionOf ?n3 . \n" +
-           "       ?s6 owl:someValuesFrom ?s5 . \n" +
-           "       ?s7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?s6 . \n" +
-           "       ?s8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> ?s7 . \n" +
-           "       ?s8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?o9 . \n" +
-           "       ?o9 rdfs:label ?behavior . \n" +
-           "       ?s10 owl:intersectionOf ?s8 . \n" +
-           "       ?s11 <http://www.w3.org/2002/07/owl#someValuesFrom> ?s10 . \n" +
-           "       ?s12 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?s11 . \n" +
-           "       ?s13 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> ?s12 . \n" +
-           "       ?s15 <http://www.w3.org/2002/07/owl#intersectionOf> ?s13 . \n" +
-           "       ?s16 rdf:type ?s15 . \n" +
-           "       ?s16 obo:BFO_0000050 ?pubid . \n" +
-           "       ?pubid rdfs:label ?publication . \n" +
-           "       <%s> rdfs:label ?taxon_name . } \n";
+           "SELECT ?taxon_name ?behavior ?anatomy ?publication ?pubid %n" +
+           "WHERE {?r1 owl:someValuesFrom <%s> . %n" +
+           "       ?res1 rdf:first ?r1 . %n" +
+           "       ?n3 rdf:rest ?res1 . %n" +
+           "       ?n3 rdf:first ?o4 . %n" +
+           "       ?o4 rdfs:label ?anatomy . %n" +
+           "       ?s5 owl:intersectionOf ?n3 . %n" +
+           "       ?s6 owl:someValuesFrom ?s5 . %n" +
+           "       ?s7 rdf:first ?s6 . %n" +
+           "       ?s8 rdf:rest ?s7 . %n" +
+           "       ?s8 rdf:first ?o9 . %n" +
+           "       ?o9 rdfs:label ?behavior . %n" +
+           "       ?s10 owl:intersectionOf ?s8 . %n" +
+           "       ?s11 owl:someValuesFrom ?s10 . %n" +
+           "       ?s12 rdf:first ?s11 . %n" +
+           "       ?s13 rdf:rest ?s12 . %n" +
+           "       ?s15 owl:intersectionOf ?s13 . %n" +
+           "       ?s16 rdf:type ?s15 . %n" +
+           "       ?s16 obo:BFO_0000050 ?pubid . %n" +
+           "       ?pubid rdfs:label ?publication . %n" +
+           "       <%s> rdfs:label ?taxon_name . } %n";
     		
    
     String getName2EthogramQuery(String id){
@@ -156,8 +154,8 @@ public class Taxon extends HttpServlet {
     }
     
     final static String NAME2TAXONQUERYBASE = 
-        	"SELECT ?taxon_id \n" +
-        	"WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . } \n";
+        	"SELECT ?taxon_id %n" +
+        	"WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . } %n";
     		
     
     String getName2TaxonIdQuery(String name){
@@ -165,9 +163,9 @@ public class Taxon extends HttpServlet {
     }
     
     final static String NAME2TAXONNAMEANDIDQUERYBASE =
-        	"SELECT ?taxon_name ?taxon_id \n" +
-        	"WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . \n" +
-        	"       ?taxon_id rdfs:label ?taxon_name . } \n";
+        	"SELECT ?taxon_name ?taxon_id %n" +
+        	"WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . %n" +
+        	"       ?taxon_id rdfs:label ?taxon_name . } %n";
     		
     String getName2TaxonNameAndId(String name){
     	return String.format(NAME2TAXONNAMEANDIDQUERYBASE, name);
@@ -177,35 +175,31 @@ public class Taxon extends HttpServlet {
     
     List<String> buildSubClassClosure(String name, RepositoryConnection con) throws RepositoryException, MalformedQueryException, QueryEvaluationException{
     	final List<String> result = new ArrayList<String>();
-		final String taxonIdQueryString = getName2TaxonIdQuery(name);
-		List<TupleQueryResult>queryResults = new ArrayList<TupleQueryResult>(); 
-		queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonIdQueryString, con);
-		String rootId = getOneResult(queryResults,"taxon_id");
-		if (rootId != null){
-			final Deque<String> worklist = new ArrayDeque<String>();
-			worklist.add(rootId);
-			while(worklist.peek() != null){
-				final String nextId = worklist.poll();
-				result.add(nextId);
-				final String taxonSubClassQueryString = getName2SubClassQuery(nextId);
-				queryResults.clear(); 
-				queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonSubClassQueryString, con);
-				try{
-					for(TupleQueryResult rn : queryResults){
-						while (rn.hasNext()){
-							final BindingSet bSet = rn.next();
-							final Binding b = bSet.getBinding("child_id");
-							if (b != null){
-								final String child_id = b.getValue().stringValue();
-								worklist.add(child_id);
-							}
-						}
-					}
-				} catch (QueryEvaluationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+    	final String taxonIdQueryString = getName2TaxonIdQuery(name);
+    	List<TupleQueryResult>queryResults = new ArrayList<TupleQueryResult>(); 
+    	queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonIdQueryString, con);
+    	String rootId = getOneResult(queryResults,"taxon_id");
+    	if (rootId != null){
+    		final String nextId = rootId;
+    		result.add(nextId);
+    		final String taxonSubClassQueryString = getName2SubClassQuery(nextId);
+    		queryResults.clear(); 
+    		queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonSubClassQueryString, con);
+    		try{
+    			for(TupleQueryResult rn : queryResults){
+    				while (rn.hasNext()){
+    					final BindingSet bSet = rn.next();
+    					final Binding b = bSet.getBinding("child_id");
+    					if (b != null){
+    						final String child_id = b.getValue().stringValue();
+    						result.add(child_id);
+    					}
+    				}
+    			}
+    		} catch (QueryEvaluationException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
     	}
     	return result;
     }
@@ -237,7 +231,7 @@ public class Taxon extends HttpServlet {
     
     final static String NAME2SUBCLASSQUERYBASE = 
         	"SELECT ?child_id \n" + 
-        	"WHERE {?child_id rdfs:subClassOf <%s> . } \n";
+        	"WHERE {?child_id rdfs:subClassOf* <%s> . } \n";
     		
     
     String getName2SubClassQuery(String id){
