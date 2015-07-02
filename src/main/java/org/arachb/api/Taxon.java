@@ -44,8 +44,34 @@ public class Taxon extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) 
 			throws ServletException, IOException {
 
+		
+		String path = request.getRequestURI();
+		
+		switch (path){
+		case "/taxon/events":
+			getTaxonEvents(request,response);
+			break;
+		case "/taxon":
+			getTaxonGeneralClaims(request,response);
+			break;
+		default:
+			final StringBuilder msgBuffer = new StringBuilder();
+			final OutputStream os = response.getOutputStream();
+			msgBuffer.append('"');
+			msgBuffer.append("Path is: ");
+			msgBuffer.append(path);
+			msgBuffer.append('"');
+			os.write(msgBuffer.toString().getBytes("UTF-8"));
+		}
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
+		return;
+	}
+	
+	
+	public void getTaxonGeneralClaims(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{	
 		final OutputStream os = response.getOutputStream();
-
 		String name = request.getQueryString();
 		name = name.substring("taxon=".length()).trim();
 		final int pos = name.indexOf('+');
@@ -116,7 +142,18 @@ public class Taxon extends HttpServlet {
 		os.flush();
 		os.close();
 	}
-    	
+
+	
+	public void getTaxonEvents(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException{	
+
+		final OutputStream os = response.getOutputStream();
+		
+		os.flush();
+		os.close();
+	}
+	
+	
 	/**
 	 * 
 	 * @param name either monomial or binomial (only one space)
