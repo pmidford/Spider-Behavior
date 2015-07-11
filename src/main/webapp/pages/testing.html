@@ -67,13 +67,17 @@
           <p id="test_query2">Test query2</p>
           <button id="API_button2">Test call to publication API</button>
           <p id="service_test2">Testing API call</p>
+          <h3>Testing API calls</h3>
+          <p id="test_query3">Test query3</p>
+          <button id="API_button3">Test call to taxon/events API</button>
+          <p id="service_test3">Testing API call</p>
         </div>
       </div>
     </section>
   </div>
   <hr/>
   <footer>
-    <p>Last update 9 March 2014</p>
+    <p>Last update 2 July 2015</p>
   </footer>
 
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
@@ -116,10 +120,19 @@
        ).done(function(data, testStatus, jqXHR){$("#service_test").html("<p>Test return: </p>"  +  data)})
        .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
       });
+    $("#API_button3").click(function(){
+       var urlstr = myhost+"taxon/events?taxon=Leucauge+mariana"   
+       $.ajax({
+         url: urlstr,
+         dataType: "text"
+       }
+       ).done(function(data, testStatus, jqXHR){$("#service_test3").html("<p>Test return: </p>"  +  data)})
+       .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
+      });
     $("#API_button2").click(function(){
        var urlstr = myhost+"publication"
        $.ajax({
-         url: urlstr,   //"http://arachb.org/publication",
+         url: urlstr, 
          dataType: "text",
          accepts: {json: "application/sparql-results+json"},
          type: "get"
