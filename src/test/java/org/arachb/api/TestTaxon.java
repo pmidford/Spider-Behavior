@@ -17,7 +17,7 @@ public class TestTaxon extends TestCase {
 	@Test
 	public void testGetName2EthogramQuery() {
 		Taxon testTaxon = new Taxon();
-		String testQuery = testTaxon.getName2EthogramQuery("Habronattus");
+		String testQuery = testTaxon.getName2GeneralQuery("Habronattus");
 		System.out.println(testQuery);
 		assert(testQuery.contains("Habronattus"));
 	}
