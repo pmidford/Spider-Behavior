@@ -36,6 +36,10 @@
     <url-pattern>/taxon</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
+    <servlet-name>taxon</servlet-name>
+    <url-pattern>/taxon/events</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
     <servlet-name>behavior</servlet-name>
     <url-pattern>/behavior</url-pattern>
   </servlet-mapping>
