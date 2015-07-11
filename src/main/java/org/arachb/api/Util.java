@@ -100,11 +100,13 @@ public class Util {
     }
 
 	
-    public static void returnError(OutputStream os) throws IOException{
+    public static void noResultsError(OutputStream os) throws IOException{
+    	returnError(os,"no results");
+    }
+    
+    public static void returnError(OutputStream os, String text) throws IOException{
 		final StringBuilder msgBuffer = new StringBuilder();
-		msgBuffer.append('"');
-		msgBuffer.append("no results");
-		msgBuffer.append('"');
+		msgBuffer.append('"').append(text).append('"');
 		os.write(msgBuffer.toString().getBytes("UTF-8"));
     }
 

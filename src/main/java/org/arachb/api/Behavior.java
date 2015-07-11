@@ -54,7 +54,7 @@ public class Behavior extends HttpServlet {
 			name = b.toString().trim();  //remove final space
 		}
 		if (!validateBehaviorName(name)){
-			Util.returnError(os);
+			Util.noResultsError(os);
 			os.flush();
 			os.close();
 			return;			
@@ -73,7 +73,7 @@ public class Behavior extends HttpServlet {
 			if (!Util.tryQuery(behaviorQueryString,con,os)){
 				String taxonIdQueryString = getName2BehaviorIdQuery(name);
 				if (!Util.tryQuery(taxonIdQueryString,con,os)){
-					Util.returnError(os);
+					Util.noResultsError(os);
 				}
 			}
 		} catch (RepositoryException e) {
