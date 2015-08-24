@@ -53,7 +53,10 @@
     <div class="page-header">
       <h1 class="arachb_headline">Ethogram results</h1>
     </div>  
-      
+    
+    <div class="section-header">
+       <h2 class="arachb_headline">Nonspecific mentions</h2>
+    </div>
     <section id="taxonomy_table">
       <div class="row-fluid">
           <div class="span12">
@@ -61,6 +64,19 @@
           </div>
       </div>
     </section>
+
+    <div class="section-header">
+       <h2 class="arachb_headline">Events involving individuals</h2>
+    </div>
+
+    <section id="events_table">
+      <div class="row-fluid">
+          <div class="span12">
+          <p id="events">Working...</p>
+          </div>
+      </div>
+    </section>
+
   </div>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
   </script>
@@ -71,7 +87,9 @@
   <script type="text/javascript" src="../static/resulttable.js">
   </script>
   
-  
+  <script type="text/javascript" src="../static/taxoneventtable.js">
+  </script>
+
   <script type="text/javascript" src="../static/env.js">
   </script>    
   
@@ -82,6 +100,14 @@
          dataType: "text"
        }
        ).done(function(data, testStatus, jqXHR){$("#results").html(resulttable(eval( '(' + data + ')')))})
+       .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
+      });
+    $(document).ready(function(){
+       $.ajax({
+         url: myhost + "taxon/events" + $(location).attr('search'),
+         dataType: "text"
+       }
+       ).done(function(data, testStatus, jqXHR){$("#events").html(taxoneventtable(eval( '(' + data + ')')))})
        .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
       });
   </script>
