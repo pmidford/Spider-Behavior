@@ -36,6 +36,9 @@ public class Taxon extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private final static File BASEDIR = new File(Util.ADUNAHOME);
+
 
 
 	@Override
@@ -43,12 +46,24 @@ public class Taxon extends HttpServlet {
 			throws ServletException, IOException {
 		
 		String path = request.getRequestURI();
+		String taxonName = getTaxonFromQuery(request);
+		
+		final OutputStream os = response.getOutputStream();
+		response.setContentType(Util.SPARQLMIMETYPE);
+		
+		if (!validateTaxonName(taxonName)){
+			Util.noResultsError(os);
+			os.flush();
+			os.close();
+			return;			
+		}
+
 		switch (path){
 		case "/taxon/events":
-			getTaxonEvents(request,response);
+			getTaxonEvents(taxonName,os);
 			break;
 		case "/taxon":
-			getTaxonGeneralClaims(request,response);
+			getTaxonGeneralClaims(taxonName,os);
 			break;
 		default:
 			final StringBuilder msgBuffer = new StringBuilder();
@@ -61,33 +76,23 @@ public class Taxon extends HttpServlet {
 	}
 	
 	
-	public void getTaxonGeneralClaims(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException{	
-		final OutputStream os = response.getOutputStream();
-		String name = getTaxonFromQuery(request);
-		if (!validateTaxonName(name)){
-			Util.noResultsError(os);
-			os.flush();
-			os.close();
-			return;			
-		}
-		response.setContentType(Util.SPARQLMIMETYPE);
-		final File baseDir = new File(Util.ADUNAHOME);
+	void getTaxonGeneralClaims(String taxonName, OutputStream os) throws ServletException, IOException{	
+
 		Repository repo = null;
 		RepositoryConnection con = null;
-		final LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
+		final LocalRepositoryManager manager = new LocalRepositoryManager(BASEDIR);
 		try {
 			manager.initialize();
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
-			List <String> NameList = buildSubClassClosure(name,con); 
+			List <String> NameList = buildSubClassClosure(taxonName,con); 
 			List<TupleQueryResult> resultList = new ArrayList<TupleQueryResult>();
 			for (String child_name : NameList){
 				final String ethogramQueryString = getName2GeneralQuery(child_name);
 				resultList = Util.tryAndAccumulateQueryResult(resultList, ethogramQueryString, con);
 			}
 			if (resultList.isEmpty()){
-				final String taxonIdQueryString = getName2TaxonNameAndId(name);
+				final String taxonIdQueryString = getName2TaxonNameAndId(taxonName);
 				if (!Util.tryQuery(taxonIdQueryString,con,os)){
 					Util.noResultsError(os);
 				}
@@ -109,57 +114,30 @@ public class Taxon extends HttpServlet {
 			e.printStackTrace();
 		}
 		finally {
-			try{
-				if (con != null){
-					con.close();
-				}
-				if (repo != null){
-					repo.shutDown();
-				}
-			}
-			catch (NullPointerException e){
-				System.out.println("Error trying to close null repository");
-				e.printStackTrace();
-			}
-			catch (RepositoryException e){
-				System.out.println("Error while trying to close repository");
-				e.printStackTrace();
-			}
+			cleanupResources(repo,con);
 		}
 		os.flush();
 		os.close();
 	}
 
 	
-	public void getTaxonEvents(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException{	
+	void getTaxonEvents(String taxonName, OutputStream os) throws ServletException, IOException{	
 
-		final OutputStream os = response.getOutputStream();
-		String name = getTaxonFromQuery(request);
-
-		if (!validateTaxonName(name)){
-			Util.noResultsError(os);
-			os.flush();
-			os.close();
-			return;			
-		}
-		response.setContentType(Util.SPARQLMIMETYPE);
-		final File baseDir = new File(Util.ADUNAHOME);
 		Repository repo = null;
 		RepositoryConnection con = null;
-		final LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
+		final LocalRepositoryManager manager = new LocalRepositoryManager(BASEDIR);
 		try {
 			manager.initialize();
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
-			String name1 = buildClass(name,con); //buildSubClassClosure(name,con); 
+			String name1 = buildClass(taxonName,con); //buildSubClassClosure(name,con); 
 			List<TupleQueryResult> resultList = new ArrayList<TupleQueryResult>();
 			final String eventQueryString = getName2EventQuery(name1);
 			System.out.println("event query = " + eventQueryString);
 			resultList = Util.tryAndAccumulateQueryResult(resultList, eventQueryString, con);
 			if (resultList.isEmpty()){
 				System.out.println("No results");
-				final String taxonIdQueryString = getName2TaxonNameAndId(name);
+				final String taxonIdQueryString = getName2TaxonNameAndId(taxonName);
 				if (!Util.tryQuery(taxonIdQueryString,con,os)){
 					Util.noResultsError(os);
 				}
@@ -181,22 +159,7 @@ public class Taxon extends HttpServlet {
 			e.printStackTrace();
 		}
 		finally {
-			try{
-				if (con != null){
-					con.close();
-				}
-				if (repo != null){
-					repo.shutDown();
-				}
-			}
-			catch (NullPointerException e){
-				System.out.println("Error trying to close null repository");
-				e.printStackTrace();
-			}
-			catch (RepositoryException e){
-				System.out.println("Error while trying to close repository");
-				e.printStackTrace();
-			}
+			cleanupResources(repo, con);
 		}
 		os.flush();
 		os.close();
@@ -222,40 +185,10 @@ public class Taxon extends HttpServlet {
     public boolean validateTaxonName(String name){
     	return (name.split(" ").length<=2);  //TODO be more selective (also consider common names)
     }
-    
-/*    final static String TAXONGENERALQUERY = Util.OBOPREFIX +
-          // "SELECT ?taxon_name ?behavior ?anatomy ?publication ?pubid %n" +
-    	"SELECT ?taxon_name ?o9 ?p1 ?s8 ?p3 ?s7 ?p2 ?s6 ?p1 ?s5 ?n3 ?o4 ?p8 ?p10 ?r2 ?r1 ?p11 ?r20 ?r21 ?res1 ?p4 ?anatomy %n" +
-           "WHERE {?r1 owl:someValuesFrom <%s> .  %n" +
-           "       <%s> rdfs:label ?taxon_name . %n" +
-           "       ?r1 ?p10 ?r2 . %n " +
-           "       ?r2 ?p11 ?r20 . %n" +
-           "       ?res1 rdf:first ?r1 . %n " +
-           "       ?res1 rdf:rest ?r21 . %n" + 
-           "       ?n3 rdf:rest ?res1 .  %n " +
-           "       ?n3 rdf:first ?o4 .  %n" +
-           "       ?o4 rdfs:label ?anatomy . %n" +
-           "       ?s5 owl:intersectionOf ?n3 . %n" +
-           "       ?s6 ?p1 ?s5 . %n" +
-           "       ?s7 ?p2 ?s6 . %n" +
-           "       ?s8 ?p3 ?s7 . %n " +
-           "       ?s8 ?p4 ?o9 . }%n";
-         /*  "       ?o9 rdfs:label ?behavior . %n" +
-           "       ?s10 owl:intersectionOf ?s8 . %n" +
-           "       ?s11 owl:someValuesFrom ?s10 . %n" +
-           "       ?s12 rdf:first ?s11 . %n" +
-           "       ?s13 rdf:rest ?s12 . %n" +
-           "       ?s15 owl:intersectionOf ?s13 . %n" +
-           "       ?s16 rdf:type ?s15 . %n" +
-           "       ?s16 obo:BFO_0000050 ?pubid . %n" +
-           "       ?pubid rdfs:label ?publication . %n" +
-           "       <%s> rdfs:label ?taxon_name . } %n";  */
-    		
+        		
    
     String getName2GeneralQuery(String id){
-    	SparqlBuilder b = SparqlBuilder.startSparql();
-    	b.addText(Util.OBOPREFIX, true);
-    	b.addText("%n",true);
+    	SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
     	b.addText("SELECT ?taxon_name ?behavior ?anatomy ?publication ?pubid %n", true);
     	String line1 = String.format("WHERE {?r1 owl:someValuesFrom <%s> .  %n",id);
     	b.addText(line1,true);
@@ -281,18 +214,16 @@ public class Taxon extends HttpServlet {
     	String line2 = String.format("<%s> rdfs:label ?taxon_name",id);
     	b.addText(line2,true); 
     	b.addText("} %n", true);
-    	String foo = b.finish();
-    	System.out.println("Hit getName2GeneralQuery : " + foo);
-    	return foo;
+    	return b.finish();
     }
     
-    final static String NAME2TAXONQUERYBASE = 
-        	"SELECT ?taxon_id %n" +
-        	"WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . } %n";
-    		
     
     String getName2TaxonIdQuery(String name){
-    	return String.format(NAME2TAXONQUERYBASE, name);
+    	SparqlBuilder b = SparqlBuilder.startSparql();
+    	b.addText("SELECT ?taxon_id %n");
+    	String line2 = String.format("WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . } %n", name);
+    	b.addText(line2);
+    	return b.finish();
     }
     
     final static String NAME2TAXONNAMEANDIDQUERYBASE =
@@ -305,14 +236,23 @@ public class Taxon extends HttpServlet {
     }
 
     
-    final static String TAXONEVENTQUERY = Util.OBOPREFIX +
-    		"SELECT ?subject ?label ?p2 ?event ?n1 %n" +
-	        "WHERE { ?subject rdf:type <%s> .  %n" +
-	        "        ?subject rdfs:label ?label .  %n" +
-	        "        ?n1 obo:BFO_0000050 ?subject .  %n" +
-            "        ?n1 obo:RO_0000056 ?n2. }";     //should be RO_000056
     String getName2EventQuery(String id){
-        return String.format(TAXONEVENTQUERY, id);
+    	SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
+    	String selectLine = 
+    			String.format("SELECT ?taxonLabel (<%s> AS ?taxon) ?label ?subject ?anatomy_label ?anatomy ?event %n", id); // ?anatomy_label %n", id);
+		b.addText(selectLine); // ?anatomy ?px ?n2 ?n3 %n");
+		String line1 = String.format("WHERE { ?subject rdf:type <%s> . %n",id); 
+		b.addText(line1);
+		String line2 = String.format("<%s> rdfs:label ?taxonLabel . %n", id);
+		b.addText(line2);
+        b.addClause("?subject rdfs:label ?label",true);
+        b.addClause("?anatomy obo:BFO_0000050 ?subject",true);
+        b.addClause("?anatomy rdfs:label ?anatomy_label",true);
+        b.addClause("?event obo:RO_0002218 ?anatomy",true); 
+        b.addClause("?n3 obo:IAO_0000219 ?event",false);
+    	b.addText("} %n");
+    	b.debug();
+    	return b.finish();
     }
 
     
@@ -388,6 +328,28 @@ public class Taxon extends HttpServlet {
     
     String getName2SubClassQuery(String id){
     	return String.format(NAME2SUBCLASSQUERYBASE, id);
+    }
+    
+    
+    //cleanup methods
+
+    private void cleanupResources(Repository repo, RepositoryConnection con){
+    	try{
+    		if (con != null){
+    			con.close();
+    		}
+    		if (repo != null){
+    			repo.shutDown();
+    		}
+    	}
+    	catch (NullPointerException e){
+    		System.out.println("Error trying to close null repository");
+    		e.printStackTrace();
+    	}
+    	catch (RepositoryException e){
+    		System.out.println("Error while trying to close repository");
+    		e.printStackTrace();
+    	}
     }
     
 }
