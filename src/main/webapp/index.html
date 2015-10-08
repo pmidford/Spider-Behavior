@@ -5,7 +5,7 @@
   <title>Arachnolingua</title>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Home page / quick query page for arachnolingua"/>
+  <meta name="description" content="Search page for Arachnolingua, a database of spider behavior"/>
   <meta name="author" content="Peter E. Midford"/>
   <link href="static/bootstrap/css/bootstrap.css" rel="stylesheet"/>
   <style type="text/css">
@@ -43,9 +43,6 @@
             <li>
               <a href="pages/curation.html">Curation</a>
             </li>
-            <li>
-              <a href="pages/testing.html">Test Sesame Server</a>
-            </li>
           </ul>
         </div>
       </div>
@@ -58,42 +55,43 @@
     </h1>
     <h3>"Words about what Spiders do"</h3>
     <div class="row">
-      <div class="span4">
+      <div class="span6">
         <p><strong>Ethogram</strong></p>
         <form id="ethogram_form" action="pages/ethogram_results.html" method="get">
-          <input name="taxon" type="text"/>
+          <input name="taxon" type="text" value="Tetragnatha"/>
           <input type="submit" value="Submit" />
-        </form>     
+        </form>
       </div>
-      <div class="span4">
+      <div class="span6">
         <p><strong>Behavior Cross Reference</strong></p>
         <form id="xref_form" action="pages/behavior_results.html">
-          <input name="behavior" type="text"/>
+          <input name="behavior" type="text" value="body part movement"/>
           <input type="submit" value="Submit" />
-        </form>     
+        </form>
       </div>
-      <div class="span4">
+<!--      <div class="span4">
         <p><strong>Participant</strong></p>
         <form id="participant_form">
           <input name="participant" type="text"/>
           <input type="submit" value="Submit" />
-        </form>     
+        </form>
       </div>
+-->
     </div>
     <hr/>
     <footer>
-      <p>Last update 12 May 2015</p>
-    </footer> 
+      <p>Last update 8 October 2015</p>
+    </footer>
   </div>
 
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
   </script>
   <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js">
   </script>
-    
-  
-  
-  
+
+
+
+
   <script type="text/javascript"> //<![CDATA[
 
    var _gaq = _gaq || [];

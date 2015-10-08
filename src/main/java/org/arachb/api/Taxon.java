@@ -30,32 +30,33 @@ import org.openrdf.repository.manager.LocalRepositoryManager;
  *
  */
 public class Taxon extends HttpServlet {
-	
+
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private final static File BASEDIR = new File(Util.ADUNAHOME);
 
 
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) 
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		String path = request.getRequestURI();
+		path = path.substring(path.indexOf("/taxon"));
 		String taxonName = getTaxonFromQuery(request);
-		
+
 		final OutputStream os = response.getOutputStream();
 		response.setContentType(Util.SPARQLMIMETYPE);
-		
+
 		if (!validateTaxonName(taxonName)){
 			Util.noResultsError(os);
 			os.flush();
 			os.close();
-			return;			
+			return;
 		}
 
 		switch (path){
@@ -74,9 +75,9 @@ public class Taxon extends HttpServlet {
 		response.getOutputStream().close();
 		return;
 	}
-	
-	
-	void getTaxonGeneralClaims(String taxonName, OutputStream os) throws ServletException, IOException{	
+
+
+	void getTaxonGeneralClaims(String taxonName, OutputStream os) throws ServletException, IOException{
 
 		Repository repo = null;
 		RepositoryConnection con = null;
@@ -85,12 +86,9 @@ public class Taxon extends HttpServlet {
 			manager.initialize();
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
-			List <String> NameList = buildSubClassClosure(taxonName,con); 
 			List<TupleQueryResult> resultList = new ArrayList<TupleQueryResult>();
-			for (String child_name : NameList){
-				final String ethogramQueryString = getName2GeneralQuery(child_name);
-				resultList = Util.tryAndAccumulateQueryResult(resultList, ethogramQueryString, con);
-			}
+			final String ethogramQueryString = getName2GeneralQuery(taxonName);
+			resultList = Util.tryAndAccumulateQueryResult(resultList, ethogramQueryString, con);
 			if (resultList.isEmpty()){
 				final String taxonIdQueryString = getName2TaxonNameAndId(taxonName);
 				if (!Util.tryQuery(taxonIdQueryString,con,os)){
@@ -120,8 +118,8 @@ public class Taxon extends HttpServlet {
 		os.close();
 	}
 
-	
-	void getTaxonEvents(String taxonName, OutputStream os) throws ServletException, IOException{	
+
+	void getTaxonEvents(String taxonName, OutputStream os) throws ServletException, IOException{
 
 		Repository repo = null;
 		RepositoryConnection con = null;
@@ -130,13 +128,14 @@ public class Taxon extends HttpServlet {
 			manager.initialize();
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
-			String name1 = buildClass(taxonName,con); //buildSubClassClosure(name,con); 
+			//List <String> NameList = buildSubClassClosure(taxonName,con);
 			List<TupleQueryResult> resultList = new ArrayList<TupleQueryResult>();
-			final String eventQueryString = getName2EventQuery(name1);
+
+			final String eventQueryString = getName2EventQuery(taxonName);
 			System.out.println("event query = " + eventQueryString);
 			resultList = Util.tryAndAccumulateQueryResult(resultList, eventQueryString, con);
+
 			if (resultList.isEmpty()){
-				System.out.println("No results");
 				final String taxonIdQueryString = getName2TaxonNameAndId(taxonName);
 				if (!Util.tryQuery(taxonIdQueryString,con,os)){
 					Util.noResultsError(os);
@@ -164,7 +163,7 @@ public class Taxon extends HttpServlet {
 		os.flush();
 		os.close();
 	}
-	
+
 	private String getTaxonFromQuery(HttpServletRequest request){
 		String name = request.getQueryString();
 		name = name.substring("taxon=".length()).trim();
@@ -175,33 +174,35 @@ public class Taxon extends HttpServlet {
 		return name;
 	}
 
-	
+
 	/**
-	 * 
+	 *
 	 * @param name either monomial or binomial (only one space)
 	 * @return true if valid
-	 * 
+	 *
 	 */
     public boolean validateTaxonName(String name){
     	return (name.split(" ").length<=2);  //TODO be more selective (also consider common names)
     }
-        		
-   
-    String getName2GeneralQuery(String id){
+
+
+    String getName2GeneralQuery(String name){
     	SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
-    	b.addText("SELECT ?taxon_name ?behavior ?anatomy ?publication ?pubid %n", true);
-    	String line1 = String.format("WHERE {?r1 owl:someValuesFrom <%s> .  %n",id);
-    	b.addText(line1,true);
+    	b.addText("SELECT ?taxon ?child_taxon ?behavior ?behavior_id ?anatomy ?anatomy_id ?publication ?pubid %n", true);
+		String line1 = String.format("WHERE { ?parent_taxon rdfs:label \"%s\"^^xsd:string . %n",name);
+		b.addText(line1,true);
+		b.addClause("?child_taxon rdfs:subClassOf* ?parent_taxon",true);
+    	b.addClause("?r1 owl:someValuesFrom ?child_taxon",true);
     	b.addClause("?res1 rdf:first ?r1",true);
     	b.addClause("?n3 rdf:rest ?res1",true);
-    	b.addClause("?n3 rdf:first ?o4",true);
-    	b.addClause("?o4 rdfs:label ?anatomy",true);
+    	b.addClause("?n3 rdf:first ?anatomy_id",true);
+    	b.addClause("?anatomy_id rdfs:label ?anatomy",true);
     	b.addClause("?s5 owl:intersectionOf ?n3",true);
     	b.addClause("?s6 owl:someValuesFrom ?s5",true);
     	b.addClause("?s7 rdf:first ?s6",true);
     	b.addClause("?s8 rdf:rest ?s7",true);
-    	b.addClause("?s8 rdf:first ?o9",true);
-        b.addClause("?o9 rdfs:label ?behavior",true);
+    	b.addClause("?s8 rdf:first ?behavior_id",true);
+        b.addClause("?behavior_id rdfs:label ?behavior",true);
     	b.addClause("?s10 owl:intersectionOf ?s8",true);   //should be intersectionOf?
     	b.addClause("?s11 owl:someValuesFrom ?s10 ",true);
     	b.addClause("?s12 rdf:first ?s11",true);
@@ -211,13 +212,13 @@ public class Taxon extends HttpServlet {
         b.addClause("?s16 rdf:type ?s15",true);
     	b.addClause("?s16 obo:BFO_0000050 ?pubid",true);
     	b.addClause("?pubid rdfs:label ?publication",true);
-    	String line2 = String.format("<%s> rdfs:label ?taxon_name",id);
-    	b.addText(line2,true); 
+    	b.addClause("?child_taxon rdfs:label ?taxon",true);
     	b.addText("} %n", true);
+    	b.debug();
     	return b.finish();
     }
-    
-    
+
+
     String getName2TaxonIdQuery(String name){
     	SparqlBuilder b = SparqlBuilder.startSparql();
     	b.addText("SELECT ?taxon_id %n");
@@ -225,78 +226,60 @@ public class Taxon extends HttpServlet {
     	b.addText(line2);
     	return b.finish();
     }
-    
+
     final static String NAME2TAXONNAMEANDIDQUERYBASE =
         	"SELECT ?taxon_name ?taxon_id %n" +
         	"WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . %n" +
         	"       ?taxon_id rdfs:label ?taxon_name . } %n";
-    		
+
     String getName2TaxonNameAndId(String name){
     	return String.format(NAME2TAXONNAMEANDIDQUERYBASE, name);
     }
 
-    
-    String getName2EventQuery(String id){
+    private String selectLine =
+    		"SELECT ?taxon ?child_taxon ?individual ?subject ?anatomy ?anatomy_id ?behavior ?behavior_id ?narrative ?narrative_id ?publication ?pub_id %n";
+
+    String getName2EventQuery(String name){
     	SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
-    	String selectLine = 
-    			String.format("SELECT ?taxonLabel (<%s> AS ?taxon) ?label ?subject ?anatomy_label ?anatomy ?event %n", id); // ?anatomy_label %n", id);
-		b.addText(selectLine); // ?anatomy ?px ?n2 ?n3 %n");
-		String line1 = String.format("WHERE { ?subject rdf:type <%s> . %n",id); 
+		b.addText(selectLine);
+		String line1 = String.format("WHERE { ?parent_taxon rdfs:label \"%s\"^^xsd:string . %n",name);
 		b.addText(line1);
-		String line2 = String.format("<%s> rdfs:label ?taxonLabel . %n", id);
-		b.addText(line2);
-        b.addClause("?subject rdfs:label ?label",true);
-        b.addClause("?anatomy obo:BFO_0000050 ?subject",true);
-        b.addClause("?anatomy rdfs:label ?anatomy_label",true);
-        b.addClause("?event obo:RO_0002218 ?anatomy",true); 
-        b.addClause("?n3 obo:IAO_0000219 ?event",false);
+		b.addClause("?child_taxon rdfs:subClassOf* ?parent_taxon");
+		b.addClause("?subject rdf:type ?child_taxon");
+        b.addClause("?subject rdfs:label ?individual",true);
+        b.addClause("?anatomy_id obo:BFO_0000050 ?subject",true);
+        b.addClause("?anatomy_id rdfs:label ?anatomy",true);
+        b.addClause("?event obo:RO_0002218 ?anatomy_id",true);
+        b.addClause("?event rdf:type ?i1",true);
+        b.addClause("?i1 owl:intersectionOf ?i2",true);
+        b.addClause("?i2 rdf:first ?behavior_id",true);
+        b.addClause("?behavior_id rdfs:label ?behavior",true);
+        b.addClause("?event obo:BFO_0000050 ?narrative_id",true);
+        b.addClause("?narrative_id rdfs:label ?narrative",true);
+        b.addClause("?n3 obo:IAO_0000219 ?event",true);
+        b.addClause("?n3 obo:BFO_0000050 ?pub_id",true);
+        b.addClause("?pub_id rdfs:label ?publication",true);
+		b.addClause("?child_taxon rdfs:label ?taxon",true);
+		b.addText("    FILTER NOT EXISTS { ?subject rdf:type ?other .");
+        b.addText("        ?other rdfs:subClassOf ?child_taxon .");
+        b.addText("        FILTER(?other != ?child_taxon)");
+        b.addText("    }");
     	b.addText("} %n");
     	b.debug();
     	return b.finish();
     }
 
-    
-    
-    List<String> buildSubClassClosure(String name, RepositoryConnection con) throws RepositoryException, MalformedQueryException, QueryEvaluationException{
-    	final List<String> result = new ArrayList<String>();
-    	final String taxonIdQueryString = getName2TaxonIdQuery(name);
-    	List<TupleQueryResult>queryResults = new ArrayList<TupleQueryResult>(); 
-    	queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonIdQueryString, con);
-    	String rootId = getOneResult(queryResults,"taxon_id");
-    	if (rootId != null){
-    		final String nextId = rootId;
-    		result.add(nextId);
-    		final String taxonSubClassQueryString = getName2SubClassQuery(nextId);
-    		queryResults.clear(); 
-    		queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonSubClassQueryString, con);
-    		try{
-    			for(TupleQueryResult rn : queryResults){
-    				while (rn.hasNext()){
-    					final BindingSet bSet = rn.next();
-    					final Binding b = bSet.getBinding("child_id");
-    					if (b != null){
-    						final String child_id = b.getValue().stringValue();
-    						result.add(child_id);
-    					}
-    				}
-    			}
-    		} catch (QueryEvaluationException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
-    	}
-    	return result;
-    }
 
-    
+
+
     String buildClass(String name, RepositoryConnection con) throws RepositoryException, MalformedQueryException, QueryEvaluationException{
     	final String taxonIdQueryString = getName2TaxonIdQuery(name);
-    	List<TupleQueryResult>queryResults = new ArrayList<TupleQueryResult>(); 
+    	List<TupleQueryResult>queryResults = new ArrayList<TupleQueryResult>();
     	queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonIdQueryString, con);
     	return getOneResult(queryResults,"taxon_id");
     }
-    
-    
+
+
     private String getOneResult(List<TupleQueryResult> queryResults, String bindingKey){
     	try {
     		for(TupleQueryResult rn : queryResults){
@@ -320,17 +303,8 @@ public class Taxon extends HttpServlet {
     	}
     	return null;
     }
-    
-    final static String NAME2SUBCLASSQUERYBASE = 
-        	"SELECT ?child_id %n" + 
-        	"WHERE {?child_id rdfs:subClassOf* <%s> . } %n";
-    		
-    
-    String getName2SubClassQuery(String id){
-    	return String.format(NAME2SUBCLASSQUERYBASE, id);
-    }
-    
-    
+
+
     //cleanup methods
 
     private void cleanupResources(Repository repo, RepositoryConnection con){
@@ -351,6 +325,6 @@ public class Taxon extends HttpServlet {
     		e.printStackTrace();
     	}
     }
-    
+
 }
-    
+
