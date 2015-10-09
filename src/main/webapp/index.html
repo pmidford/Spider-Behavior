@@ -8,61 +8,61 @@
   <meta name="description" content="Search page for Arachnolingua, a database of spider behavior"/>
   <meta name="author" content="Peter E. Midford"/>
   <link href="static/bootstrap/css/bootstrap.css" rel="stylesheet"/>
-  <style type="text/css">
-    body {
-      padding-top: 60px;
-      padding-bottom: 40px;
-    }
-  </style>
   <link href="static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet"/>
   <link type="text/css" rel="stylesheet" href="static/spider-behavior.css"/>
-
 </head>
 <body>
 
-  <div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container">
-        <button class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse" type="button">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#projectpage-navbar-collapse" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <img class="brand" src="static/spiderwords_small.jpg" alt="spider words" width="32" height="19"/>
-        <div class="nav-collapse collapse">
-          <ul class="nav">
-            <li class="active">
-              <a href="#">Home</a>
-            </li>
-            <li>
-              <a href="pages/project.html">About</a>
-            </li>
-            <li>
-              <a href="pages/taxonomy.html">Taxonomy Status</a>
-            </li>
-            <li>
-              <a href="pages/curation.html">Curation</a>
-            </li>
-          </ul>
-        </div>
+        <a class="navbar-brand" href="http://arachb.org">
+          <img class="navbar-image" src="static/spiderwords_small.jpg"  alt="spider words"/>
+        </a>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+      <div class= "collapse navbar-collapse" id="projectpage-navbar-collapse">
+        <ul class="nav navbar-nav">        
+        <li class="active">
+          <a href="#">Home</a>
+        </li>
+        <li>
+          <a href="pages/project.html">About</a>
+        </li>
+        <li>
+          <a href="pages/taxonomy.html">Taxonomy Status</a>
+        </li>
+        <li>
+          <a href="pages/curation.html">Curation</a>
+        </li>
+      </ul>
       </div>
     </div>
-  </div>
+  </nav>
 
-  <div class="container">
+
+  <div class="container-fluid">
     <h1 class="arachb_headline">
       Arachnolingua
     </h1>
     <h3>"Words about what Spiders do"</h3>
     <div class="row">
-      <div class="span6">
+      <div class="col-md-4 col-md-offset-2">
         <p><strong>Ethogram</strong></p>
         <form id="ethogram_form" action="pages/ethogram_results.html" method="get">
           <input name="taxon" type="text" value="Tetragnatha"/>
           <input type="submit" value="Submit" />
         </form>
       </div>
-      <div class="span6">
+      <div class="col-md-4 col-md-offset-2">
         <p><strong>Behavior Cross Reference</strong></p>
         <form id="xref_form" action="pages/behavior_results.html">
           <input name="behavior" type="text" value="body part movement"/>
@@ -78,11 +78,19 @@
       </div>
 -->
     </div>
-    <hr/>
+      
+    </div>
     <footer>
-      <p>Last update 8 October 2015</p>
+      <div class="container-fluid">
+        <hr/>
+        <div class="row">
+          <div class="col-md-10 col-md-offset-2">
+            <p>Last update 8 October 2015</p>
+          </div>
+        </div>
+      </div>
     </footer>
-  </div>
+  
 
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
   </script>

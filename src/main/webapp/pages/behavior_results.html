@@ -8,96 +8,95 @@
     <meta name="description" content=""/>
     <meta name="author" content="Peter E. Midford"/>
     <link href="../static/bootstrap/css/bootstrap.css" rel="stylesheet"/>
-    <style type="text/css">
-    body {
-      padding-top: 60px;
-      padding-bottom: 40px;
-    }
-  </style>
     <link href="../static/bootstrap/css/bootstrap-responsive.css" rel="stylesheet"/>
+    <link type="text/css" rel="stylesheet" href="../static/spider-behavior.css"/>        
 </head>
 <body>
-    <body>
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-                    <button class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse" type="button">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <img class="brand" src="../static/spiderwords_small.jpg" alt="spider words" width="32" height="19">
-                        <div class="nav-collapse collapse">
-                            <ul class="nav">
-                                <li>
-                                    <a href="../index.html">Home</a>
-                                </li>
-                                <li>
-                                    <a href="project.html">About</a>
-                                </li>
-                                <li>
-                                    <a href="taxonomy.html">Taxonomy Status</a>
-                                </li>
-                                <li>
-                                    <a href="curation.html">Curation</a>
-                                </li>
-                            </ul>
-                        </div>
-                </div>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#behaviorpage-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://arachb.org">
+                    <img class="navbar-image" src="../static/spiderwords_small.jpg"  alt="spider words"/>
+                </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+            <div class= "collapse navbar-collapse" id="behaviorpage-navbar-collapse">
+                <ul class="nav navbar-nav">        
+                    <li>
+                        <a href="../index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="project.html">About</a>
+                    </li>
+                    <li>
+                        <a href="taxonomy.html">Taxonomy Status</a>
+                    </li>
+                    <li>
+                        <a href="curation.html">Curation</a>
+                    </li>
+                </ul>
             </div>
         </div>
+    </nav>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1 class="arachb_headline">Behavior Cross Reference</h1>
+        </div>  
         
-        <div class="container">
-            <div class="page-header">
-                <h1 class="arachb_headline">Behavior Cross Reference</h1>
-            </div>  
-            
-            <section id="taxonomy_table">
-                <div class="row-fluid">
-                    <div class="span12">
-                        <p id="results">Working...</p>
-                    </div>
+        <section id="taxonomy_table">
+            <div class="row-fluid">
+                <div class="span12">
+                    <p id="results">Working...</p>
                 </div>
-            </section>
-        </div>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
-  </script>
+            </div>
+        </section>
+    </div>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+    </script>
+    
+    <script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js">      
+    </script>
+    
+    <script type="text/javascript" src="../static/resulttable.js">
+    </script>
+    
+    <script type="text/javascript" src="../static/env.js">
+    </script>    
+    
+    <script>
+        $(document).ready(function(){
+        $.ajax({
+        url: myhost + "behavior" + $(location).attr('search'),
+        dataType: "text"
+        }
+        ).done(function(data, testStatus, jqXHR){$("#results").html(resulttable(eval( '(' + data + ')')))})
+        .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
+        });
+    </script>
+    
+    <script type="text/javascript"> //<![CDATA[
         
-  <script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js">      
-  </script>
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-30972937-1']);
+        _gaq.push(['_setAllowLinker', true]);
+        _gaq.push(['_trackPageview']);
         
-  <script type="text/javascript" src="../static/resulttable.js">
-  </script>
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+        //]]>
         
-  <script type="text/javascript" src="../static/env.js">
-  </script>    
-              
-  <script>
-    $(document).ready(function(){
-       $.ajax({
-         url: myhost + "behavior" + $(location).attr('search'),
-         dataType: "text"
-       }
-       ).done(function(data, testStatus, jqXHR){$("#results").html(resulttable(eval( '(' + data + ')')))})
-       .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
-      });
-  </script>
-        
-  <script type="text/javascript"> //<![CDATA[
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-30972937-1']);
-  _gaq.push(['_setAllowLinker', true]);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-  //]]>
-
- </script>
-        
+    </script>
+    
 </body>
 </html>
