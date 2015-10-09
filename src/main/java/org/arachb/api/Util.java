@@ -29,10 +29,10 @@ public class Util {
 	public static boolean tryQuery(String queryString, RepositoryConnection con, OutputStream os) 
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException{
 		final TupleQuery tQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, queryString);
-		long startTime = System.nanoTime();
+		//long startTime = System.nanoTime();
 		final TupleQueryResult qResult = tQuery.evaluate();
-		long endTime = System.nanoTime();
-		long duration = endTime - startTime;
+		//long endTime = System.nanoTime();
+		//long duration = endTime - startTime;
 		//System.out.println("Query " + queryString + " \n\n took " + duration + " nanosec");
 		if (qResult.hasNext()){
 			jsonFormatResult(qResult,os);
@@ -100,11 +100,13 @@ public class Util {
     }
 
 	
-    public static void returnError(OutputStream os) throws IOException{
+    public static void noResultsError(OutputStream os) throws IOException{
+    	returnError(os,"no results");
+    }
+    
+    public static void returnError(OutputStream os, String text) throws IOException{
 		final StringBuilder msgBuffer = new StringBuilder();
-		msgBuffer.append('"');
-		msgBuffer.append("no results");
-		msgBuffer.append('"');
+		msgBuffer.append('"').append(text).append('"');
 		os.write(msgBuffer.toString().getBytes("UTF-8"));
     }
 

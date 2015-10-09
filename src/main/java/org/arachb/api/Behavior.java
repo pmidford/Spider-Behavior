@@ -54,7 +54,7 @@ public class Behavior extends HttpServlet {
 			name = b.toString().trim();  //remove final space
 		}
 		if (!validateBehaviorName(name)){
-			Util.returnError(os);
+			Util.noResultsError(os);
 			os.flush();
 			os.close();
 			return;			
@@ -73,7 +73,7 @@ public class Behavior extends HttpServlet {
 			if (!Util.tryQuery(behaviorQueryString,con,os)){
 				String taxonIdQueryString = getName2BehaviorIdQuery(name);
 				if (!Util.tryQuery(taxonIdQueryString,con,os)){
-					Util.returnError(os);
+					Util.noResultsError(os);
 				}
 			}
 		} catch (RepositoryException e) {
@@ -142,30 +142,35 @@ public class Behavior extends HttpServlet {
     }
 
     
-    final static String NAME2BEHAVIORBASE = Util.OBOPREFIX +
-        	"SELECT ?behavior ?taxon ?anatomy\n" +
-        	"WHERE {?behavior_id rdfs:label \"%s\"^^xsd:string . \n" +
-        	"       ?behavior_id rdfs:label ?behavior . \n " +
-        	"       ?s8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?behavior_id . \n" +
-        	"       ?s8 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> ?s7 . \n" +
-        	"       ?s7 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?s6 .\n" +
-        	"       ?s6 <http://www.w3.org/2002/07/owl#someValuesFrom> ?s5 . \n " +
-        	"       ?s5 <http://www.w3.org/2002/07/owl#intersectionOf> ?s4 . \n" +
-        	"       ?s4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?anatomy_id . \n" +
-        	"       ?s4 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> ?s2 . \n" +
-        	"       ?s2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> ?s1 .  \n" +
-        	"       ?s1 <http://www.w3.org/2002/07/owl#someValuesFrom> ?taxon_id .  \n" +
-        	"       ?taxon_id rdfs:label ?taxon . \n" +
-        	"       ?anatomy_id rdfs:label ?anatomy . }\n";
     
-    String getName2BehaviorReportQuery(String name){        
-        return String.format(NAME2BEHAVIORBASE,name);
+    String getName2BehaviorReportQuery(String name){
+    	SparqlBuilder b = SparqlBuilder.startSparql();
+    	String selectLine = "SELECT ?behavior ?taxon ?anatomy%n";
+    	b.addText(selectLine);
+    	String whereLine =
+    			String.format("WHERE {?behavior_id rdfs:label \"%s\"^^xsd:string . %n", name);
+    	b.addText(whereLine);
+    	b.addClause("?behavior_id rdfs:label ?behavior", true);
+    	b.addClause("?s8 rdf:first ?behavior_id",true);
+    	b.addClause("?s8 rdf:rest ?s7",true);
+    	b.addClause("?s7 rdf:first ?s6",true);
+    	b.addClause("?s6 owl:someValuesFrom ?s5",true);
+    	b.addClause("?s5 owl:intersectionOf ?s4",true);
+    	b.addClause("?s4 rdf:first ?anatomy_id",true);
+    	b.addClause("?s4 rdf:rest ?s2",true);
+    	b.addClause("?s2 rdf:first ?s1",true);
+    	b.addClause("?s1 owl:someValuesFrom ?taxon_id",true);
+    	b.addClause("?taxon_id rdfs:label ?taxon",true);
+    	b.addClause("?anatomy_id rdfs:label ?anatomy",true);
+    	b.addText("} %n");
+    	b.debug();
+    	return b.finish();
     }
     
     final static String NAME2BEHAVIORIDBASE = Util.OBOPREFIX +
-        	"SELECT ?behavior_name ?behavior_id \n" +
-            "WHERE {?behavior_id rdfs:label \"%s\"^^xsd:string . \n" +
-            "       ?behavior_id rdfs:label ?behavior_name . }\n ";
+        	"SELECT ?behavior_name ?behavior_id %n" +
+            "WHERE {?behavior_id rdfs:label \"%s\"^^xsd:string . %n" +
+            "       ?behavior_id rdfs:label ?behavior_name . }%n ";
     		
     
     String getName2BehaviorIdQuery(String name){

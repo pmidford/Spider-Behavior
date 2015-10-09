@@ -2,3 +2,8 @@ target
 sesame-test
 .DS_Store
 .settings
+*.html~
+*.js~
+*.css~
+*.xml~
+*.sh~

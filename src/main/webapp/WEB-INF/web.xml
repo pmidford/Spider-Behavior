@@ -27,13 +27,21 @@
     <servlet-class>org.arachb.api.Publication</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>arachb</servlet-name>
+    <servlet-class>org.arachb.api.ArachbService</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>startup</servlet-name>
     <servlet-class>org.arachb.api.Startup</servlet-class>
-    <load-on-startup>5</load-on-startup> 
+    <load-on-startup>5</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>taxon</servlet-name>
     <url-pattern>/taxon</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>taxon</servlet-name>
+    <url-pattern>/taxon/events</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>behavior</servlet-name>
@@ -43,5 +51,21 @@
     <servlet-name>publication</servlet-name>
     <url-pattern>/publication</url-pattern>
   </servlet-mapping>
-  
+  <servlet-mapping>
+    <servlet-name>arachb</servlet-name>
+    <url-pattern>/arachb/*</url-pattern>
+  </servlet-mapping>
+
+  <error-page>
+    <error-code>404</error-code>
+    <location>/pages/404.html</location>
+  </error-page>
+
+  <!-- Define an error handler for java.lang.Throwable -->
+  <error-page>
+    <exception-type>java.lang.Throwable</exception-type>
+    <location>/pages/error.html</location>
+  </error-page>
+
+
 </web-app>
