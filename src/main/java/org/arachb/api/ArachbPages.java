@@ -6,6 +6,8 @@ package org.arachb.api;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,7 +40,7 @@ import com.fasterxml.jackson.core.JsonToken;
  * @author pmidford
  *
  */
-public class ArachbService extends HttpServlet {
+public class ArachbPages extends HttpServlet {
 
 
 	//needs to extract target uri from request,
@@ -180,6 +182,16 @@ public class ArachbService extends HttpServlet {
 		return b.finish();
 	}
 
+	
+	/**
+	 * the start of the service for http://arachb.org/arachb/arachb.owl
+	 * @throws IOException
+	 */
+	void getOntology() throws IOException{
+		URL loadURL = ArachbPages.class.getClassLoader().getResource("arachb.owl");
+		URLConnection loadConnection = loadURL.openConnection();
+
+	}
 
 
 	//Probably not really this simple
