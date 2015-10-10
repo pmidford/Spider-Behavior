@@ -28,7 +28,7 @@
   </servlet>
   <servlet>
     <servlet-name>arachb</servlet-name>
-    <servlet-class>org.arachb.api.ArachbService</servlet-class>
+    <servlet-class>org.arachb.api.ArachbPages</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>startup</servlet-name>
