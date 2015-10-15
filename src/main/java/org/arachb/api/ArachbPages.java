@@ -3,22 +3,27 @@
  */
 package org.arachb.api;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.arachb.api.provider.ArachbPage;
+import org.arachb.api.provider.DefaultPage;
+import org.arachb.api.provider.MetaDataSummary;
+import org.arachb.api.provider.NarrativePage;
+import org.arachb.api.provider.PublicationPage;
 import org.openrdf.model.Value;
 import org.openrdf.query.Binding;
 import org.openrdf.query.BindingSet;
@@ -31,10 +36,6 @@ import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.config.RepositoryConfigException;
 import org.openrdf.repository.manager.LocalRepositoryManager;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-
 
 /**
  * @author pmidford
@@ -42,7 +43,15 @@ import com.fasterxml.jackson.core.JsonToken;
  */
 public class ArachbPages extends HttpServlet {
 
-
+	enum PageType {
+		PUBLICATION,
+		NARRATIVE,
+		ONTOLOGY,
+		TAXON,
+		INDIVIDUAL,
+		UNKNOWN;
+	}
+	
 	//needs to extract target uri from request,
 	//figure out what class this is or what it is an instance of
 	//for publication individuals, find an rdfs:comment with the json record, parse, return or format
@@ -62,7 +71,7 @@ public class ArachbPages extends HttpServlet {
 			throws ServletException, IOException {
 
 
-		final OutputStream os = response.getOutputStream();
+		final ServletOutputStream os = response.getOutputStream();
 
 		boolean writeHTML;
 		String target;
@@ -91,43 +100,56 @@ public class ArachbPages extends HttpServlet {
 				repo = manager.getRepository(Util.REPONAME);
 				con = repo.getConnection();
 				final StringBuilder msgBuffer = new StringBuilder();
-				String commentString = null;
-				final String commentQueryString = getURI2CommentQuery(target);
-				System.out.println("Query String is: " + commentQueryString);
-				List<TupleQueryResult> resultList = new ArrayList<TupleQueryResult>();
-				resultList = Util.tryAndAccumulateQueryResult(resultList, commentQueryString, con);
-				PublicationSummary ps = new PublicationSummary();
-				if (!resultList.isEmpty()){
-					for (TupleQueryResult tqr : resultList){
-						while (tqr.hasNext() && commentString==null){
-							BindingSet bs = tqr.next();
-							Binding b = bs.getBinding("comment");
-							if (b != null){
-								Value v = b.getValue();
-								commentString = v.stringValue().trim();
-							}
-						}
-					}
-					if (jsonCheck(commentString)){
-						JsonFactory jsonF = new JsonFactory();
-						JsonParser p = jsonF.createParser(commentString);
-						ps = read(p);  //overwrites default
+				List<String> commentStrings = getComments(target, con);
+				MetaDataSummary mds = null;
+				for (String comment : commentStrings){
+					if (jsonCheck(comment)){
+						mds = new MetaDataSummary(comment);  //overwrites default
+						break;
 					}
 				}
-				if (!ps.containsKey("localIdentifier")){
-					ps.put("localIdentifier", target);
+				if (mds == null){
+					mds = new MetaDataSummary();
 				}
-				if (writeHTML){
-					msgBuffer.append(generateHTML(ps));
+				if (!mds.contains("localIdentifier")){
+					mds.add("localIdentifier", target);
 				}
-				else {
-					msgBuffer.append(generatejson(commentString));
+				
+				PageType thisType = identifyPage(target,con);
+				ArachbPage thisPage = null;
+				switch (thisType){
+					case PUBLICATION: {						
+						thisPage = new PublicationPage(mds);
+						break;
+					}
+					case NARRATIVE: {
+						thisPage = new NarrativePage(mds,con);
+						break;
+					}
+					case ONTOLOGY: {
+						getOntology(os);
+						break;
+					}
+					default:{
+						thisPage = new DefaultPage(mds);
+					}
 				}
+				if (thisPage != null){
+					if (writeHTML){
+						msgBuffer.append(thisPage.generateHTML());
+					}
+					else {
+						msgBuffer.append(thisPage.generatejson());
+					}
+				}
+				
 				response.getOutputStream().write(msgBuffer.toString().getBytes("UTF-8"));
 
 			} catch (RepositoryException e) {  //TODO - make these return meaningful JSON strings
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				response.setStatus(500);
+				response.getOutputStream().write(e.getMessage().getBytes("UTF-8"));
 			} catch (RepositoryConfigException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -146,32 +168,75 @@ public class ArachbPages extends HttpServlet {
 		os.close();
 	}
 
-
-	private boolean jsonCheck(String comment){
-		return !comment.isEmpty() && 
-				(comment.charAt(0) == '{') &&
-				(comment.charAt(comment.length()-1) == '}');
-
-	}
-
 	
-	PublicationSummary read(JsonParser jp) throws IOException{
-		// Sanity check: verify that we got "Json Object":
-		if (jp.nextToken() != JsonToken.START_OBJECT) {
-			throw new IOException("Expected data to start with an Object");
+	/**
+	 * 
+	 * @param target
+	 * @return
+	 */
+	private PageType identifyPage(String target, RepositoryConnection con) 
+			throws RepositoryException, MalformedQueryException, QueryEvaluationException {
+		if (ontologyTest(target)){
+			return PageType.ONTOLOGY;
 		}
-		PublicationSummary result = new PublicationSummary();
-		// Iterate over object fields:
-		while (jp.nextToken() != JsonToken.END_OBJECT) {
-			String fieldName = jp.getCurrentName();
-			// Let's move to value
-			jp.nextToken();	
-			result.put(fieldName,jp.getText());
-		}
-		jp.close(); // important to close both parser and underlying File reader
+		String publicationTest = getURI2PublicationTest(target);
+		if (checkType(publicationTest,con))
+			return PageType.PUBLICATION;
+		String narrativeTest = getURI2NarrativeTest(target);
+		if (checkType(narrativeTest,con))
+			return PageType.NARRATIVE;
+		//String taxonTest = getURI2TaxonTest(target);
+		return PageType.UNKNOWN;
+	}
+	
+	private boolean checkType(String testQuery, RepositoryConnection con)
+			throws RepositoryException, MalformedQueryException, QueryEvaluationException {
+		System.out.println("Query String is: " + testQuery);
+		boolean result = Util.askQuery(testQuery, con);
+		System.out.println("Result is " + Boolean.toString(result));
 		return result;
 	}
 
+	
+
+	/**
+	 * @param target
+	 * @param con
+	 * @param commentString
+	 * @return
+	 * @throws RepositoryException
+	 * @throws MalformedQueryException
+	 * @throws QueryEvaluationException
+	 */
+	private List<String> getComments(String target, RepositoryConnection con)
+			throws RepositoryException, MalformedQueryException, QueryEvaluationException {
+		final String commentQueryString = getURI2CommentQuery(target);
+		System.out.println("Query String is: " + commentQueryString);
+		List<String> results = new ArrayList<>();
+		List<TupleQueryResult> queryResult = new ArrayList<TupleQueryResult>();
+		queryResult = Util.tryAndAccumulateQueryResult(queryResult, commentQueryString, con);
+		if (!queryResult.isEmpty()){
+			for (TupleQueryResult tqr : queryResult){
+				while (tqr.hasNext()){
+					BindingSet bs = tqr.next();
+					Binding b = bs.getBinding("comment");
+					if (b != null){
+						Value v = b.getValue();
+						results.add(v.stringValue().trim());
+					}
+				}
+			}
+		}
+		return results;
+	}
+
+
+	private boolean jsonCheck(String comment){
+		return (comment != null) &&
+				!comment.isEmpty() && 
+				(comment.charAt(0) == '{') &&
+				(comment.charAt(comment.length()-1) == '}');
+	}
 
 
 	String getURI2CommentQuery(String uriStr){
@@ -182,150 +247,58 @@ public class ArachbPages extends HttpServlet {
 		return b.finish();
 	}
 
+	//TODO: figure out where the .owl extension disappears
+	final private String ontologyURI = "http://arachb.org/arachb/arachb";
+	boolean ontologyTest(String target){
+		return ontologyURI.equals(target);
+	}
 	
 	/**
 	 * the start of the service for http://arachb.org/arachb/arachb.owl
 	 * @throws IOException
 	 */
-	void getOntology() throws IOException{
-		URL loadURL = ArachbPages.class.getClassLoader().getResource("arachb.owl");
-		URLConnection loadConnection = loadURL.openConnection();
-
+	void getOntology(ServletOutputStream os) throws IOException{
+		BufferedReader inputReader = null;
+		try {
+			URL loadURL = ArachbPages.class.getClassLoader().getResource("arachb.owl");
+			URLConnection loadConnection = loadURL.openConnection();
+			InputStream ontStr = loadConnection.getInputStream();
+			inputReader= new BufferedReader(new InputStreamReader(ontStr));
+            String l;
+            while ((l = inputReader.readLine()) != null) {
+                os.println(l);
+            }
+  
+		}
+		finally {
+			if (inputReader != null){
+				inputReader.close();
+			}
+		}
 	}
 
-
-	//Probably not really this simple
-	private String generatejson(String jsonString){
-		return jsonString;
+	String getURI2PublicationTest(String target){
+		SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
+		b.addText(String.format("ASK WHERE {<%s> rdf:type obo:IAO_0000311 . } %n", target));
+		return b.finish();
+	}
+	
+	String getURI2NarrativeTest(String target){
+		SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
+		b.addText(String.format("ASK WHERE {<%s> rdf:type obo:IAO_0000030 . %n", target));
+		b.addText(String.format("<%s> obo:BFO_0000050 ?a . %n", target));
+		b.addText(String.format("?b obo:BFO_0000050 <%s> . } %n", target));
+		return b.finish();
+	}
+	
+	String getURI2TaxonTest(String target){
+		SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
+		b.addText(String.format("ASK WHERE {<%s> rdf:type obo:NCBI_Taxon1 . } %n", target));
+		return b.finish();
 	}
 
-	private String generateHTML(PublicationSummary pubdata) throws IOException{
-		String result = "";
-		result += "<!DOCTYPE html>";
-		result += "<html lang=\"en\">";
-		result += "<head>";
-		result += "   <meta charset=\"utf-8\"/>";
-		if (pubdata.containsKey("title")){
-			result += String.format("   <title>%s</title>",pubdata.get("title"));
-		}
-		else {
-			result += String.format("   <title>%s</title>",pubdata.get("localIdentifier"));			
-		}
-		result += "   <meta http-equiv=\"content-type\" content=\"text/html;charset=UTF-8\" />";
-		result += "   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>";
-		result += "   <meta name=\"description\" content=\"generated publication page\"/>";
-		result += "   <meta name=\"author\" content=\"Peter E. Midford\"/>";
-		result += "   <link href=\"../static/bootstrap/css/bootstrap.css\" rel=\"stylesheet\"/>";
-		result += "   <style type=\"text/css\">";
-		result += "      body {";
-		result += "         padding-top: 60px;";
-		result += "         padding-bottom: 40px;";
-		result += "      }";
-		result += "   </style>";
-		result += "   <link href=\"../static/bootstrap/css/bootstrap-responsive.css\" rel=\"stylesheet\"/>";
-		result += "   <link type=\"text/css\" rel=\"stylesheet\" href=\"../static/spider-behavior.css\"/>";
-		result += "</head>";
-		result += "<body>";
-		result += "	 <div class=\"navbar navbar-inverse navbar-fixed-top\">";
-		result += "      <div class=\"navbar-inner\">";
-		result += "         <div class=\"container\">";
-		result += "            <button class=\"btn btn-navbar\" data-target=\".nav-collapse\" "
-				+ "                    data-toggle=\"collapse\" type=\"button\">";
-		result += "		         <span class=\"icon-bar\"></span>";
-		result += "		         <span class=\"icon-bar\"></span>";
-		result += "		         <span class=\"icon-bar\"></span>";
-		result += "		      </button>";
-		result += "		      <img class=\"brand\" src=\"../static/spiderwords_small.jpg\" "
-				+ "                 alt=\"spider words\" width=\"32\" height=\"19\"/>";
-		result += "		      <div class=\"nav-collapse collapse\">";
-		result += "		         <ul class=\"nav\">";
-		result += "                  <li>";
-		result += "                     <a href=\"../index.html\">Home</a>";
-		result += "                  </li>";
-		result += "                  <li>";
-		result += "                     <a href=\"../pages/project.html\">About</a>";
-		result += "                  </li>";
-		result += "                  <li>";
-		result += "                     <a href=\"../pages/taxonomy.html\">Taxonomy Status</a>";
-		result += "                  </li>";
-		result += "		            <li>";
-		result += "                     <a href=\"../pages/curation.html\">Curation</a>";
-		result += "                  </li>";
-		result += "               </ul>";
-		result += "            </div>";
-		result += "		   </div>";
-		result += "		</div>";
-		result += "   </div>";
-		result += "   <div class=\"container\">";
-		if (pubdata.containsKey("title")){
-			result += String.format("      <h3>%s</h3>",pubdata.get("title"));
-		}
-		else {
-			result += String.format("      <h3>%s</h3>",pubdata.get("localIdentifier"));			
-		}
-		result += "   </div>";
-		result += "   <div class=\"row\">";
-		result += "      <div class=\"span11\">";
-		result += "         <div id=\"results\">";
-		result += generateResults(pubdata);
-		result += "		    </div>";
-		result += "      </div>";
-		result += "   </div>";
-		result += "   <hr/>";
-		result += "   <footer>";
-		String current = DateFormat.getDateInstance().format(new Date());
-		String timeStr = String.format("      <p>Last update %s</p>",current);
-		result += timeStr;
-		result += "   </footer>";
-		result += addScript("http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js");
-		result += addScript("../static/bootstrap/js/bootstrap.min.js");
-		result += addScript("../static/env.js");
-		result += "</body>";
-		result += "</html>";
-		return result;
-	}
-
-
-
-
-	private String addScript(String script_url){
-		String result = "   <script type=\"text/javascript\" ";
-		result += String.format("           src=\"%s\">", script_url);
-		result += "   </script>";
-		return result;
-	}
 
 	
-	private String generateResults(PublicationSummary pubdata){
-		String result = "";
-		result += "            <ul>";
-		if (pubdata.containsKey("title")){
-			result += "               <li><strong>Title: </strong>" + pubdata.get("title") + "</li>";
-		}
-		if (pubdata.containsKey("publicationYear")){
-			result += "               <li><strong>Publication year: </strong>" + pubdata.get("publicationYear") + "</li>";
-		}
-		if (pubdata.containsKey("authorList")){
-			result += "               <li><strong>Authors: </strong>" + pubdata.get("authorList") + "</li>";
-		}
-		if (pubdata.containsKey("publicationType")){
-			result += "               <li><strong>Publication type: </strong>" + pubdata.get("publicationType") + "</li>";
-		}
-		if (pubdata.containsKey("sourcePublication")){
-			result += "               <li><strong>Source Title: </strong>" + pubdata.get("sourcePublication") + "</li>";
-		}
-		if (pubdata.containsKey("volumne")){
-			result += "               <li><strong>Volume: </strong>" + pubdata.get("volume") + "</li>";
-		}
-		if (pubdata.containsKey("issue")){
-			result += "               <li><strong>Issue: </strong>" + pubdata.get("issue") + "</li>";
-		}
-		if (pubdata.containsKey("pageRange")){
-			result += "               <li><strong>Pages: </strong>" + pubdata.get("pageRange") + "</li>";
-		}
-		result += "            </ul>";
-		return result;
-	}
 	
 	//cleanup methods
 
@@ -351,12 +324,3 @@ public class ArachbPages extends HttpServlet {
 
 }
 
-
-final class PublicationSummary extends HashMap<String,String>{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-}
