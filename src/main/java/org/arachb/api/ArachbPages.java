@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.arachb.api;
 
@@ -51,7 +51,7 @@ public class ArachbPages extends HttpServlet {
 		INDIVIDUAL,
 		UNKNOWN;
 	}
-	
+
 	//needs to extract target uri from request,
 	//figure out what class this is or what it is an instance of
 	//for publication individuals, find an rdfs:comment with the json record, parse, return or format
@@ -67,7 +67,7 @@ public class ArachbPages extends HttpServlet {
 
 
 	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) 
+	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 
@@ -80,7 +80,14 @@ public class ArachbPages extends HttpServlet {
 			Util.noResultsError(os);
 		}
 		else{
-			target = ARACHBPREFIX + targetComponents[0];
+			if (System.getProperty("user.name").equals("pmidford")){  //debugging hack
+				target = ARACHBPREFIX + "/arachb/ARACHB_0" + targetComponents[0];
+			}
+			else{
+				target = ARACHBPREFIX + targetComponents[0];
+			}
+			System.out.println("User is " + System.getProperty("user.name"));
+			System.out.println("target = " + target);
 			if (targetComponents.length == 2){
 				if ("json".equalsIgnoreCase(targetComponents[1])){
 					writeHTML = false;
@@ -114,11 +121,11 @@ public class ArachbPages extends HttpServlet {
 				if (!mds.contains("localIdentifier")){
 					mds.add("localIdentifier", target);
 				}
-				
+
 				PageType thisType = identifyPage(target,con);
 				ArachbPage thisPage = null;
 				switch (thisType){
-					case PUBLICATION: {						
+					case PUBLICATION: {
 						thisPage = new PublicationPage(mds);
 						break;
 					}
@@ -142,7 +149,7 @@ public class ArachbPages extends HttpServlet {
 						msgBuffer.append(thisPage.generatejson());
 					}
 				}
-				
+
 				response.getOutputStream().write(msgBuffer.toString().getBytes("UTF-8"));
 
 			} catch (RepositoryException e) {  //TODO - make these return meaningful JSON strings
@@ -168,13 +175,13 @@ public class ArachbPages extends HttpServlet {
 		os.close();
 	}
 
-	
+
 	/**
-	 * 
+	 *
 	 * @param target
 	 * @return
 	 */
-	private PageType identifyPage(String target, RepositoryConnection con) 
+	private PageType identifyPage(String target, RepositoryConnection con)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException {
 		if (ontologyTest(target)){
 			return PageType.ONTOLOGY;
@@ -188,7 +195,7 @@ public class ArachbPages extends HttpServlet {
 		//String taxonTest = getURI2TaxonTest(target);
 		return PageType.UNKNOWN;
 	}
-	
+
 	private boolean checkType(String testQuery, RepositoryConnection con)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException {
 		System.out.println("Query String is: " + testQuery);
@@ -197,7 +204,7 @@ public class ArachbPages extends HttpServlet {
 		return result;
 	}
 
-	
+
 
 	/**
 	 * @param target
@@ -233,7 +240,7 @@ public class ArachbPages extends HttpServlet {
 
 	private boolean jsonCheck(String comment){
 		return (comment != null) &&
-				!comment.isEmpty() && 
+				!comment.isEmpty() &&
 				(comment.charAt(0) == '{') &&
 				(comment.charAt(comment.length()-1) == '}');
 	}
@@ -252,7 +259,7 @@ public class ArachbPages extends HttpServlet {
 	boolean ontologyTest(String target){
 		return ontologyURI.equals(target);
 	}
-	
+
 	/**
 	 * the start of the service for http://arachb.org/arachb/arachb.owl
 	 * @throws IOException
@@ -268,7 +275,7 @@ public class ArachbPages extends HttpServlet {
             while ((l = inputReader.readLine()) != null) {
                 os.println(l);
             }
-  
+
 		}
 		finally {
 			if (inputReader != null){
@@ -282,7 +289,7 @@ public class ArachbPages extends HttpServlet {
 		b.addText(String.format("ASK WHERE {<%s> rdf:type obo:IAO_0000311 . } %n", target));
 		return b.finish();
 	}
-	
+
 	String getURI2NarrativeTest(String target){
 		SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
 		b.addText(String.format("ASK WHERE {<%s> rdf:type obo:IAO_0000030 . %n", target));
@@ -290,7 +297,7 @@ public class ArachbPages extends HttpServlet {
 		b.addText(String.format("?b obo:BFO_0000050 <%s> . } %n", target));
 		return b.finish();
 	}
-	
+
 	String getURI2TaxonTest(String target){
 		SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
 		b.addText(String.format("ASK WHERE {<%s> rdf:type obo:NCBI_Taxon1 . } %n", target));
@@ -298,8 +305,8 @@ public class ArachbPages extends HttpServlet {
 	}
 
 
-	
-	
+
+
 	//cleanup methods
 
 	private void cleanupResources(Repository repo, RepositoryConnection con){
