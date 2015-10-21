@@ -57,7 +57,7 @@ public class DefaultPage extends AbstractPage {
 		result += "<!DOCTYPE html>";
 		result += "<html lang=\"en\">";
 		result += "<head>";
-		result += generateHeader("publication");
+		result += generateHeader("unknown");
 		result += "</head>";
 		result += "<body>";
 
@@ -71,7 +71,7 @@ public class DefaultPage extends AbstractPage {
 		}
 		result += "   </div>";
 		result += "   <div class=\"row\">";
-		result += "      <div class=\"span11\">";
+		result += "      <div class=\"col-md-11\">";
 		result += "         <div id=\"results\">";
 		result += metadata.generateResults(Field.values());
 		result += "		    </div>";
