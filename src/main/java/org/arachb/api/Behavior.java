@@ -70,9 +70,9 @@ public class Behavior extends HttpServlet {
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
 			String behaviorQueryString = getName2BehaviorReportQuery(name);
-			if (!Util.tryQuery(behaviorQueryString,con,os)){
+			if (!Util.queryToOutput(behaviorQueryString,con,os)){
 				String taxonIdQueryString = getName2BehaviorIdQuery(name);
-				if (!Util.tryQuery(taxonIdQueryString,con,os)){
+				if (!Util.queryToOutput(taxonIdQueryString,con,os)){
 					Util.noResultsError(os);
 				}
 			}
@@ -167,7 +167,7 @@ public class Behavior extends HttpServlet {
     	return b.finish();
     }
     
-    final static String NAME2BEHAVIORIDBASE = Util.OBOPREFIX +
+    final static String NAME2BEHAVIORIDBASE = SparqlBuilder.OBOPREFIX +
         	"SELECT ?behavior_name ?behavior_id %n" +
             "WHERE {?behavior_id rdfs:label \"%s\"^^xsd:string . %n" +
             "       ?behavior_id rdfs:label ?behavior_name . }%n ";

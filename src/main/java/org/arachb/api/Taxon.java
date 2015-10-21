@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -91,7 +92,7 @@ public class Taxon extends HttpServlet {
 			resultList = Util.tryAndAccumulateQueryResult(resultList, ethogramQueryString, con);
 			if (resultList.isEmpty()){
 				final String taxonIdQueryString = getName2TaxonNameAndId(taxonName);
-				if (!Util.tryQuery(taxonIdQueryString,con,os)){
+				if (!Util.queryToOutput(taxonIdQueryString,con,os)){
 					Util.noResultsError(os);
 				}
 			}
@@ -137,7 +138,7 @@ public class Taxon extends HttpServlet {
 
 			if (resultList.isEmpty()){
 				final String taxonIdQueryString = getName2TaxonNameAndId(taxonName);
-				if (!Util.tryQuery(taxonIdQueryString,con,os)){
+				if (!Util.queryToOutput(taxonIdQueryString,con,os)){
 					Util.noResultsError(os);
 				}
 			}
@@ -276,33 +277,9 @@ public class Taxon extends HttpServlet {
     	final String taxonIdQueryString = getName2TaxonIdQuery(name);
     	List<TupleQueryResult>queryResults = new ArrayList<TupleQueryResult>();
     	queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonIdQueryString, con);
-    	return getOneResult(queryResults,"taxon_id");
+    	return Util.getOneResult(queryResults,"taxon_id");
     }
 
-
-    private String getOneResult(List<TupleQueryResult> queryResults, String bindingKey){
-    	try {
-    		for(TupleQueryResult rn : queryResults){
-    			if (rn.hasNext()){
-    				final BindingSet bSet = rn.next();
-    				final Binding b = bSet.getBinding(bindingKey);
-    				if (b!= null){
-    					return b.getValue().stringValue();
-    				}
-    				else {
-    					return null;
-    				}
-    			}
-    			else{
-    				return null;
-    			}
-    		}
-    	}
-    	catch (QueryEvaluationException e){
-    		return null;
-    	}
-    	return null;
-    }
 
 
     //cleanup methods
