@@ -5,7 +5,7 @@ import java.util.Date;
 
 public abstract class AbstractPage implements ArachbPage {
 
-	final static String JQUERYSTRING = "http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js";
+	final static String JQUERYSTRING = "http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js";
 	final static String BOOTSTRAPSTRING = "../static/bootstrap/js/bootstrap.min.js";
 	final static String ENVSTRING = "../static/env.js";
 	
@@ -18,6 +18,8 @@ public abstract class AbstractPage implements ArachbPage {
 	String generateHeader(String content){
 		String result = "";
 		result += "   <meta charset=\"utf-8\"/>";
+		result += "   <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">";
+		result += "   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>";
 		if (metadata.contains("title")){
 			result += String.format("   <title>%s</title>",metadata.get("title"));
 		}
@@ -25,12 +27,10 @@ public abstract class AbstractPage implements ArachbPage {
 			result += String.format("   <title>%s</title>",metadata.get("localIdentifier"));			
 		}
 		result += "   <meta http-equiv=\"content-type\" content=\"text/html;charset=UTF-8\" />";
-		result += "   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"/>";
 		String generatedtemplate = "   <meta name=\"description\" content=\"generated %s page\"/>";
 		result += String.format(generatedtemplate, content);
 		result += "   <meta name=\"author\" content=\"Peter E. Midford\"/>";
 		result += "   <link href=\"../static/bootstrap/css/bootstrap.min.css\" rel=\"stylesheet\"/>";
-		//result += "   <link href=\"static/bootstrap/css/bootstrap-theme.min.css\" rel=\"stylesheet\"/>";
 		result += "   <link type=\"text/css\" rel=\"stylesheet\" href=\"../static/spider-behavior.css\"/>";
 		return result;
 	}
@@ -89,6 +89,21 @@ public abstract class AbstractPage implements ArachbPage {
 		return result;
 	}
 
+	
+	String addStartScript(String target){
+		String result = "   <script>";
+		result +=  "      $(document).ready(function(){";
+		result += "      $.ajax({";
+		result += "        url: myhost + \"taxon\" + $(location).attr('search'),";
+		result += "        dataType: \"text\"";
+		result += "      }";
+		String donefunc = String.format("      ).done(function(data, testStatus, jqXHR){$(\"%s\").html(resulttable(eval( '(' + data + ')')))})",target);
+		result += donefunc;
+		result += "      .fail(function(jqXHR, textStatus, errorThrown) { alert(\"error: \" + textStatus); });";
+		result += "     });";
+		result += "   </script>";
+		return result;
+	}
 	
 	//Probably not really this simple
 	@Override
