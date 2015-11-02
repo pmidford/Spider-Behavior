@@ -31,7 +31,7 @@ public class Publication extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	final static private String query = 
+	final static private String QUERY = 
     		"prefix obo:<http://purl.obolibrary.org/obo/> select ?publication WHERE{?publication rdf:type obo:IAO_0000312 .}";
 
 	final static private String USERHOME = System.getProperty("user.home");
@@ -43,7 +43,6 @@ public class Publication extends HttpServlet {
             throws ServletException, IOException {
     	
 
-    		String userQuery = request.getQueryString();
     		final OutputStream os = response.getOutputStream();
             response.setContentType("application/json");
     		File baseDir = new File(ADUNAHOME);
@@ -55,7 +54,7 @@ public class Publication extends HttpServlet {
     			manager.initialize();
     			repo = manager.getRepository(repositoryId);
     		    con = repo.getConnection();
-    			TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, query);
+    			TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, QUERY);
   			  	TupleQueryResult result = tupleQuery.evaluate();
     			TupleQueryResultFormat jsonFormat = QueryResultIO.getWriterFormatForMIMEType("application/sparql-results+json");
     			TupleQueryResultWriter jsonResults = QueryResultIO.createWriter(jsonFormat, os);
