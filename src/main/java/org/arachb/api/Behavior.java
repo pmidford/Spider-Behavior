@@ -3,12 +3,14 @@ package org.arachb.api;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
 import org.openrdf.query.TupleQueryResult;
@@ -34,6 +36,9 @@ public class Behavior extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private static Logger log = Logger.getLogger(Behavior.class);
+
 
 	@Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -54,10 +59,12 @@ public class Behavior extends HttpServlet {
 			name = b.toString().trim();  //remove final space
 		}
 		if (!validateBehaviorName(name)){
-			Util.noResultsError(os);
-			os.flush();
-			os.close();
-			return;			
+			final PrintStream ps = new PrintStream(response.getOutputStream());
+			response.setStatus(500);
+			String errorStr = "Failed to validate behavior Name %s"; 
+			ps.printf(errorStr, name);
+			log.error(String.format(errorStr, name));
+			return;
 		}
 		response.setContentType(Util.SPARQLMIMETYPE);
 		Repository repo = null;
@@ -70,10 +77,19 @@ public class Behavior extends HttpServlet {
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
 			String behaviorQueryString = getName2BehaviorReportQuery(name);
-			if (!Util.queryToOutput(behaviorQueryString,con,os)){
+			ResultTable result = new ResultTable(response);
+			result.tryAndAccumulateQueryResult(behaviorQueryString,con);
+			if (!result.isEmpty()){
+				result.jsonFormatResultList();
+			}
+			else{
 				String taxonIdQueryString = getName2BehaviorIdQuery(name);
-				if (!Util.queryToOutput(taxonIdQueryString,con,os)){
-					Util.noResultsError(os);
+				result.tryAndAccumulateQueryResult(taxonIdQueryString, con);
+				if (!result.isEmpty()){
+					result.jsonFormatResultList();
+				}
+				else{
+					result.noResultsError(behaviorQueryString);
 				}
 			}
 		} catch (RepositoryException e) {
@@ -112,24 +128,6 @@ public class Behavior extends HttpServlet {
     }
     
     
-    void jsonFormatResult(TupleQueryResult r,OutputStream os){
-		TupleQueryResultFormat jsonFormat = QueryResultIO.getWriterFormatForMIMEType(Util.SPARQLMIMETYPE);
-		final TupleQueryResultWriter jsonResults = QueryResultIO.createWriter(jsonFormat, os);
-		try{
-			jsonResults.startQueryResult(r.getBindingNames());
-			while(r.hasNext()){
-				jsonResults.handleSolution(r.next());
-			}
-			jsonResults.endQueryResult();  
-		} catch (QueryEvaluationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (TupleQueryResultHandlerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
 
     /**
      * 

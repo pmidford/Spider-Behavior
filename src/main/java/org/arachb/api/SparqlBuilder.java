@@ -25,7 +25,7 @@ public class SparqlBuilder {
 		return b;
 	}
 	
-	public void addEventsSelectLine(String[] varArray) {
+	public void addSelectLine(String[] varArray) {
 		b.append("SELECT ");
 		for (String var : varArray){
 			b.append("?"+var+" ");

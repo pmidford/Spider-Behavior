@@ -46,10 +46,10 @@ public class TestSparqlBuilder {
 	@Test
 	public void testAddEventsSelectLine() {
 		SparqlBuilder b1 = SparqlBuilder.startSparql();
-		b1.addEventsSelectLine(emptyVars);
+		b1.addSelectLine(emptyVars);
 		assertThat(b1.finish(),equalTo("SELECT \n"));
 		SparqlBuilder b2 = SparqlBuilder.startSparql();
-		b2.addEventsSelectLine(eventsSelectVars);
+		b2.addSelectLine(eventsSelectVars);
 		assertThat(b2.finish(),
 				equalTo("SELECT ?event ?narrative ?behavior ?behavior_id ?anatomy ?anatomy_id ?subject ?individual \n"));
 	}

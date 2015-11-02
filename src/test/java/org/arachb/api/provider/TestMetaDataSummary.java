@@ -116,9 +116,11 @@ public class TestMetaDataSummary {
 
 	@Test
 	public void testGenerateResults() {
-		String fieldList = mds1.generateResults(Field.values());
-		assert(fieldList.startsWith("<ul>"));
-		assert(fieldList.endsWith("</ul>"));
+		String fieldList = mds1.generateResults(Field.values()).trim();
+		String startStr = fieldList.substring(0, 4);
+		String endStr = fieldList.substring(fieldList.length()-5);
+		assertThat(startStr,equalTo("<ul>"));
+		assertThat(endStr,equalTo("</ul>"));
 	}
 
 }

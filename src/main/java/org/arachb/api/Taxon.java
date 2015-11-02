@@ -2,21 +2,16 @@ package org.arachb.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.io.PrintStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.openrdf.query.Binding;
-import org.openrdf.query.BindingSet;
+import org.apache.log4j.Logger;
 import org.openrdf.query.MalformedQueryException;
 import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.RepositoryException;
@@ -39,6 +34,7 @@ public class Taxon extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private final static File BASEDIR = new File(Util.ADUNAHOME);
+	private static Logger log = Logger.getLogger(Taxon.class);
 
 
 
@@ -50,27 +46,29 @@ public class Taxon extends HttpServlet {
 		path = path.substring(path.indexOf("/taxon"));
 		String taxonName = getTaxonFromQuery(request);
 
-		final OutputStream os = response.getOutputStream();
 		response.setContentType(Util.SPARQLMIMETYPE);
 
 		if (!validateTaxonName(taxonName)){
-			Util.noResultsError(os);
-			os.flush();
-			os.close();
+			final PrintStream ps = new PrintStream(response.getOutputStream());
+			response.setStatus(500);
+			String errorStr = "Failed to validate Taxon Name %s"; 
+			ps.printf(errorStr, taxonName);
+			log.error(String.format(errorStr, taxonName));
 			return;
 		}
-
-		switch (path){
-		case "/taxon/events":
-			getTaxonEvents(taxonName,os);
-			break;
-		case "/taxon":
-			getTaxonGeneralClaims(taxonName,os);
-			break;
-		default:
-			final StringBuilder msgBuffer = new StringBuilder();
-			msgBuffer.append('"').append("Path is: ").append(path).append('"');
-			response.getOutputStream().write(msgBuffer.toString().getBytes("UTF-8"));
+		else{
+			switch (path){
+			case "/taxon/events":
+				getTaxonEvents(taxonName,response);
+				break;
+			case "/taxon":
+				getTaxonGeneralClaims(taxonName,response);
+				break;
+			default:
+				final StringBuilder msgBuffer = new StringBuilder();
+				msgBuffer.append('"').append("Path is: ").append(path).append('"');
+				response.getOutputStream().write(msgBuffer.toString().getBytes("UTF-8"));
+			}
 		}
 		response.getOutputStream().flush();
 		response.getOutputStream().close();
@@ -78,7 +76,7 @@ public class Taxon extends HttpServlet {
 	}
 
 
-	void getTaxonGeneralClaims(String taxonName, OutputStream os) throws ServletException, IOException{
+	void getTaxonGeneralClaims(String taxonName, HttpServletResponse response) throws ServletException, IOException{
 
 		Repository repo = null;
 		RepositoryConnection con = null;
@@ -87,17 +85,21 @@ public class Taxon extends HttpServlet {
 			manager.initialize();
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
-			List<TupleQueryResult> resultList = new ArrayList<TupleQueryResult>();
 			final String ethogramQueryString = getName2GeneralQuery(taxonName);
-			resultList = Util.tryAndAccumulateQueryResult(resultList, ethogramQueryString, con);
-			if (resultList.isEmpty()){
-				final String taxonIdQueryString = getName2TaxonNameAndId(taxonName);
-				if (!Util.queryToOutput(taxonIdQueryString,con,os)){
-					Util.noResultsError(os);
-				}
+			ResultTable resultTable = new ResultTable(response);
+			resultTable.tryAndAccumulateQueryResult(ethogramQueryString, con);
+			if (!resultTable.isEmpty()){
+				resultTable.jsonFormatResultList();
 			}
 			else{
-				Util.jsonFormatResultList(resultList,os);
+				final String taxonIdQueryString = getName2TaxonNameAndId(taxonName);
+				resultTable.tryAndAccumulateQueryResult(taxonIdQueryString, con);
+				if (!resultTable.isEmpty()){
+					resultTable.jsonFormatResultList();
+				}
+				else{
+					resultTable.noResultsError(ethogramQueryString);
+				}
 			}
 		} catch (RepositoryException e) {  //TODO - make these return meaningful JSON strings
 			// TODO Auto-generated catch block
@@ -115,12 +117,12 @@ public class Taxon extends HttpServlet {
 		finally {
 			cleanupResources(repo,con);
 		}
-		os.flush();
-		os.close();
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
 	}
 
 
-	void getTaxonEvents(String taxonName, OutputStream os) throws ServletException, IOException{
+	void getTaxonEvents(String taxonName, HttpServletResponse response) throws ServletException, IOException{
 
 		Repository repo = null;
 		RepositoryConnection con = null;
@@ -129,21 +131,23 @@ public class Taxon extends HttpServlet {
 			manager.initialize();
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
-			//List <String> NameList = buildSubClassClosure(taxonName,con);
-			List<TupleQueryResult> resultList = new ArrayList<TupleQueryResult>();
+			ResultTable resultTable = new ResultTable(response);
 
 			final String eventQueryString = getName2EventQuery(taxonName);
-			System.out.println("event query = " + eventQueryString);
-			resultList = Util.tryAndAccumulateQueryResult(resultList, eventQueryString, con);
-
-			if (resultList.isEmpty()){
-				final String taxonIdQueryString = getName2TaxonNameAndId(taxonName);
-				if (!Util.queryToOutput(taxonIdQueryString,con,os)){
-					Util.noResultsError(os);
-				}
+			log.info(String.format("Query String: %s",eventQueryString));
+			resultTable.tryAndAccumulateQueryResult(eventQueryString, con);
+			if (!resultTable.isEmpty()){
+				resultTable.jsonFormatResultList();
 			}
 			else{
-				Util.jsonFormatResultList(resultList,os);
+				final String taxonIdQueryString = getName2TaxonNameAndId(taxonName);
+				resultTable.tryAndAccumulateQueryResult(taxonIdQueryString, con);
+				if (!resultTable.isEmpty()){
+					resultTable.jsonFormatResultList();
+				}
+				else{
+					resultTable.noResultsError(eventQueryString);
+				}
 			}
 		} catch (RepositoryException e) {
 			// TODO Auto-generated catch block
@@ -161,18 +165,19 @@ public class Taxon extends HttpServlet {
 		finally {
 			cleanupResources(repo, con);
 		}
-		os.flush();
-		os.close();
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
 	}
 
 	private String getTaxonFromQuery(HttpServletRequest request){
 		String name = request.getQueryString();
 		name = name.substring("taxon=".length()).trim();
-		final int pos = name.indexOf('+');
-		if (pos>-1){
-			name = name.substring(0,pos)+ ' ' + name.substring(pos+1);
+		StringBuilder b = new StringBuilder();  //remove when upgrade to java 8 happens
+		for (String Component : name.split("\\+")){
+			b.append(Component);
+			b.append(" ");
 		}
-		return name;
+		return b.toString().trim();
 	}
 
 
@@ -273,11 +278,11 @@ public class Taxon extends HttpServlet {
 
 
 
-    String buildClass(String name, RepositoryConnection con) throws RepositoryException, MalformedQueryException, QueryEvaluationException{
+    String buildClass(String name, RepositoryConnection con, HttpServletResponse response) throws RepositoryException, MalformedQueryException, QueryEvaluationException{
     	final String taxonIdQueryString = getName2TaxonIdQuery(name);
-    	List<TupleQueryResult>queryResults = new ArrayList<TupleQueryResult>();
-    	queryResults = Util.tryAndAccumulateQueryResult(queryResults, taxonIdQueryString, con);
-    	return Util.getOneResult(queryResults,"taxon_id");
+    	ResultTable queryResults = new ResultTable(response);
+    	queryResults.tryAndAccumulateQueryResult(taxonIdQueryString, con);
+    	return queryResults.getOneResult("taxon_id");
     }
 
 

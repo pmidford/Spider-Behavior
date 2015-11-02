@@ -8,9 +8,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.arachb.api.provider.ArachbPage;
 import org.arachb.api.provider.DefaultPage;
 import org.arachb.api.provider.MetaDataSummary;
@@ -65,6 +68,8 @@ public class ArachbPages extends HttpServlet {
 
 	private final static File BASEDIR = new File(Util.ADUNAHOME);
 
+	private static Logger log = Logger.getLogger(ArachbPages.class);
+
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -77,7 +82,10 @@ public class ArachbPages extends HttpServlet {
 		String target;
 		String[] targetComponents = request.getRequestURI().substring(TOSTRIP.length()).split("\\.");
 		if (targetComponents.length == 0 || targetComponents.length > 2){
-			Util.noResultsError(os);
+			final PrintStream ps = new PrintStream(response.getOutputStream());
+			response.setStatus(500);
+			ps.printf("Dubious request %s", Arrays.toString(targetComponents));
+			log.error(String.format("Dubious request %s", Arrays.toString(targetComponents)));
 		}
 		else{
 			if (System.getProperty("user.name").equals("pmidford")){  //debugging hack
@@ -86,8 +94,8 @@ public class ArachbPages extends HttpServlet {
 			else{
 				target = ARACHBPREFIX + targetComponents[0];
 			}
-			System.out.println("User is " + System.getProperty("user.name"));
-			System.out.println("target = " + target);
+			log.info("User is " + System.getProperty("user.name"));
+			log.info("target = " + target);
 			if (targetComponents.length == 2){
 				if ("json".equalsIgnoreCase(targetComponents[1])){
 					writeHTML = false;
@@ -107,7 +115,7 @@ public class ArachbPages extends HttpServlet {
 				repo = manager.getRepository(Util.REPONAME);
 				con = repo.getConnection();
 				final StringBuilder msgBuffer = new StringBuilder();
-				List<String> commentStrings = getComments(target, con);
+				List<String> commentStrings = getComments(target, con, response);
 				MetaDataSummary mds = null;
 				for (String comment : commentStrings){
 					if (jsonCheck(comment)){
@@ -130,7 +138,7 @@ public class ArachbPages extends HttpServlet {
 						break;
 					}
 					case NARRATIVE: {
-						thisPage = new NarrativePage(mds,con);
+						thisPage = new NarrativePage(mds,con,response);
 						break;
 					}
 					case ONTOLOGY: {
@@ -198,9 +206,9 @@ public class ArachbPages extends HttpServlet {
 
 	private boolean checkType(String testQuery, RepositoryConnection con)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException {
-		System.out.println("Query String is: " + testQuery);
+		log.info("Query String is: " + testQuery);
 		boolean result = Util.askQuery(testQuery, con);
-		System.out.println("Result is " + Boolean.toString(result));
+		log.info("Result is " + Boolean.toString(result));
 		return result;
 	}
 
@@ -215,15 +223,15 @@ public class ArachbPages extends HttpServlet {
 	 * @throws MalformedQueryException
 	 * @throws QueryEvaluationException
 	 */
-	private List<String> getComments(String target, RepositoryConnection con)
+	private List<String> getComments(String target, RepositoryConnection con, HttpServletResponse response)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException {
 		final String commentQueryString = getURI2CommentQuery(target);
-		System.out.println("Query String is: " + commentQueryString);
+		log.info("Query String is: " + commentQueryString);
 		List<String> results = new ArrayList<>();
-		List<TupleQueryResult> queryResult = new ArrayList<TupleQueryResult>();
-		queryResult = Util.tryAndAccumulateQueryResult(queryResult, commentQueryString, con);
-		if (!queryResult.isEmpty()){
-			for (TupleQueryResult tqr : queryResult){
+		ResultTable resultTable = new ResultTable(response);
+		resultTable.tryAndAccumulateQueryResult(commentQueryString, con);
+		if (!resultTable.isEmpty()){
+			for (TupleQueryResult tqr : resultTable.getContents()){
 				while (tqr.hasNext()){
 					BindingSet bs = tqr.next();
 					Binding b = bs.getBinding("comment");

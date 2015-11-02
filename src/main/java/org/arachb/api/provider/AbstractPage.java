@@ -16,19 +16,21 @@ public abstract class AbstractPage implements ArachbPage {
 	}
 	
 	String generateHeader(String content){
+		final String ls = System.lineSeparator();
 		String result = "";
-		result += "   <meta charset=\"utf-8\"/>";
-		result += "   <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">";
-		result += "   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>";
+		result += "   <meta charset=\"utf-8\"/>" + ls;
+		result += "   <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" + ls;
+		result += "   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>" +ls;
+		String titleTemplate = "   <title>%s</title>%n";
 		if (metadata.contains("title")){
-			result += String.format("   <title>%s</title>",metadata.get("title"));
+			result += String.format(titleTemplate,metadata.get("title"));
 		}
 		else {
-			result += String.format("   <title>%s</title>",metadata.get("localIdentifier"));			
+			result += String.format(titleTemplate,metadata.get("localIdentifier"));			
 		}
 		result += "   <meta http-equiv=\"content-type\" content=\"text/html;charset=UTF-8\" />";
 		String generatedtemplate = "   <meta name=\"description\" content=\"generated %s page\"/>";
-		result += String.format(generatedtemplate, content);
+		result += String.format(generatedtemplate, content) + ls;
 		result += "   <meta name=\"author\" content=\"Peter E. Midford\"/>";
 		result += "   <link href=\"../static/bootstrap/css/bootstrap.min.css\" rel=\"stylesheet\"/>";
 		result += "   <link type=\"text/css\" rel=\"stylesheet\" href=\"../static/spider-behavior.css\"/>";
@@ -76,32 +78,33 @@ public abstract class AbstractPage implements ArachbPage {
 	
 	String addScript(String script_url){
 		String result = "   <script type=\"text/javascript\" ";
-		result += String.format("           src=\"%s\">", script_url);
-		result += "   </script>";
+		result += String.format("           src=\"%s\"> %n", script_url);
+		result += "   </script>" + System.lineSeparator();
 		return result;
 	}
 
 	String addFooter(){
 		String current = DateFormat.getDateInstance().format(new Date());
-		String result = "   <footer>";
-		result += String.format("      <p>Last update %s</p>",current);;
-		result += "   </footer>";
+		String result = "   <footer>" + System.lineSeparator();
+		result += String.format("      <p>Last update %s</p>",current) + System.lineSeparator();
+		result += "   </footer>" + System.lineSeparator();
 		return result;
 	}
 
 	
 	String addStartScript(String target){
-		String result = "   <script>";
-		result +=  "      $(document).ready(function(){";
-		result += "      $.ajax({";
-		result += "        url: myhost + \"taxon\" + $(location).attr('search'),";
-		result += "        dataType: \"text\"";
-		result += "      }";
-		String donefunc = String.format("      ).done(function(data, testStatus, jqXHR){$(\"%s\").html(resulttable(eval( '(' + data + ')')))})",target);
+		String ls = System.lineSeparator();
+		String result = "   <script>" + ls;
+		result +=  "      $(document).ready(function(){" + ls;
+		result += "      $.ajax({" + ls;
+		result += "        url: myhost + \"taxon\" + $(location).attr('search')," + ls;
+		result += "        dataType: \"text\"" + ls;
+		result += "      }" + ls;
+		String donefunc = String.format("      ).done(function(data, testStatus, jqXHR){$(\"%s\").html(resulttable(eval( '(' + data + ')')))})%n",target);
 		result += donefunc;
-		result += "      .fail(function(jqXHR, textStatus, errorThrown) { alert(\"error: \" + textStatus); });";
-		result += "     });";
-		result += "   </script>";
+		result += "      .fail(function(jqXHR, textStatus, errorThrown) { alert(\"error: \" + textStatus); });" + ls;
+		result += "     });" + ls;
+		result += "   </script>" + ls;
 		return result;
 	}
 	
