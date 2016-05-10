@@ -31,6 +31,10 @@
     <servlet-class>org.arachb.api.ArachbPages</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>public_ontology</servlet-name>
+    <servlet-class>org.arachb.api.PublicOntology</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>startup</servlet-name>
     <servlet-class>org.arachb.api.Startup</servlet-class>
     <load-on-startup>5</load-on-startup>
@@ -54,6 +58,10 @@
   <servlet-mapping>
     <servlet-name>arachb</servlet-name>
     <url-pattern>/arachb/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>public_ontology</servlet-name>
+    <url-pattern>/ontology</url-pattern>
   </servlet-mapping>
 
   <error-page>

@@ -50,6 +50,7 @@ public class ArachbPages extends HttpServlet {
 		PUBLICATION,
 		NARRATIVE,
 		ONTOLOGY,
+		PUBLIC_ONTOLOGY,
 		TAXON,
 		INDIVIDUAL,
 		UNKNOWN;
@@ -63,7 +64,7 @@ public class ArachbPages extends HttpServlet {
 
 	final static String ARACHBPREFIX = "http://arachb.org";
 	final static String TOSTRIP = "/spider-behavior";
-
+	
 	private static final long serialVersionUID = 1L;
 
 	private final static File BASEDIR = new File(Util.ADUNAHOME);
@@ -77,10 +78,18 @@ public class ArachbPages extends HttpServlet {
 
 
 		final ServletOutputStream os = response.getOutputStream();
-
 		boolean writeHTML;
 		String target;
-		String[] targetComponents = request.getRequestURI().substring(TOSTRIP.length()).split("\\.");
+		String requestStr = request.getRequestURI();
+		String[] targetComponents = null;
+		log.info("RequestStr: " + requestStr);
+		if (requestStr.contains(TOSTRIP)) {
+			targetComponents = requestStr.substring(TOSTRIP.length()).split("\\.");
+		}
+		else {
+			targetComponents = requestStr.split("\\.");			
+		}
+		log.info("targetComponents: " + targetComponents[0]);
 		if (targetComponents.length == 0 || targetComponents.length > 2){
 			final PrintStream ps = new PrintStream(response.getOutputStream());
 			response.setStatus(500);
@@ -88,14 +97,7 @@ public class ArachbPages extends HttpServlet {
 			log.error(String.format("Dubious request %s", Arrays.toString(targetComponents)));
 		}
 		else{
-			if (System.getProperty("user.name").equals("pmidford")){  //debugging hack
-				target = ARACHBPREFIX + "/arachb/ARACHB_0" + targetComponents[0];
-			}
-			else{
-				target = ARACHBPREFIX + targetComponents[0];
-			}
-			log.info("User is " + System.getProperty("user.name"));
-			log.info("target = " + target);
+			target = ARACHBPREFIX + targetComponents[0];
 			if (targetComponents.length == 2){
 				if ("json".equalsIgnoreCase(targetComponents[1])){
 					writeHTML = false;
@@ -267,6 +269,7 @@ public class ArachbPages extends HttpServlet {
 	boolean ontologyTest(String target){
 		return ontologyURI.equals(target);
 	}
+	
 
 	/**
 	 * the start of the service for http://arachb.org/arachb/arachb.owl
