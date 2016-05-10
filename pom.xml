@@ -21,6 +21,10 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<slf4j.version>1.7.10</slf4j.version>
+		<jackson.version>2.4.4</jackson.version>
   </properties>
   <dependencies>
     <dependency>
@@ -59,7 +63,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>log4j-over-slf4j</artifactId>
-      <version>1.7.5</version>
+      <version>${slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
@@ -69,8 +73,8 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
-      <version>2.2.1</version>
-    </dependency> 
+      <version>${jackson.version}</version>
+	</dependency> 
     <dependency>
     	<groupId>org.openrdf.sesame</groupId>
     	<artifactId>sesame-runtime</artifactId>
