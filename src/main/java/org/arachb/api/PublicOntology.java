@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class PublicOntology extends HttpServlet {
 
-	final static String PUBLIC_ONTOLOGY_REDIRECT = "http://bit.ly/1WZ2koJ";
+	final static String PUBLIC_ONTOLOGY_REDIRECT = "http://arachb.org/pages/ontology.html";
 
 
 	
