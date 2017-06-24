@@ -9,20 +9,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.query.TupleQueryResultHandlerException;
-import org.openrdf.query.resultio.QueryResultIO;
-import org.openrdf.query.resultio.TupleQueryResultFormat;
-import org.openrdf.query.resultio.TupleQueryResultWriter;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.config.RepositoryConfigException;
-import org.openrdf.repository.manager.LocalRepositoryManager;
+import org.eclipse.rdf4j.query.MalformedQueryException;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
+import org.eclipse.rdf4j.query.resultio.QueryResultFormat;
+import org.eclipse.rdf4j.query.resultio.QueryResultIO;
+import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriter;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
+import org.eclipse.rdf4j.repository.manager.LocalRepositoryManager;
 
 public class Publication extends HttpServlet {
 	
@@ -56,13 +56,16 @@ public class Publication extends HttpServlet {
     		    con = repo.getConnection();
     			TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, QUERY);
   			  	TupleQueryResult result = tupleQuery.evaluate();
-    			TupleQueryResultFormat jsonFormat = QueryResultIO.getWriterFormatForMIMEType("application/sparql-results+json");
-    			TupleQueryResultWriter jsonResults = QueryResultIO.createWriter(jsonFormat, os);
-    			jsonResults.startQueryResult(result.getBindingNames());
-    			while(result.hasNext()){
-    		        jsonResults.handleSolution(result.next());
+    			QueryResultFormat jsonFormat = 
+    					QueryResultIO.getWriterFormatForMIMEType("application/sparql-results+json").orElse(null);
+    			if (jsonFormat != null){
+    				TupleQueryResultWriter jsonResults = (TupleQueryResultWriter) QueryResultIO.createWriter(jsonFormat, os);
+        			jsonResults.startQueryResult(result.getBindingNames());
+        			while(result.hasNext()){
+        		        jsonResults.handleSolution(result.next());
+        			}
+        			jsonResults.endQueryResult();  
     			}
-    			jsonResults.endQueryResult();  
     		} catch (RepositoryException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();

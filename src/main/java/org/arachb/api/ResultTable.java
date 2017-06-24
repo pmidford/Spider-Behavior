@@ -1,7 +1,6 @@
 package org.arachb.api;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,19 +10,19 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.openrdf.query.Binding;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.QueryLanguage;
-import org.openrdf.query.TupleQuery;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.query.TupleQueryResultHandlerException;
-import org.openrdf.query.resultio.QueryResultIO;
-import org.openrdf.query.resultio.TupleQueryResultFormat;
-import org.openrdf.query.resultio.TupleQueryResultWriter;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
+import org.eclipse.rdf4j.query.Binding;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.MalformedQueryException;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.TupleQueryResultHandlerException;
+import org.eclipse.rdf4j.query.resultio.QueryResultFormat;
+import org.eclipse.rdf4j.query.resultio.QueryResultIO;
+import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriter;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
 
 public class ResultTable {
 
@@ -57,11 +56,11 @@ public class ResultTable {
 	}
 
 
-	final static TupleQueryResultFormat JSONFORMAT = QueryResultIO.getWriterFormatForMIMEType(Util.SPARQLMIMETYPE);
+	final static QueryResultFormat JSONFORMAT = QueryResultIO.getWriterFormatForMIMEType(Util.SPARQLMIMETYPE).orElse(null);
 
 	public void jsonFormatResultList() throws IOException{
 		final ServletOutputStream os = response.getOutputStream();
-		final TupleQueryResultWriter jsonResults = QueryResultIO.createWriter(JSONFORMAT, os);
+		final TupleQueryResultWriter jsonResults = (TupleQueryResultWriter) QueryResultIO.createWriter(JSONFORMAT, os);
 		try {
 			TupleQueryResult r = contents.get(0);
 			jsonResults.startQueryResult(r.getBindingNames());
@@ -149,7 +148,7 @@ public class ResultTable {
 
 	void jsonFormatSingleResult() throws IOException{
 		final ServletOutputStream os = response.getOutputStream();
-		final TupleQueryResultWriter jsonResults = QueryResultIO.createWriter(JSONFORMAT, os);
+		final TupleQueryResultWriter jsonResults = (TupleQueryResultWriter) QueryResultIO.createWriter(JSONFORMAT, os);
 		try{
 			TupleQueryResult r = contents.get(0);
 			jsonResults.startQueryResult(r.getBindingNames());

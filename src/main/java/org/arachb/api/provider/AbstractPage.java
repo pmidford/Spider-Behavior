@@ -5,7 +5,7 @@ import java.util.Date;
 
 public abstract class AbstractPage implements ArachbPage {
 
-	final static String JQUERYSTRING = "http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js";
+	final static String JQUERYSTRING = "https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js";
 	final static String BOOTSTRAPSTRING = "../static/bootstrap/js/bootstrap.min.js";
 	final static String ENVSTRING = "../static/env.js";
 	
@@ -48,7 +48,7 @@ public abstract class AbstractPage implements ArachbPage {
 		result += "            <span class=\"icon-bar\"></span>";
 		result += "            <span class=\"icon-bar\"></span>";
 		result += "        </button>";
-		result += "        <a class=\"navbar-brand\" href=\"http://arachb.org\">";
+		result += "        <a class=\"navbar-brand\" href=\"https://arachb.org\">";
 		result += "          <img class=\"navbar-image\" src=\"../static/spiderwords_small.jpg\"  alt=\"spider words\"/>";
 		result += "        </a>";
 		result += "      </div>";

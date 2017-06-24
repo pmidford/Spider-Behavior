@@ -27,17 +27,17 @@ import org.arachb.api.provider.DefaultPage;
 import org.arachb.api.provider.MetaDataSummary;
 import org.arachb.api.provider.NarrativePage;
 import org.arachb.api.provider.PublicationPage;
-import org.openrdf.model.Value;
-import org.openrdf.query.Binding;
-import org.openrdf.query.BindingSet;
-import org.openrdf.query.MalformedQueryException;
-import org.openrdf.query.QueryEvaluationException;
-import org.openrdf.query.TupleQueryResult;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.config.RepositoryConfigException;
-import org.openrdf.repository.manager.LocalRepositoryManager;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.query.Binding;
+import org.eclipse.rdf4j.query.BindingSet;
+import org.eclipse.rdf4j.query.MalformedQueryException;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
+import org.eclipse.rdf4j.repository.manager.LocalRepositoryManager;
 
 
 /**
@@ -67,7 +67,7 @@ public class ArachbPages extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 
-	private final static File BASEDIR = new File(Util.ADUNAHOME);
+	private final static File BASEDIR = new File(Util.RDF4JHOME);
 
 	private static Logger log = Logger.getLogger(ArachbPages.class);
 

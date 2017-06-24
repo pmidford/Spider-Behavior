@@ -1,7 +1,5 @@
 package org.arachb.api.provider;
 
-import static org.junit.Assert.*;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;

@@ -10,18 +10,18 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.config.RepositoryConfig;
-import org.openrdf.repository.config.RepositoryConfigException;
-import org.openrdf.repository.config.RepositoryImplConfig;
-import org.openrdf.repository.manager.LocalRepositoryManager;
-import org.openrdf.repository.sail.config.SailRepositoryConfig;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFParseException;
-import org.openrdf.sail.config.SailImplConfig;
-import org.openrdf.sail.memory.config.MemoryStoreConfig;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.config.RepositoryConfig;
+import org.eclipse.rdf4j.repository.config.RepositoryConfigException;
+import org.eclipse.rdf4j.repository.config.RepositoryImplConfig;
+import org.eclipse.rdf4j.repository.manager.LocalRepositoryManager;
+import org.eclipse.rdf4j.repository.sail.config.SailRepositoryConfig;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.sail.config.SailImplConfig;
+import org.eclipse.rdf4j.sail.memory.config.MemoryStoreConfig;
 
 
 public class Startup extends HttpServlet {
@@ -32,14 +32,14 @@ public class Startup extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	final static private String USERHOME = System.getProperty("user.home");
-	final static private String ADUNAHOME = USERHOME+"/.aduna/";
+	final static private String RDF4JHOME = USERHOME+"/.rdf4j/";
 	final static private String baseURI = "http://arachb.org/arachb/arachb.owl";
 
 	
 	@Override
     public void init(ServletConfig config) throws ServletException{
 		System.out.println("Starting init process");
-		File baseDir = new File(ADUNAHOME);
+		File baseDir = new File(RDF4JHOME);
 		String repositoryId = "test1";
 		LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
 		Repository repo = null;
