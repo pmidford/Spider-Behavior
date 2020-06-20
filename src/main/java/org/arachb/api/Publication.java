@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import org.eclipse.rdf4j.query.MalformedQueryException;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.QueryLanguage;
@@ -34,22 +36,23 @@ public class Publication extends HttpServlet {
 	final static private String QUERY = 
     		"prefix obo:<http://purl.obolibrary.org/obo/> select ?publication WHERE{?publication rdf:type obo:IAO_0000312 .}";
 
+	private final static File BASEDIR = new File(Util.RDF4JHOME);
+
 	final static private String USERHOME = System.getProperty("user.home");
-	final static private String ADUNAHOME = USERHOME+"/.aduna/";
 	final static private String baseURI = "http://arachb.org/arachb/arachb.owl";
 
-	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-    	
+	private static final Logger log = Logger.getLogger(Taxon.class);
 
+
+	@Override
+	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     		final OutputStream os = response.getOutputStream();
             response.setContentType("application/json");
-    		File baseDir = new File(ADUNAHOME);
 			String repositoryId = "test1";
 			Repository repo = null;
 			RepositoryConnection con = null;
-    		LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
+			log.error("In publication doGet");
+    		LocalRepositoryManager manager = new LocalRepositoryManager(BASEDIR);
     		try {
     			manager.initialize();
     			repo = manager.getRepository(repositoryId);
