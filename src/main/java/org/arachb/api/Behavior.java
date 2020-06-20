@@ -32,7 +32,7 @@ public class Behavior extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private static Logger log = Logger.getLogger(Behavior.class);
+	private static final Logger log = Logger.getLogger(Behavior.class);
 
 
 	@Override
@@ -42,7 +42,7 @@ public class Behavior extends HttpServlet {
 		final OutputStream os = response.getOutputStream();
 
 		String name = request.getQueryString();
-		//System.out.println("raw string is: |" + name);
+		log.warn("raw string is: |" + name);
 		name = name.substring("behavior=".length()).trim();
 		final String[] components = name.split("\\+");
 		if (components.length>1){
@@ -138,10 +138,10 @@ public class Behavior extends HttpServlet {
     
     String getName2BehaviorReportQuery(String name){
     	SparqlBuilder b = SparqlBuilder.startSparql();
-    	String selectLine = "SELECT ?behavior ?taxon ?anatomy%n";
+    	String selectLine = "SELECT ?behavior ?taxon ?anatomy\n";
     	b.addText(selectLine);
     	String whereLine =
-    			String.format("WHERE {?behavior_id rdfs:label \"%s\"^^xsd:string . %n", name);
+    			String.format("WHERE {?behavior_id rdfs:label \"%s\"^^xsd:string .\n", name);
     	b.addText(whereLine);
     	b.addClause("?behavior_id rdfs:label ?behavior", true);
     	b.addClause("?s8 rdf:first ?behavior_id",true);
@@ -155,8 +155,8 @@ public class Behavior extends HttpServlet {
     	b.addClause("?s1 owl:someValuesFrom ?taxon_id",true);
     	b.addClause("?taxon_id rdfs:label ?taxon",true);
     	b.addClause("?anatomy_id rdfs:label ?anatomy",true);
-    	b.addText("} %n");
-    	b.debug();
+    	b.addText("}");
+    	//b.debug();
     	return b.finish();
     }
     
