@@ -3,6 +3,7 @@ package org.arachb.api;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -34,7 +35,7 @@ public class Taxon extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private final static File BASEDIR = new File(Util.RDF4JHOME);
-	private static Logger log = Logger.getLogger(Taxon.class);
+	private static final Logger log = Logger.getLogger(Taxon.class);
 
 
 
@@ -45,6 +46,7 @@ public class Taxon extends HttpServlet {
 		String path = request.getRequestURI();
 		path = path.substring(path.indexOf("/taxon"));
 		String taxonName = getTaxonFromQuery(request);
+		log.warn("Taxon name: " +  taxonName);
 
 		response.setContentType(Util.SPARQLMIMETYPE);
 
@@ -57,6 +59,7 @@ public class Taxon extends HttpServlet {
 			return;
 		}
 		else{
+			log.warn("path: " +  path);
 			switch (path){
 			case "/taxon/events":
 				getTaxonEvents(taxonName,response);
@@ -65,21 +68,19 @@ public class Taxon extends HttpServlet {
 				getTaxonGeneralClaims(taxonName,response);
 				break;
 			default:
-				final StringBuilder msgBuffer = new StringBuilder();
-				msgBuffer.append('"').append("Path is: ").append(path).append('"');
-				response.getOutputStream().write(msgBuffer.toString().getBytes("UTF-8"));
+				response.getOutputStream().write(('"' + "Path is: " + path + '"').getBytes(StandardCharsets.UTF_8));
 			}
 		}
 		response.getOutputStream().flush();
 		response.getOutputStream().close();
-		return;
 	}
 
 
-	void getTaxonGeneralClaims(String taxonName, HttpServletResponse response) throws ServletException, IOException{
+	void getTaxonGeneralClaims(String taxonName, HttpServletResponse response) throws IOException{
 
 		Repository repo = null;
 		RepositoryConnection con = null;
+		log.warn("BASEDIR= " + BASEDIR);
 		final LocalRepositoryManager manager = new LocalRepositoryManager(BASEDIR);
 		try {
 			manager.initialize();
@@ -88,6 +89,7 @@ public class Taxon extends HttpServlet {
 			final String ethogramQueryString = getName2GeneralQuery(taxonName);
 			ResultTable resultTable = new ResultTable(response);
 			resultTable.tryAndAccumulateQueryResult(ethogramQueryString, con);
+			log.warn("Result table: " +  resultTable.isEmpty());
 			if (!resultTable.isEmpty()){
 				resultTable.jsonFormatResultList();
 			}
@@ -103,12 +105,15 @@ public class Taxon extends HttpServlet {
 			}
 		} catch (RepositoryException e) {  //TODO - make these return meaningful JSON strings
 			// TODO Auto-generated catch block
+			log.error(e.toString());
 			e.printStackTrace();
 		} catch (RepositoryConfigException e) {
 			// TODO Auto-generated catch block
+			log.error(e.toString());
 			e.printStackTrace();
 		} catch (MalformedQueryException e) {
 			// TODO Auto-generated catch block
+			log.error(e.toString());
 			e.printStackTrace();
 		} catch (QueryEvaluationException e) {
 			// TODO Auto-generated catch block
@@ -122,7 +127,7 @@ public class Taxon extends HttpServlet {
 	}
 
 
-	void getTaxonEvents(String taxonName, HttpServletResponse response) throws ServletException, IOException{
+	void getTaxonEvents(String taxonName, HttpServletResponse response) throws IOException{
 
 		Repository repo = null;
 		RepositoryConnection con = null;
@@ -194,8 +199,8 @@ public class Taxon extends HttpServlet {
 
     String getName2GeneralQuery(String name){
     	SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
-    	b.addText("SELECT ?taxon ?child_taxon ?behavior ?behavior_id ?anatomy ?anatomy_id ?publication ?pubid %n", true);
-		String line1 = String.format("WHERE { ?parent_taxon rdfs:label \"%s\"^^xsd:string . %n",name);
+    	b.addText("SELECT ?taxon ?child_taxon ?behavior ?behavior_id ?anatomy ?anatomy_id ?publication ?pubid \n", true);
+		String line1 = String.format("WHERE { ?parent_taxon rdfs:label \"%s\"^^xsd:string . \n",name);
 		b.addText(line1,true);
 		b.addClause("?child_taxon rdfs:subClassOf* ?parent_taxon",true);
     	b.addClause("?r1 owl:someValuesFrom ?child_taxon",true);
@@ -219,36 +224,36 @@ public class Taxon extends HttpServlet {
     	b.addClause("?s16 obo:BFO_0000050 ?pubid",true);
     	b.addClause("?pubid rdfs:label ?publication",true);
     	b.addClause("?child_taxon rdfs:label ?taxon",true);
-    	b.addText("} %n", true);
-    	b.debug();
+    	b.addText("} \n", true);
+    	//b.debug();
     	return b.finish();
     }
 
 
     String getName2TaxonIdQuery(String name){
     	SparqlBuilder b = SparqlBuilder.startSparql();
-    	b.addText("SELECT ?taxon_id %n");
-    	String line2 = String.format("WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . } %n", name);
+    	b.addText("SELECT ?taxon_id \n");
+    	String line2 = String.format("WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . } \n", name);
     	b.addText(line2);
     	return b.finish();
     }
 
     final static String NAME2TAXONNAMEANDIDQUERYBASE =
-        	"SELECT ?taxon_name ?taxon_id %n" +
-        	"WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . %n" +
-        	"       ?taxon_id rdfs:label ?taxon_name . } %n";
+        	"SELECT ?taxon_name ?taxon_id \n" +
+        	"WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . \n" +
+        	"       ?taxon_id rdfs:label ?taxon_name . } \n";
 
     String getName2TaxonNameAndId(String name){
     	return String.format(NAME2TAXONNAMEANDIDQUERYBASE, name);
     }
 
-    private String selectLine =
-    		"SELECT ?taxon ?child_taxon ?individual ?subject ?anatomy ?anatomy_id ?behavior ?behavior_id ?narrative ?narrative_id ?publication ?pub_id %n";
 
     String getName2EventQuery(String name){
+		final String selectLine =
+				"SELECT ?taxon ?child_taxon ?individual ?subject ?anatomy ?anatomy_id ?behavior ?behavior_id ?narrative ?narrative_id ?publication ?pub_id \n";
     	SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
 		b.addText(selectLine);
-		String line1 = String.format("WHERE { ?parent_taxon rdfs:label \"%s\"^^xsd:string . %n",name);
+		String line1 = String.format("WHERE { ?parent_taxon rdfs:label \"%s\"^^xsd:string . \n",name);
 		b.addText(line1);
 		b.addClause("?child_taxon rdfs:subClassOf* ?parent_taxon");
 		b.addClause("?subject rdf:type ?child_taxon");
@@ -270,8 +275,8 @@ public class Taxon extends HttpServlet {
         b.addText("        ?other rdfs:subClassOf ?child_taxon .");
         b.addText("        FILTER(?other != ?child_taxon)");
         b.addText("    }");
-    	b.addText("} %n");
-    	b.debug();
+    	b.addText("} \n");
+    	//b.debug();
     	return b.finish();
     }
 
