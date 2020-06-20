@@ -1,5 +1,5 @@
 /**
- *
+ * A Base class for the servlets defined on this site.
  */
 package org.arachb.api;
 
@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,7 +54,7 @@ public class ArachbPages extends HttpServlet {
 		PUBLIC_ONTOLOGY,
 		TAXON,
 		INDIVIDUAL,
-		UNKNOWN;
+		UNKNOWN
 	}
 
 	//needs to extract target uri from request,
@@ -69,19 +70,19 @@ public class ArachbPages extends HttpServlet {
 
 	private final static File BASEDIR = new File(Util.RDF4JHOME);
 
-	private static Logger log = Logger.getLogger(ArachbPages.class);
+	private static final Logger log = Logger.getLogger(ArachbPages.class);
 
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+			throws IOException {
 
 
 		final ServletOutputStream os = response.getOutputStream();
 		boolean writeHTML;
 		String target;
 		String requestStr = request.getRequestURI();
-		String[] targetComponents = null;
+		String[] targetComponents;
 		log.info("RequestStr: " + requestStr);
 		if (requestStr.contains(TOSTRIP)) {
 			targetComponents = requestStr.substring(TOSTRIP.length()).split("\\.");
@@ -90,7 +91,7 @@ public class ArachbPages extends HttpServlet {
 			targetComponents = requestStr.split("\\.");			
 		}
 		log.info("targetComponents: " + targetComponents[0]);
-		if (targetComponents.length == 0 || targetComponents.length > 2){
+		if (targetComponents.length > 2){
 			final PrintStream ps = new PrintStream(response.getOutputStream());
 			response.setStatus(500);
 			ps.printf("Dubious request %s", Arrays.toString(targetComponents));
@@ -99,12 +100,7 @@ public class ArachbPages extends HttpServlet {
 		else{
 			target = ARACHBPREFIX + targetComponents[0];
 			if (targetComponents.length == 2){
-				if ("json".equalsIgnoreCase(targetComponents[1])){
-					writeHTML = false;
-				}
-				else {
-					writeHTML = true;
-				}
+				writeHTML = !"json".equalsIgnoreCase(targetComponents[1]);
 			}
 			else {
 				writeHTML = true;
@@ -160,21 +156,29 @@ public class ArachbPages extends HttpServlet {
 					}
 				}
 
-				response.getOutputStream().write(msgBuffer.toString().getBytes("UTF-8"));
+				response.getOutputStream().write(msgBuffer.toString().getBytes(StandardCharsets.UTF_8));
 
 			} catch (RepositoryException e) {  //TODO - make these return meaningful JSON strings
+				e.printStackTrace();
+				response.setStatus(500);
+				response.getOutputStream().write(e.getMessage().getBytes(StandardCharsets.UTF_8));
+			} catch (RepositoryConfigException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				response.setStatus(500);
-				response.getOutputStream().write(e.getMessage().getBytes("UTF-8"));
-			} catch (RepositoryConfigException e) {
-				// TODO Auto-generated catch block
+				response.getOutputStream().write(e.getMessage().getBytes(StandardCharsets.UTF_8));
 				e.printStackTrace();
 			} catch (MalformedQueryException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				response.setStatus(500);
+				response.getOutputStream().write(e.getMessage().getBytes(StandardCharsets.UTF_8));
+				e.printStackTrace();
 			} catch (QueryEvaluationException e) {
 				// TODO Auto-generated catch block
+				e.printStackTrace();
+				response.setStatus(500);
+				response.getOutputStream().write(e.getMessage().getBytes(StandardCharsets.UTF_8));
 				e.printStackTrace();
 			}
 			finally {
@@ -188,8 +192,9 @@ public class ArachbPages extends HttpServlet {
 
 	/**
 	 *
-	 * @param target
-	 * @return
+	 * @param target specifies the page to identify
+	 * @param con the connection to the respository
+	 * @return a PageType enumeration member
 	 */
 	private PageType identifyPage(String target, RepositoryConnection con)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException {
@@ -210,17 +215,16 @@ public class ArachbPages extends HttpServlet {
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException {
 		log.info("Query String is: " + testQuery);
 		boolean result = Util.askQuery(testQuery, con);
-		log.info("Result is " + Boolean.toString(result));
+		log.info("Result is " + result);
 		return result;
 	}
 
 
 
 	/**
-	 * @param target
-	 * @param con
-	 * @param commentString
-	 * @return
+	 * @param target URI of entity to retrieve comment for
+	 * @param con Connection to the repository
+	 * @return comments associated with the entity
 	 * @throws RepositoryException
 	 * @throws MalformedQueryException
 	 * @throws QueryEvaluationException
@@ -228,7 +232,7 @@ public class ArachbPages extends HttpServlet {
 	private List<String> getComments(String target, RepositoryConnection con, HttpServletResponse response)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException {
 		final String commentQueryString = getURI2CommentQuery(target);
-		log.info("Query String is: " + commentQueryString);
+		//log.info("Query String is: " + commentQueryString);
 		List<String> results = new ArrayList<>();
 		ResultTable resultTable = new ResultTable(response);
 		resultTable.tryAndAccumulateQueryResult(commentQueryString, con);
@@ -265,8 +269,8 @@ public class ArachbPages extends HttpServlet {
 	}
 
 	//TODO: figure out where the .owl extension disappears
-	final private String ontologyURI = "http://arachb.org/arachb/arachb";
 	boolean ontologyTest(String target){
+		final String ontologyURI = "http://arachb.org/arachb/arachb";
 		return ontologyURI.equals(target);
 	}
 	
@@ -279,13 +283,18 @@ public class ArachbPages extends HttpServlet {
 		BufferedReader inputReader = null;
 		try {
 			URL loadURL = ArachbPages.class.getClassLoader().getResource("arachb.owl");
-			URLConnection loadConnection = loadURL.openConnection();
-			InputStream ontStr = loadConnection.getInputStream();
-			inputReader= new BufferedReader(new InputStreamReader(ontStr));
-            String l;
-            while ((l = inputReader.readLine()) != null) {
-                os.println(l);
-            }
+			if (loadURL != null) {
+				URLConnection loadConnection = loadURL.openConnection();
+				InputStream ontStr = loadConnection.getInputStream();
+				inputReader = new BufferedReader(new InputStreamReader(ontStr));
+				String l;
+				while ((l = inputReader.readLine()) != null) {
+					os.println(l);
+				}
+			}
+			else {
+				os.println("arachb.owl ontology not found");
+			}
 
 		}
 		finally {
