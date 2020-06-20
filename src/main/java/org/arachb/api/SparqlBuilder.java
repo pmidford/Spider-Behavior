@@ -9,7 +9,7 @@ public class SparqlBuilder {
 
 	private final StringBuilder b = new StringBuilder(500);
 
-	private static Logger log = Logger.getLogger(SparqlBuilder.class);
+	private static final Logger log = Logger.getLogger(SparqlBuilder.class);
 	private SparqlBuilder(){
 
 	}
@@ -21,14 +21,14 @@ public class SparqlBuilder {
 	public static SparqlBuilder startSparqlWithOBO(){
 		SparqlBuilder b = new SparqlBuilder();
 		b.addText(OBOPREFIX, true);
-		b.addText("%n",true);
+		b.addText("\n",true);
 		return b;
 	}
 	
 	public void addSelectLine(String[] varArray) {
 		b.append("SELECT ");
 		for (String var : varArray){
-			b.append("?"+var+" ");
+			b.append("?").append(var).append(" ");
 		}
 		b.append(System.lineSeparator());
 	}
@@ -36,12 +36,12 @@ public class SparqlBuilder {
 
 	public void addText(String text, boolean engage){
 		if (engage){
-			b.append(String.format(text));
+			b.append(text);
 		}
 	}
 
 	public void addText(String text){
-		b.append(String.format(text));
+		b.append(text);
 	}
 
 
