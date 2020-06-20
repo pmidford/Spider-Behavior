@@ -9,7 +9,9 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 
 public class Util {
 
-	final static String USERHOME = System.getProperty("user.home");
+	// Tomcat9 doesn't seem to play nice with user.home, so hard code until a better solution.
+	//final static String USERHOME = System.getProperty("user.home");
+	final static String USERHOME = "/home/spider-master";
 	final static String RDF4JHOME = USERHOME+"/.rdf4j/";
 	final static String SPARQLMIMETYPE = "application/sparql-results+json";
 	final static String BASEURI = "http://arachb.org/arachb/arachb.owl";
