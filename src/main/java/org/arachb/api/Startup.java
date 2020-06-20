@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.apache.log4j.Logger;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,15 +32,17 @@ public class Startup extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	final static private String USERHOME = System.getProperty("user.home");
-	final static private String RDF4JHOME = USERHOME+"/.rdf4j/";
+
+	private static final Logger log = Logger.getLogger(Startup.class);
+
+	final static private String RDF4JHOME = Util.USERHOME+"/.rdf4j/";
 	final static private String baseURI = "http://arachb.org/arachb/arachb.owl";
 
 	
 	@Override
     public void init(ServletConfig config) throws ServletException{
-		System.out.println("Starting init process");
+		log.warn("Starting init process");
+		log.warn("RDF4JHOME = " + RDF4JHOME);
 		File baseDir = new File(RDF4JHOME);
 		String repositoryId = "test1";
 		LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
@@ -47,7 +51,7 @@ public class Startup extends HttpServlet {
 		try {
 			manager.initialize();
 			repo = manager.getRepository(repositoryId);
-			System.out.println("Found repo " + repo + " from id repositoryId");
+			log.warn("Found repo " + repo + " from id repositoryId");
 			boolean needsLoading = false;
 			if (repo == null){
 				boolean persist = true;
@@ -65,7 +69,7 @@ public class Startup extends HttpServlet {
 			else {
 			    con = repo.getConnection();
 			    long size = con.size();
-				System.out.println("Found repo " + repo + " of size " + size + " from id repositoryId");
+				log.warn("Found repo " + repo + " of size " + size + " from id repositoryId");
 			    if (size <1000) {
 			    	//fake, need to load
 			    	needsLoading = true;
@@ -75,12 +79,13 @@ public class Startup extends HttpServlet {
 			if (needsLoading){
 
 				URL loadURL = Startup.class.getClassLoader().getResource("arachb.owl");
+				log.warn("Load url is " + loadURL);
 				URLConnection loadConnection = loadURL.openConnection();
 				InputStream loadStream = loadConnection.getInputStream();
 			    
-			    System.out.println("Size before loading: " + con.size());
+			    log.warn("Size before loading: " + con.size());
 			    con.add(loadStream, baseURI, RDFFormat.RDFXML);
-			    System.out.println("Size after loading: " + con.size());
+			    log.warn("Size after loading: " + con.size());
 			}
 				
 		} catch (RepositoryException e) {
