@@ -6,7 +6,7 @@ public interface ArachbPage {
 	
 	String generateHTML() throws IOException;
 	
-	public String generatejson() throws IOException;
+	String generatejson() throws IOException;
 
 
 
