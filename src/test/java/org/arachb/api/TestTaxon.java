@@ -3,14 +3,7 @@ package org.arachb.api;
 import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.TestCase;
-
-//import static org.hamcrest.CoreMatchers.equalTo;
-//import static org.junit.Assert.assertThat;
-
-
-
-public class TestTaxon extends TestCase {
+public class TestTaxon {
 	
 	final static String TAXONNCBIID = "http://purl.obolibrary.org/obo/NCBITaxon_336608";
 

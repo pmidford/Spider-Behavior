@@ -14,7 +14,7 @@ public class Util {
 	final static String USERHOME = "/home/spider-master";
 	final static String RDF4JHOME = USERHOME+"/.rdf4j/";
 	final static String SPARQLMIMETYPE = "application/sparql-results+json";
-	final static String BASEURI = "http://arachb.org/arachb/arachb.owl";
+	final static String BASEURI = "https://arachb.org/arachb/arachb.owl";
 	final static String REPONAME = "test1";
 
 

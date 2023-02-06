@@ -33,13 +33,13 @@ public class Publication extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	final static private String QUERY = 
-    		"prefix obo:<http://purl.obolibrary.org/obo/> select ?publication WHERE{?publication rdf:type obo:IAO_0000312 .}";
+	final static private String QUERY =
+			"prefix obo:<https://purl.obolibrary.org/obo/> select ?publication WHERE{?publication rdf:type obo:IAO_0000312 .}";
 
 	private final static File BASEDIR = new File(Util.RDF4JHOME);
 
 	final static private String USERHOME = System.getProperty("user.home");
-	final static private String baseURI = "http://arachb.org/arachb/arachb.owl";
+	final static private String baseURI = "https://arachb.org/arachb/arachb.owl";
 
 	private static final Logger log = Logger.getLogger(Taxon.class);
 

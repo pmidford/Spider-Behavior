@@ -63,7 +63,7 @@ public class ArachbPages extends HttpServlet {
 	//for taxon individuals - find parent, maybe some new comments
 
 
-	final static String ARACHBPREFIX = "http://arachb.org";
+	final static String ARACHBPREFIX = "https://arachb.org";
 	final static String TOSTRIP = "/spider-behavior";
 	
 	private static final long serialVersionUID = 1L;
@@ -270,7 +270,7 @@ public class ArachbPages extends HttpServlet {
 
 	//TODO: figure out where the .owl extension disappears
 	boolean ontologyTest(String target){
-		final String ontologyURI = "http://arachb.org/arachb/arachb";
+		final String ontologyURI = "https://arachb.org/arachb/arachb";
 		return ontologyURI.equals(target);
 	}
 	

@@ -36,7 +36,7 @@ public class Startup extends HttpServlet {
 	private static final Logger log = Logger.getLogger(Startup.class);
 
 	final static private String RDF4JHOME = Util.USERHOME+"/.rdf4j/";
-	final static private String baseURI = "http://arachb.org/arachb/arachb.owl";
+	final static private String baseURI = "https://arachb.org/arachb/arachb.owl";
 
 	
 	@Override
