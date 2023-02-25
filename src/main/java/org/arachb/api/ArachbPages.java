@@ -262,8 +262,8 @@ public class ArachbPages extends HttpServlet {
 
 	String getURI2CommentQuery(String uriStr){
 		SparqlBuilder b = SparqlBuilder.startSparql();
-		b.addText("SELECT ?comment %n");
-		String line2 = String.format("WHERE {<%s> rdfs:comment ?comment . } %n", uriStr);
+		b.addText("SELECT ?comment \n");
+		String line2 = String.format("WHERE {<%s> rdfs:comment ?comment . } \n", uriStr);
 		b.addText(line2);
 		return b.finish();
 	}
@@ -306,21 +306,21 @@ public class ArachbPages extends HttpServlet {
 
 	String getURI2PublicationTest(String target){
 		SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
-		b.addText(String.format("ASK WHERE {<%s> rdf:type obo:IAO_0000311 . } %n", target));
+		b.addText(String.format("ASK WHERE {<%s> rdf:type obo:IAO_0000311 . } \n", target));
 		return b.finish();
 	}
 
 	String getURI2NarrativeTest(String target){
 		SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
-		b.addText(String.format("ASK WHERE {<%s> rdf:type obo:IAO_0000030 . %n", target));
-		b.addText(String.format("<%s> obo:BFO_0000050 ?a . %n", target));
-		b.addText(String.format("?b obo:BFO_0000050 <%s> . } %n", target));
+		b.addText(String.format("ASK WHERE {<%s> rdf:type obo:IAO_0000030 . \n", target));
+		b.addText(String.format("<%s> obo:BFO_0000050 ?a . \n", target));
+		b.addText(String.format("?b obo:BFO_0000050 <%s> . } \n", target));
 		return b.finish();
 	}
 
 	String getURI2TaxonTest(String target){
 		SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
-		b.addText(String.format("ASK WHERE {<%s> rdf:type obo:NCBI_Taxon1 . } %n", target));
+		b.addText(String.format("ASK WHERE {<%s> rdf:type obo:NCBI_Taxon1 . } \n", target));
 		return b.finish();
 	}
 

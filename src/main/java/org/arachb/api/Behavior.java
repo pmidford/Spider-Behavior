@@ -161,9 +161,9 @@ public class Behavior extends HttpServlet {
     }
     
     final static String NAME2BEHAVIORIDBASE = SparqlBuilder.OBOPREFIX +
-        	"SELECT ?behavior_name ?behavior_id %n" +
-            "WHERE {?behavior_id rdfs:label \"%s\"^^xsd:string . %n" +
-            "       ?behavior_id rdfs:label ?behavior_name . }%n ";
+        	"SELECT ?behavior_name ?behavior_id \n" +
+            "WHERE {?behavior_id rdfs:label \"%s\"^^xsd:string . \n" +
+            "       ?behavior_id rdfs:label ?behavior_name . }\n ";
     		
     
     String getName2BehaviorIdQuery(String name){

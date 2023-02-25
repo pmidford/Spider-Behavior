@@ -59,7 +59,7 @@ public class MetaDataSummary{
 	
 	final static String DEFAULTLISTSTART = "            <ul>" + System.lineSeparator();
 	final static String DEFAULTLISTEND = "            </ul>" + System.lineSeparator();
-	final static String DEFAULTHTMLFIELDTEMPLATE =  "               <li><strong>%s: </strong>%s</li>%n";
+	final static String DEFAULTHTMLFIELDTEMPLATE =  "               <li><strong>%s: </strong>%s</li>\n";
 	
 	
 	/**

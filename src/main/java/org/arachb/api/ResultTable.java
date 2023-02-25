@@ -99,7 +99,7 @@ public class ResultTable {
 		StringBuilder headerRow = new StringBuilder();
 		headerRow.append("   <tr>" + ls);
 		for (String name : headers){
-			headerRow.append(String.format("    <th>%s</th>%n",name));
+			headerRow.append(String.format("    <th>%s</th>\n",name));
 			log.info("columns checkpoint 2x: " + name);
 		}
 		headerRow.append("   </tr>" + ls);
@@ -118,11 +118,11 @@ public class ResultTable {
 						if (nameBinding != null && linkBinding != null){
 							String name = nameBinding.getValue().stringValue();
 							String link = linkBinding.getValue().stringValue();
-							rowBuilder.append(String.format("      <td><a href='%s'>%s</a></td>%n",name,link));
+							rowBuilder.append(String.format("      <td><a href='%s'>%s</a></td>\n",name,link));
 						}
 						else if (nameBinding != null){
 							String name = nameBinding.getValue().stringValue();
-							rowBuilder.append(String.format("      <td>%s</td>%n", name));
+							rowBuilder.append(String.format("      <td>%s</td>\n", name));
 						}
 						else{
 							rowBuilder.append("      <td></td>" + ls);

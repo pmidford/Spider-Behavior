@@ -182,7 +182,7 @@ public class NarrativePage extends AbstractPage {
 	String narrativeLabelQuery(String target){
 		SparqlBuilder b = SparqlBuilder.startSparql();
 		b.addText(labelSelectLine);
-		String line1 = String.format("WHERE {<%s> rdfs:label ?narrative . } %n", target);
+		String line1 = String.format("WHERE {<%s> rdfs:label ?narrative . } \n", target);
 		b.addText(line1);
 		b.debug();
 		return b.finish();
@@ -194,9 +194,9 @@ public class NarrativePage extends AbstractPage {
     String narrativeEventsQuery(String target){
     	SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
 		b.addSelectLine(eventsSelectVars);
-		String line1 = String.format("WHERE { ?narrative_id obo:BFO_0000050  <%s> . %n",target);
+		String line1 = String.format("WHERE { ?narrative_id obo:BFO_0000050  <%s> . \n",target);
 		b.addText(line1);
-        String line2 = String.format("<%s> rdfs:label ?narrative . %n",target);
+        String line2 = String.format("<%s> rdfs:label ?narrative . \n",target);
         b.addText(line2);
         b.addClause("?event rdf:type ?i1",true);
         b.addClause("?i1 owl:intersectionOf ?i2",true);
@@ -206,8 +206,8 @@ public class NarrativePage extends AbstractPage {
         b.addClause("?anatomy_id obo:BFO_0000050 ?subject_id",true);
         b.addClause("?anatomy_id rdfs:label ?anatomy",true);
         b.addClause("?subject_id rdfs:label ?subject",true);
-    	b.addText("} %n");
-    	b.debug();
+    	b.addText("} \n");
+    	//b.debug();
     	return b.finish();
     }
 
