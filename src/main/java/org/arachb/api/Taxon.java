@@ -133,7 +133,7 @@ public class Taxon extends HttpServlet {
 		RepositoryConnection con = null;
 		final LocalRepositoryManager manager = new LocalRepositoryManager(BASEDIR);
 		try {
-			manager.initialize();
+			manager.init();
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
 			ResultTable resultTable = new ResultTable(response);

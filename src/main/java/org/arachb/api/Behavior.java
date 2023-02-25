@@ -68,7 +68,7 @@ public class Behavior extends HttpServlet {
 
 		try {
 			System.out.println("About to query");
-			manager.initialize();
+			manager.init();
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
 			String behaviorQueryString = getName2BehaviorReportQuery(name);

@@ -49,7 +49,7 @@ public class Startup extends HttpServlet {
 		Repository repo = null;
 		RepositoryConnection con = null;
 		try {
-			manager.initialize();
+			manager.init();
 			repo = manager.getRepository(repositoryId);
 			log.warn("Found repo " + repo + " from id repositoryId");
 			boolean needsLoading = false;

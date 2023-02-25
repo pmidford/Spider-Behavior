@@ -54,9 +54,9 @@ public class Publication extends HttpServlet {
 			log.error("In publication doGet");
     		LocalRepositoryManager manager = new LocalRepositoryManager(BASEDIR);
     		try {
-    			manager.initialize();
-    			repo = manager.getRepository(repositoryId);
-    		    con = repo.getConnection();
+				manager.init();
+				repo = manager.getRepository(Util.REPONAME);
+				con = repo.getConnection();
     			TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, QUERY);
   			  	TupleQueryResult result = tupleQuery.evaluate();
     			QueryResultFormat jsonFormat = 
