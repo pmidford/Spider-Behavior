@@ -58,9 +58,9 @@ public class NarrativePage extends AbstractPage {
 		}
 	}
 
-	RepositoryConnection con;
+	final RepositoryConnection con;
 	String eventsTableString;
-	private static Logger log = Logger.getLogger(NarrativePage.class);
+	private static final Logger log = Logger.getLogger(NarrativePage.class);
 
 	public NarrativePage(MetaDataSummary mds, RepositoryConnection c, HttpServletResponse response)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException, IOException{
@@ -176,15 +176,14 @@ public class NarrativePage extends AbstractPage {
     	mds.add("label", label);
 	}
 
-	private String labelSelectLine =
-			"SELECT ?narrative %n";
 
 	String narrativeLabelQuery(String target){
+		final String labelSelectLine ="SELECT ?narrative \n";
 		SparqlBuilder b = SparqlBuilder.startSparql();
 		b.addText(labelSelectLine);
 		String line1 = String.format("WHERE {<%s> rdfs:label ?narrative . } \n", target);
 		b.addText(line1);
-		b.debug();
+		//b.debug();
 		return b.finish();
 	}
 
