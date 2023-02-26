@@ -97,16 +97,16 @@
          url: myhost + "taxon" + $(location).attr('search'),
          dataType: "text"
        }
-       ).done(function(data, testStatus, jqXHR){$("#results").html(resulttable(eval( '(' + data + ')')))})
-       .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
+       ).done(function(data, testStatus, jqXHR){$("#results").html(resulttable(JSON.parse(data)))})
+       .fail(function(jqXHR, textStatus, errorThrown) {$("#results").html("<p>Error in claim results</p>")});
       });
     $(document).ready(function(){
        $.ajax({
          url: myhost + "taxon/events" + $(location).attr('search'),
          dataType: "text"
        }
-       ).done(function(data, testStatus, jqXHR){$("#events").html(taxoneventtable(eval( '(' + data + ')')))})
-       .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
+       ).done(function(data, testStatus, jqXHR){$("#events").html(taxoneventtable(JSON.parse(data)))})
+       .fail(function(jqXHR, textStatus, errorThrown){$("#events").html("<p>Error in event results</p>")});
       });
   </script>
 
