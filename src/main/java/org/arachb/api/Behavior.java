@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +26,6 @@ import org.eclipse.rdf4j.repository.manager.LocalRepositoryManager;
  *
  */
 public class Behavior extends HttpServlet {
-	
 
 	/**
 	 * 
@@ -37,7 +37,7 @@ public class Behavior extends HttpServlet {
 
 	@Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
 
 		final OutputStream os = response.getOutputStream();
 
@@ -84,23 +84,13 @@ public class Behavior extends HttpServlet {
 					result.jsonFormatResultList();
 				}
 				else{
-					result.noResultsError(behaviorQueryString);
+					result.noResultsMsg();
 				}
 			}
-		} catch (RepositoryException e) {
+		} catch (RepositoryException | RepositoryConfigException | MalformedQueryException | QueryEvaluationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (RepositoryConfigException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MalformedQueryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (QueryEvaluationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			try{
 				if (con != null){
 					con.close();
@@ -126,12 +116,17 @@ public class Behavior extends HttpServlet {
 
     /**
      * 
-     * @param name
+     * @param name identifies a behavior name (term label?)
      * @return true if a behavior name
      */
     public boolean validateBehaviorName(String name){
-    	String[]nameList = name.split(" ");   //TODO better validation
-    	return (nameList.length<=3);
+		Pattern pattern = Pattern.compile("%3A|%7B|%7D|\\{|\\}", Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(name);
+		if (matcher.find())
+			return false;
+		else {
+			return (name.split(" ").length <= 3);  //TODO be more selective (also consider common names)
+		}
     }
 
     
