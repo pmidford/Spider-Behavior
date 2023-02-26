@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -73,27 +72,31 @@ public class ArachbPages extends HttpServlet {
 	private static final Logger log = Logger.getLogger(ArachbPages.class);
 
 
+	/**
+	 *
+	 * Note- In testing environments, urls may contain /spider-behavior at the end,
+	 *       thus the need to check and remove it.
+	 * @param request - incoming http request
+	 * @param response - holds output stream for writing result
+	 * @throws IOException - pass through
+	 */
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
-
 
 		final ServletOutputStream os = response.getOutputStream();
 		boolean writeHTML;
 		String target;
 		String requestStr = request.getRequestURI();
-		String[] targetComponents;
 		log.info("RequestStr: " + requestStr);
-		if (requestStr.contains(TOSTRIP)) {
-			targetComponents = requestStr.substring(TOSTRIP.length()).split("\\.");
+		if (requestStr.contains(TOSTRIP)) {  // strip out extra /spider-behavior in path
+			requestStr = requestStr.substring(TOSTRIP.length());
 		}
-		else {
-			targetComponents = requestStr.split("\\.");			
-		}
+		final String[] targetComponents = requestStr.split("\\.");
 		log.info("targetComponents: " + targetComponents[0]);
 		if (targetComponents.length > 2){
 			final PrintStream ps = new PrintStream(response.getOutputStream());
-			response.setStatus(500);
+			//response.setStatus(500);
 			ps.printf("Dubious request %s", Arrays.toString(targetComponents));
 			log.error(String.format("Dubious request %s", Arrays.toString(targetComponents)));
 		}
@@ -157,29 +160,11 @@ public class ArachbPages extends HttpServlet {
 				}
 
 				response.getOutputStream().write(msgBuffer.toString().getBytes(StandardCharsets.UTF_8));
-
-			} catch (RepositoryException e) {  //TODO - make these return meaningful JSON strings
+            //TODO - make these return meaningful JSON strings
+			} catch (RepositoryException | RepositoryConfigException | MalformedQueryException | QueryEvaluationException e) {
 				e.printStackTrace();
-				response.setStatus(500);
+				//response.setStatus(500);
 				response.getOutputStream().write(e.getMessage().getBytes(StandardCharsets.UTF_8));
-			} catch (RepositoryConfigException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				response.setStatus(500);
-				response.getOutputStream().write(e.getMessage().getBytes(StandardCharsets.UTF_8));
-				e.printStackTrace();
-			} catch (MalformedQueryException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				response.setStatus(500);
-				response.getOutputStream().write(e.getMessage().getBytes(StandardCharsets.UTF_8));
-				e.printStackTrace();
-			} catch (QueryEvaluationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				response.setStatus(500);
-				response.getOutputStream().write(e.getMessage().getBytes(StandardCharsets.UTF_8));
-				e.printStackTrace();
 			}
 			finally {
 				cleanupResources(repo,con);
@@ -225,9 +210,9 @@ public class ArachbPages extends HttpServlet {
 	 * @param target URI of entity to retrieve comment for
 	 * @param con Connection to the repository
 	 * @return comments associated with the entity
-	 * @throws RepositoryException
-	 * @throws MalformedQueryException
-	 * @throws QueryEvaluationException
+	 * @throws RepositoryException - pass through from tryAndAccumulateResult
+	 * @throws MalformedQueryException pass through from tryAndAccumulateResult
+	 * @throws QueryEvaluationException pass through from tryAndAccumulateResult
 	 */
 	private List<String> getComments(String target, RepositoryConnection con, HttpServletResponse response)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException {
@@ -276,8 +261,8 @@ public class ArachbPages extends HttpServlet {
 	
 
 	/**
-	 * the start of the service for http://arachb.org/arachb/arachb.owl
-	 * @throws IOException
+	 * the start of the service for "http://arachb.org/arachb/arachb.owl"
+	 * @throws IOException - pass through from URL.openConnection, os.println
 	 */
 	void getOntology(ServletOutputStream os) throws IOException{
 		BufferedReader inputReader = null;
@@ -317,14 +302,6 @@ public class ArachbPages extends HttpServlet {
 		b.addText(String.format("?b obo:BFO_0000050 <%s> . } \n", target));
 		return b.finish();
 	}
-
-	String getURI2TaxonTest(String target){
-		SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
-		b.addText(String.format("ASK WHERE {<%s> rdf:type obo:NCBI_Taxon1 . } \n", target));
-		return b.finish();
-	}
-
-
 
 
 	//cleanup methods
