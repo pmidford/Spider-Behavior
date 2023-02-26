@@ -21,7 +21,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="http://arachb.org">
+        <a class="navbar-brand" href="https://arachb.org">
           <img class="navbar-image" src="static/spiderwords_small.jpg"  alt="spider words"/>
         </a>
       </div>
@@ -55,16 +55,22 @@
     <h3>"Words about what Spiders do"</h3>
     <div class="row">
       <div class="col-md-4 col-md-offset-2">
-        <p><strong>Ethogram</strong></p>
         <form id="ethogram_form" action="pages/ethogram_results.html" method="get">
-          <input name="taxon" type="text" value="Tetragnatha"/>
+          <label style="font-weight: bold">
+            Ethogram (enter taxon)
+            <br>
+            <input name="taxon" type="text" value="Tetragnatha"/>
+          </label>
           <input type="submit" value="Submit" />
         </form>
       </div>
       <div class="col-md-4 col-md-offset-2">
-        <p><strong>Behavior Cross Reference</strong></p>
         <form id="xref_form" action="pages/behavior_results.html">
-          <input name="behavior" type="text" value="body part movement"/>
+          <label style="font-weight: bold">
+            Behavior Cross Reference (enter behavior term)
+            <br>
+            <input name="behavior" type="text" value="body part movement"/>
+          </label>
           <input type="submit" value="Submit" />
         </form>
       </div>
@@ -83,8 +89,16 @@
       <div class="container-fluid">
         <hr/>
         <div class="row">
+          <div class="col-md-9 col-md-offset-2">
+            <p>To collect and curate records of arachnid behavior in a form that lets
+              interested people gather behavior from different species in an environment
+              to facilitate generating and <br> testing comparative questions.</p>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-md-10 col-md-offset-2">
-            <p>Last update 10 May 2015</p>
+            <p>Last data update 10 May 2015</p>
+            <p>Last software update 26 February 2023</p>
             <p>Technical Problems: <a href="mailto:admin@arachb.org?Subject=FrontPage%20query" target="_top">admin</a>&nbsp; &nbsp; 
               Behavior, taxonomy Issues: <a href="mailto:curation@arachb.org?Subject=FrontPage%20query" target="_top">curation</a></p>
           </div>
@@ -92,14 +106,14 @@
         <br/>
         <div class="row">
           <div class="col-md-10 col-md-offset-2">
-            <p>In Progress <a href="http://arachb.org/ontology">Spider Behavior Ontology</a></p>
+            <p>In Progress <a href="https://arachb.org/ontology">Spider Behavior Ontology</a></p>
           </div>
         </div>
       </div>
     </footer>
-  
 
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
   </script>
   <script type="text/javascript" src="static/bootstrap/js/bootstrap.min.js">
   </script>
