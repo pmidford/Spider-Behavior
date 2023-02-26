@@ -79,7 +79,7 @@
         url: myhost + "behavior" + $(location).attr('search'),
         dataType: "text"
         }
-        ).done(function(data, testStatus, jqXHR){$("#results").html(resulttable(eval( '(' + data + ')')))})
+        ).done(function(data, testStatus, jqXHR){$("#results").html(resulttable(JSON.parse(data)))})
         .fail(function(jqXHR, textStatus, errorThrown) { alert("error: " + textStatus); });
         });
     </script>
