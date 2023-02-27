@@ -6,8 +6,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.apache.log4j.Logger;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,16 +31,15 @@ public class Startup extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger log = Logger.getLogger(Startup.class);
-
 	final static private String RDF4JHOME = Util.USERHOME+"/.rdf4j/";
 	final static private String baseURI = "https://arachb.org/arachb/arachb.owl";
 
 	
 	@Override
     public void init(ServletConfig config) throws ServletException{
-		log.warn("Starting init process");
-		log.warn("RDF4JHOME = " + RDF4JHOME);
+		super.init(config);
+		getServletContext().log("Starting init process");
+		getServletContext().log("RDF4JHOME = " + RDF4JHOME);
 		File baseDir = new File(RDF4JHOME);
 		String repositoryId = "test1";
 		LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
@@ -51,13 +48,13 @@ public class Startup extends HttpServlet {
 		try {
 			manager.init();
 			repo = manager.getRepository(repositoryId);
-			log.warn("Found repo " + repo + " from id repositoryId");
+			getServletContext().log("Found repo " + repo + " from id repositoryId");
 			boolean needsLoading = false;
 			if (repo == null){
 				boolean persist = true;
 				SailImplConfig backendConfig = new MemoryStoreConfig(persist);
 
-				 
+
 				// create a configuration for the repository implementation
 				RepositoryImplConfig repositoryTypeSpec = new SailRepositoryConfig(backendConfig);
 				RepositoryConfig repConfig = new RepositoryConfig(repositoryId, repositoryTypeSpec);
@@ -69,44 +66,39 @@ public class Startup extends HttpServlet {
 			else {
 			    con = repo.getConnection();
 			    long size = con.size();
-				log.warn("Found repo " + repo + " of size " + size + " from id repositoryId");
+				getServletContext().log("Found repo " + repo + " of size " + size + " from id repositoryId");
 			    if (size <1000) {
 			    	//fake, need to load
 			    	needsLoading = true;
 			    }
-			    	
+
 			}
 			if (needsLoading){
 
 				URL loadURL = Startup.class.getClassLoader().getResource("arachb.owl");
-				log.warn("Load url is " + loadURL);
+				ClassLoader cl = Startup.class.getClassLoader();
+				getServletContext().log("Context loader is " + cl);
+				getServletContext().log("Load url is " + loadURL);
+				if (loadURL == null){
+					throw new ServletException("Can't find KB file to load into server, loadURL is null");
+				}
 				URLConnection loadConnection = loadURL.openConnection();
 				InputStream loadStream = loadConnection.getInputStream();
-			    
-			    log.warn("Size before loading: " + con.size());
+
+				getServletContext().log("Size before loading: " + con.size());
 			    con.add(loadStream, baseURI, RDFFormat.RDFXML);
-			    log.warn("Size after loading: " + con.size());
+				getServletContext().log("Size after loading: " + con.size());
 			}
-				
-		} catch (RepositoryException e) {
+
+		} catch (RepositoryException | RDFParseException | IOException | RepositoryConfigException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (RDFParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RepositoryConfigException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally{
+		} finally{
 			try {
 				if (con != null){
 					con.close();
 				}
-				if (repo != null){ 
+				if (repo != null){
 					repo.shutDown();
 			    }
 			} catch (RepositoryException e) {
