@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,7 +47,6 @@ public class Publication extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     		final OutputStream os = response.getOutputStream();
             response.setContentType("application/json");
-			String repositoryId = "test1";
 			Repository repo = null;
 			RepositoryConnection con = null;
 			log.error("In publication doGet");
@@ -58,34 +56,23 @@ public class Publication extends HttpServlet {
 				repo = manager.getRepository(Util.REPONAME);
 				con = repo.getConnection();
     			TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, QUERY);
-  			  	TupleQueryResult result = tupleQuery.evaluate();
-    			QueryResultFormat jsonFormat = 
-    					QueryResultIO.getWriterFormatForMIMEType("application/sparql-results+json").orElse(null);
-    			if (jsonFormat != null){
-    				TupleQueryResultWriter jsonResults = (TupleQueryResultWriter) QueryResultIO.createWriter(jsonFormat, os);
-        			jsonResults.startQueryResult(result.getBindingNames());
-        			while(result.hasNext()){
-        		        jsonResults.handleSolution(result.next());
-        			}
-        			jsonResults.endQueryResult();  
-    			}
-    		} catch (RepositoryException e) {
+				try (TupleQueryResult result = tupleQuery.evaluate()) {
+					QueryResultFormat jsonFormat =
+							QueryResultIO.getWriterFormatForMIMEType("application/sparql-results+json").orElse(null);
+					if (jsonFormat != null) {
+						TupleQueryResultWriter jsonResults = (TupleQueryResultWriter) QueryResultIO.createWriter(jsonFormat, os);
+						jsonResults.startQueryResult(result.getBindingNames());
+						while (result.hasNext()) {
+							jsonResults.handleSolution(result.next());
+						}
+						jsonResults.endQueryResult();
+					}
+				}
+			} catch (RepositoryException | RepositoryConfigException | MalformedQueryException |
+					 QueryEvaluationException | TupleQueryResultHandlerException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
-    		} catch (RepositoryConfigException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (MalformedQueryException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (QueryEvaluationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TupleQueryResultHandlerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    		finally {
+    		} finally {
     			try{
     				if (con != null){
     					con.close();
