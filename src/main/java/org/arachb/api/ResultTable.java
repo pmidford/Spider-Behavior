@@ -26,14 +26,14 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 
 public class ResultTable {
 
-	private List<TupleQueryResult> contents;
-	private HttpServletResponse response;
-	private static Logger log = Logger.getLogger(ResultTable.class);
+	private final List<TupleQueryResult> contents;
+	private final HttpServletResponse response;
+	private static final Logger log = Logger.getLogger(ResultTable.class);
 
 	
 	public ResultTable(HttpServletResponse r){
 		response = r;
-		contents = new ArrayList<TupleQueryResult>();
+		contents = new ArrayList<>();
 	}
 
 	public List<TupleQueryResult> getContents(){
@@ -86,31 +86,32 @@ public class ResultTable {
 
 	
 	public String htmlFormatPairedColumns(String[] queryKeys) throws IOException, QueryEvaluationException {
-		final ServletOutputStream os = response.getOutputStream();
 		final String ls = System.lineSeparator();
 		log.info("columns checkpoint 1, query_keys= " + Arrays.toString(queryKeys));
-		String result = "<table class=\"table\">" + ls;
+		StringBuilder result = new StringBuilder();
+		result.append("<table class=\"table\">").append(ls);
 		List<String> headers = new ArrayList<>();
-		for (int i=0;i< queryKeys.length;i+=2){
-			log.info("query: " + Integer.toString(i+1));
-			headers.add(queryKeys[i+1]);
+		for (int i=0;i < queryKeys.length;i+=2){
+			int next = i+1;
+			log.info("query: " + next);
+			headers.add(queryKeys[next]);
 		}
 		log.info("columns checkpoint 2");
 		StringBuilder headerRow = new StringBuilder();
-		headerRow.append("   <tr>" + ls);
+		headerRow.append("   <tr>").append(ls);
 		for (String name : headers){
 			headerRow.append(String.format("    <th>%s</th>\n",name));
 			log.info("columns checkpoint 2x: " + name);
 		}
-		headerRow.append("   </tr>" + ls);
+		headerRow.append("   </tr>").append(ls);
 		log.info("Header row is: " + headerRow);
-		result += headerRow.toString();
+		result.append(headerRow);
 		try {
 			for(TupleQueryResult rn : contents){
 				while (rn.hasNext()){
 					final BindingSet bSet = rn.next();
 					StringBuilder rowBuilder = new StringBuilder(100);
-					result += "   <tr>" + ls;
+					result.append("   <tr>").append(ls);
 					for (int i=0; i<queryKeys.length;i+=2){
 						log.info("Trying key: " + queryKeys[i] + " and link: " + queryKeys[i+1]);
 						final Binding nameBinding = bSet.getBinding(queryKeys[i]);
@@ -125,26 +126,20 @@ public class ResultTable {
 							rowBuilder.append(String.format("      <td>%s</td>\n", name));
 						}
 						else{
-							rowBuilder.append("      <td></td>" + ls);
+							rowBuilder.append("      <td></td>").append(ls);
 						}
 					}
-					log.info("table row is " + rowBuilder.toString());
-					result += rowBuilder.toString() + "   </tr>" + ls;
+					log.info("table row is " + rowBuilder);
+					result.append(rowBuilder).append("   </tr>").append(ls);
 				}
 			}
 		}
 		finally{
-			result += "</table>" + ls;
+			result.append("</table>").append(ls);
 		}
-		return result;
+		return result.toString();
 	}
 
-	
-
-	
-	
-	
-	
 
 	void jsonFormatSingleResult() throws IOException{
 		final ServletOutputStream os = response.getOutputStream();
@@ -196,11 +191,11 @@ public class ResultTable {
 		return null;
 	}
 
+
     public void noResultsError(String query) throws IOException{
 		final PrintStream ps = new PrintStream(response.getOutputStream());
-		response.setStatus(500);
-		ps.printf("Unexpected empty result from query %s", query);
-		log.error(String.format("Unexpected empty result from query %s", query));
+		final String error_str = String.format("No results Unexpected empty result from query %s", query);
+		ps.printf("{error: %s}", error_str);
 
     }
 
