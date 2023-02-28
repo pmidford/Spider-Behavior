@@ -11,7 +11,7 @@ const uricolumn = function (resultObj, column) {
 
 const taxoneventtable = function (resultObj) {
     "use strict";
-    if (resultobj === 'no results') {
+    if (resultObj === 'no results') {
         return "<p>No results</p>";
     }
     if (resultObj.msg){
