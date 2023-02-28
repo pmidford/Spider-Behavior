@@ -7,7 +7,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -179,8 +178,15 @@ public class Taxon extends HttpServlet {
 	 * @return true if valid
 	 *
 	 */
-    public boolean validateTaxonName(String name){
-    	return (name.split(" ").length<=2);  //TODO be more selective (also consider common names)
+    public boolean validateTaxonName(String name) {
+		Pattern pattern = Pattern.compile("%3A|%7B|%7D|\\{|\\}", Pattern.CASE_INSENSITIVE);
+		Matcher matcher = pattern.matcher(name);
+		if (matcher.find()) {
+			return false;
+		}
+		else {
+			return (name.split(" ").length <= 2);  //TODO be more selective (also consider common names)
+		}
     }
 
 
@@ -216,14 +222,6 @@ public class Taxon extends HttpServlet {
     	return b.finish();
     }
 
-
-    String getName2TaxonIdQuery(String name){
-    	SparqlBuilder b = SparqlBuilder.startSparql();
-    	b.addText("SELECT ?taxon_id \n");
-    	String line2 = String.format("WHERE {?taxon_id rdfs:label \"%s\"^^xsd:string . } \n", name);
-    	b.addText(line2);
-    	return b.finish();
-    }
 
     final static String NAME2TAXONNAMEANDIDQUERYBASE =
         	"SELECT ?taxon_name ?taxon_id \n" +
