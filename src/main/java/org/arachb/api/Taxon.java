@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -41,22 +43,21 @@ public class Taxon extends HttpServlet {
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+			throws IOException {
+
+		getServletContext().log("Got doGet for Taxon servlet");
 
 		String path = request.getRequestURI();
 		path = path.substring(path.indexOf("/taxon"));
 		String taxonName = getTaxonFromQuery(request);
-		log.warn("Taxon name: " +  taxonName);
+		getServletContext().log("Taxonname is " + taxonName);
 
 		response.setContentType(Util.SPARQLMIMETYPE);
 
 		if (!validateTaxonName(taxonName)){
 			final PrintStream ps = new PrintStream(response.getOutputStream());
-			response.setStatus(500);
-			String errorStr = "Failed to validate Taxon Name %s"; 
-			ps.printf(errorStr, taxonName);
-			log.error(String.format(errorStr, taxonName));
-			return;
+			String errorStr = String.format("{\"error\": \"Failed to validate Taxon Name %s\"}", taxonName);
+			response.getOutputStream().write(errorStr.getBytes(StandardCharsets.UTF_8));
 		}
 		else{
 			log.warn("path: " +  path);
@@ -77,46 +78,43 @@ public class Taxon extends HttpServlet {
 
 
 	void getTaxonGeneralClaims(String taxonName, HttpServletResponse response) throws IOException{
-
 		Repository repo = null;
 		RepositoryConnection con = null;
 		log.warn("BASEDIR= " + BASEDIR);
+		getServletContext().log("BASEDIR= " + BASEDIR);
 		final LocalRepositoryManager manager = new LocalRepositoryManager(BASEDIR);
 		try {
-			manager.initialize();
+			manager.init();
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
 			final String ethogramQueryString = getName2GeneralQuery(taxonName);
+			getServletContext().log("Query String " + ethogramQueryString);
 			ResultTable resultTable = new ResultTable(response);
 			resultTable.tryAndAccumulateQueryResult(ethogramQueryString, con);
-			log.warn("Result table: " +  resultTable.isEmpty());
 			if (!resultTable.isEmpty()){
+				getServletContext().log("First query was successful");
 				resultTable.jsonFormatResultList();
 			}
 			else{
+				getServletContext().log("First query was empty");
 				final String taxonIdQueryString = getName2TaxonNameAndId(taxonName);
 				resultTable.tryAndAccumulateQueryResult(taxonIdQueryString, con);
 				if (!resultTable.isEmpty()){
 					resultTable.jsonFormatResultList();
 				}
 				else{
-					resultTable.noResultsError(ethogramQueryString);
+					getServletContext().log("Second query was empty");
+					resultTable.noResultsError(taxonIdQueryString);
 				}
 			}
-		} catch (RepositoryException e) {  //TODO - make these return meaningful JSON strings
-			// TODO Auto-generated catch block
-			log.error(e.toString());
-			e.printStackTrace();
-		} catch (RepositoryConfigException e) {
-			// TODO Auto-generated catch block
-			log.error(e.toString());
-			e.printStackTrace();
-		} catch (MalformedQueryException e) {
-			// TODO Auto-generated catch block
+		} catch (RepositoryException | RepositoryConfigException | MalformedQueryException e) {
+			//TODO - make these return meaningful JSON strings
+			//response.setStatus(400);
 			log.error(e.toString());
 			e.printStackTrace();
 		} catch (QueryEvaluationException e) {
 			// TODO Auto-generated catch block
+			//response.setStatus(400);
 			e.printStackTrace();
 		}
 		finally {
@@ -128,7 +126,6 @@ public class Taxon extends HttpServlet {
 
 
 	void getTaxonEvents(String taxonName, HttpServletResponse response) throws IOException{
-
 		Repository repo = null;
 		RepositoryConnection con = null;
 		final LocalRepositoryManager manager = new LocalRepositoryManager(BASEDIR);
@@ -139,7 +136,6 @@ public class Taxon extends HttpServlet {
 			ResultTable resultTable = new ResultTable(response);
 
 			final String eventQueryString = getName2EventQuery(taxonName);
-			log.info(String.format("Query String: %s",eventQueryString));
 			resultTable.tryAndAccumulateQueryResult(eventQueryString, con);
 			if (!resultTable.isEmpty()){
 				resultTable.jsonFormatResultList();
@@ -151,23 +147,14 @@ public class Taxon extends HttpServlet {
 					resultTable.jsonFormatResultList();
 				}
 				else{
-					resultTable.noResultsError(eventQueryString);
+					resultTable.noResultsError(taxonIdQueryString);
 				}
 			}
-		} catch (RepositoryException e) {
+		} catch (RepositoryException | RepositoryConfigException | MalformedQueryException | QueryEvaluationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (RepositoryConfigException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MalformedQueryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (QueryEvaluationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally {
+			//response.setStatus(400);
+		} finally {
 			cleanupResources(repo, con);
 		}
 		response.getOutputStream().flush();
@@ -199,7 +186,7 @@ public class Taxon extends HttpServlet {
 
     String getName2GeneralQuery(String name){
     	SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
-    	b.addText("SELECT ?taxon ?child_taxon ?behavior ?behavior_id ?anatomy ?anatomy_id ?publication ?pubid \n", true);
+		b.addText("SELECT ?taxon ?child_taxon ?behavior ?behavior_id ?anatomy ?anatomy_id ?publication ?pubid \n", true);
 		String line1 = String.format("WHERE { ?parent_taxon rdfs:label \"%s\"^^xsd:string . \n",name);
 		b.addText(line1,true);
 		b.addClause("?child_taxon rdfs:subClassOf* ?parent_taxon",true);
@@ -281,18 +268,7 @@ public class Taxon extends HttpServlet {
     }
 
 
-
-
-    String buildClass(String name, RepositoryConnection con, HttpServletResponse response) throws RepositoryException, MalformedQueryException, QueryEvaluationException{
-    	final String taxonIdQueryString = getName2TaxonIdQuery(name);
-    	ResultTable queryResults = new ResultTable(response);
-    	queryResults.tryAndAccumulateQueryResult(taxonIdQueryString, con);
-    	return queryResults.getOneResult("taxon_id");
-    }
-
-
-
-    //cleanup methods
+	//cleanup methods
 
     private void cleanupResources(Repository repo, RepositoryConnection con){
     	try{
