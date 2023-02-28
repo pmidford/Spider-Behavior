@@ -1,45 +1,49 @@
-var uricolumn = function (resultobj, column) {
+const uricolumn = function (resultObj, column) {
     "use strict";
-    var i, binding, celltype;
-    for (i = 0; i < resultobj.results.bindings.length; i += 1) {
-        binding = resultobj.results.bindings[i];
-        celltype = binding[column].type;
-        if (celltype !== 'uri') {
+    for (let i = 0; i < resultObj.results.bindings.length; i += 1) {
+        let binding = resultObj.results.bindings[i];
+        if (binding[column].type !== 'uri'){
             return false;
         }
     }
     return true;
 };
 
-var taxoneventtable = function (resultobj) {
+const taxoneventtable = function (resultObj) {
     "use strict";
     if (resultobj === 'no results') {
         return "<p>No results</p>";
     }
-    if (resultobj.results.bindings && resultobj.results.bindings.length > 0) {
-        var result, i, j, binding, fieldtype, fieldname, nextfieldname, fielddatatype, nextfielddatatype;
+    if (resultObj.msg){
+        return "<p>" + resultObj.msg +"</p>";
+    }
+    if (resultObj.error){
+        return "<p style='color:red'>" + resultObj.error +"</p>";
+    }
+    if (resultObj.results.bindings && resultObj.results.bindings.length > 0) {
+        var result, i, j, fieldname, nextfieldname, fielddatatype, nextfielddatatype;
         result = "<table class='table'>\n";
         result = result + "  <tr>\n";
-        for (i = 0; i < resultobj.head.vars.length; i += 1) {
-            fieldtype = resultobj.head.vars[i];
-            if (!uricolumn(resultobj, fieldtype)) {
-                result = result + "  <th>" + fieldtype + "</th>\n";
+        for (i = 0; i < resultObj.head.vars.length; i += 1) {
+            const fieldType = resultObj.head.vars[i];
+            if (!uricolumn(resultObj, fieldType)) {
+                result = result + "  <th>" + fieldType + "</th>\n";
             }
         }
         result = result + "  </tr>\n";
-        for (j = 0; j < resultobj.results.bindings.length; j += 1) {
-            binding = resultobj.results.bindings[j];
+        for (j = 0; j < resultObj.results.bindings.length; j += 1) {
+            const binding = resultObj.results.bindings[j];
             result = result + "  <tr>\n";
-            for (i = 0; i < resultobj.head.vars.length; i += 1) {
-                fieldname = resultobj.head.vars[i];
+            for (i = 0; i < resultObj.head.vars.length; i += 1) {
+                fieldname = resultObj.head.vars[i];
                 fielddatatype = binding[fieldname].type;
-                if (i < resultobj.head.vars.length - 1) {
-                    nextfielddatatype = binding[resultobj.head.vars[i + 1]].type;
+                if (i < resultObj.head.vars.length - 1) {
+                    nextfielddatatype = binding[resultObj.head.vars[i + 1]].type;
                 } else {
                     nextfielddatatype = '';
                 }
                 if (nextfielddatatype === 'uri') {
-                    nextfieldname = resultobj.head.vars[i + 1];
+                    nextfieldname = resultObj.head.vars[i + 1];
                     result = result + "    <td> <a href= '" + binding[nextfieldname].value + "'>" + binding[fieldname].value + "</a></td>\n";
                 } else {
                     if (fielddatatype !== 'uri') {
