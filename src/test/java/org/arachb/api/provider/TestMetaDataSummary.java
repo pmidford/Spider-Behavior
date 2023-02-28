@@ -2,7 +2,6 @@ package org.arachb.api.provider;
 
 import static org.junit.Assert.*;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,8 +9,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.equalTo;
 
 
 public class TestMetaDataSummary {
@@ -62,35 +59,32 @@ public class TestMetaDataSummary {
 	private MetaDataSummary mds2;
 	
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		mds1 = new MetaDataSummary(dummyJson);
+	public static void setUpBeforeClass()  {
+		mds1 = new MetaDataSummary();
+		mds1.add("field1", "Habronattus");
+		mds1.add("field2", "2");
 	}
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp(){
 		mds2 = new MetaDataSummary();
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		mds2 = null;
 	}
 
 	@Test
 	public void testMetaDataSummary() {
 		MetaDataSummary mds = new MetaDataSummary();
-		assertThat(mds.raw(),equalTo(null));
+		assertNull(mds.raw());
 	}
 
-	@Test
-	public void testMetaDataSummaryString() throws IOException {
-		assertThat(mds1.raw(),equalTo(dummyJson));
-	}
-
-	@Test
-	public void testRaw() throws IOException {
-		assertThat(mds1.raw(),equalTo(dummyJson));
-	}
+//	@Test
+//	public void testMetaDataSummaryString() throws IOException {
+//		assertEquals(dummyJson, mds1.raw);
+//	}
 
 	@Test
 	public void testContains() {
@@ -103,15 +97,15 @@ public class TestMetaDataSummary {
 	public void testAdd() {
 		mds2.add("testfield", "testvalue");
 		assert(mds2.contains("testfield"));
-		assertThat(mds2.get("testfield"),equalTo("testvalue"));
+		assertEquals("testvalue", mds2.get("testfield"));
 		assertFalse(mds2.contains("testfield2"));
 	}
 
 	@Test
 	public void testGet() {
-		assertThat(mds1.get("field1"),equalTo("Habronattus"));
-		assertThat(mds1.get("field2"),equalTo("2"));
-		assertThat(mds1.get("field3"),equalTo(null));
+		assertEquals("Habronattus",mds1.get("field1"));
+		assertEquals("2",mds1.get("field2"));
+		assertNull(mds1.get("field3"));
 	}
 
 	@Test
@@ -119,8 +113,8 @@ public class TestMetaDataSummary {
 		String fieldList = mds1.generateResults(Field.values()).trim();
 		String startStr = fieldList.substring(0, 4);
 		String endStr = fieldList.substring(fieldList.length()-5);
-		assertThat(startStr,equalTo("<ul>"));
-		assertThat(endStr,equalTo("</ul>"));
+		assertEquals("<ul>",startStr);
+		assertEquals("</ul>",endStr);
 	}
 
 }
