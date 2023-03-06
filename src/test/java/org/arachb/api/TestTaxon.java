@@ -8,7 +8,7 @@ public class TestTaxon {
 	final static String TAXONNCBIID = "http://purl.obolibrary.org/obo/NCBITaxon_336608";
 
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() { //throws Exception {
 	}
 
 	@Test
@@ -19,11 +19,18 @@ public class TestTaxon {
 		assert(testQuery.contains("Habronattus"));
 	}
 	
+
+	/**
+	 * Tests monomial and binomial taxa are accepted (no trinomials currently).
+	 * Now checks  strings that might attack via CVE-2021-44228 - log4j vulnerability
+	 */
 	@Test
-	public void testGetName2TaxonIdQuery(){
+	public void testValidateTaxonName(){
 		Taxon testTaxon = new Taxon();
-		String testQuery = testTaxon.getName2TaxonIdQuery("Habronattus");
-		assert(testQuery.contains("Habronattus"));
+		assert testTaxon.validateTaxonName("Habronattus");
+		assert testTaxon.validateTaxonName("Habronattus californicus");
+		assert !testTaxon.validateTaxonName("jndi:{}");
+		assert !testTaxon.validateTaxonName("jndi%3A%7B%7D");
 	}
 
 }

@@ -1,7 +1,5 @@
 package org.arachb.api;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +9,7 @@ public class TestUtils {
 	
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() { //} throws Exception {
 	}
 
 	@Test
