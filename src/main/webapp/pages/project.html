@@ -11,6 +11,17 @@
   <link type="text/css" rel="stylesheet" href="../static/spider-behavior.css"/>
 </head>
 
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N1V5P8V6E0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-N1V5P8V6E0');
+</script>
+
 <body>
   <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
@@ -59,23 +70,24 @@
           <h3>Frequently Asked (or should be frequently asked) Questions</h3>
           <dl>
             <dt> What does this do?</dt>
-            <dd> This is a database of published descriptions of behavior of spiders and other arachnids (mites, scorpions, etc.)  You can
+            <dd> <p>This is a database of published descriptions of behavior of spiders and other arachnids (mites, scorpions, etc.)  You can
                  enter a taxon name (mostly species) in the taxon search box and see a list of published behaviors for that taxon and 
-                 links to the publication where they were mentioned.</dd>
+                 links to the publication where they were mentioned.</p></dd>
             <dt> OK, but what does it really do right now?</dt>
             <dd>
-              Currently there are annotations for several taxa (including <i>Tetragnatha</i>, <i>Deinopis</i>,
-              <i>Cupiennius salei</i>, <i>Leucauge mariana</i>). You can enter a taxon name in the taxon box and if there are behavior annotations for the taxon, they will be listed.  If the taxon
-              is in the current taxonomy (a chunk of NCBI) but no behavior is listed, it will return a table with a link to the taxon term - 
-              currently this is the entry in OntoBee (not very useful), but this will change to point to the NBCI or alternative taxonomy page.
-              Note that the publication links are now live and point to the publication's doi which will redirect to the publisher's page.
-              Eventually each pub will have it's own generated page both to handle pubs without doi's or other URL's but also to provide information
-              about the publication relative to this database.<br/>
-              There are also a couple of behavior terms that are available in a taxon cross-reference table (try 'posture' or 'predator behavior').  Note that there 
-              have been a number of corrections and improvements to site recently.  The third form will have cross references for participants (either
-              anatomical parts or components of the environment - prey, substrates, etc.).<br/>
-              <i>Leucauge mariana</i> is the first non-NCBI taxon and is represented by its LSID in the 
-              <a href="https://research.amnh.org/iz/spiders/catalog/TETRAGNATHIDAE.html">World Spider Catalog</a>
+              <p>Currently there are annotations for several taxa (including <i>Tetragnatha</i>, <i>Deinopis</i>,
+                <i>Cupiennius salei</i>, <i>Leucauge mariana</i>). You can enter a taxon name in the taxon box and if there are behavior annotations for the taxon, they will be listed.  If the taxon
+                is in the current taxonomy (a chunk of NCBI) but no behavior is listed, it will return a table with a link to the taxon term -
+                currently this is the entry in OntoBee (not very useful), but this will change to point to the NBCI or alternative taxonomy page.
+                Note that the publication links are now live and point to the publication's doi which will redirect to the publisher's page.
+                Eventually each pub will have it's own generated page both to handle pubs without doi's or other URL's but also to provide information
+                about the publication relative to this database.</p>
+              <p>There are also a couple of behavior terms that are available in a taxon cross-reference table (try 'posture' or 'predator behavior').  Note that there
+                have been a number of corrections and improvements to site recently.  The third form will have cross references for participants (either
+                anatomical parts or components of the environment - prey, substrates, etc.).</p>
+              <p>The NCBI taxonomy does not include every species known to science.  Species not in that
+              taxonomy are represented by their LSIDs in the
+              <a href="https://wsc.nmbe.ch/">World Spider Catalog</a> and equivalent resources for other groups.</p>
             </dd>
           </dl>
           <dl>
@@ -112,42 +124,42 @@
              <p>
                <a href="../ontologies/arachb.owl">here</a>
                <br/>
-               Note: this will dump rdf-xml format direct to your browser so you may want to have a plugin installed for formating all that xml.
+               Note: this will dump rdf-xml format directly to your browser so you may want to have a plugin installed for formatting all that xml.
              </p>
           <h3>Arachnolingua imports terms from these Ontologies </h3>
           <dl>
             <dt>
-              <a href="https://behavior-ontology.googlecode.com/svn/trunk/behavior.owl">
+              <a href="https://obofoundry.org/ontology/nbo.html">
                 NeuroBehavior Ontology
               </a> 
             </dt>
             <dd>OBO ontology for behavior</dd>
             <dt>
-              <a href="https://purl.obolibrary.org/obo/ncbitaxon.owl">
+              <a href="https://obofoundry.org/ontology/ncbitaxon.html">
                 NCBI taxonomy (generated OWL file in OBO foundry)
               </a>
             </dt>
             <dd>Taxonomy (only Arachnid taxa and the path to 'root')</dd>
             <dt>
-              <a href="https://purl.obolibrary.org/obo/spd.owl">
+              <a href="https://obofoundry.org/ontology/spd.html">
                 Spider Biology Ontology
               </a> 
             </dt>
             <dd>Mostly anatomy of spiders</dd>
             <dt>
-              <a href="https://purl.obolibrary.org/obo/iao.owl">
+              <a href="https://obofoundry.org/ontology/iao.html">
                 Information Artifact Ontology
               </a> 
             </dt>
             <dd>Vocubulary used for talking about descriptions of behavior</dd>
             <dt>
-              <a href="https://purl.obolibrary.org/obo/ro.owl">
+              <a href="https://obofoundry.org/ontology/ro.html">
                 Relations Ontology
               </a> 
             </dt>
             <dd>Vocabulary of relations among and between entities and processes</dd>
             <dt>
-              <a href="https://purl.obolibrary.org/obo/bfo.owl">
+              <a href="https://obofoundry.org/ontology/bfo.html">
                 Basic Formal Ontology
               </a> 
             </dt>
@@ -173,27 +185,13 @@
 
     <hr/>
     <footer>
-      <p>Last update 16 October 2015</p>
+      <p>Last update 19 September 2023</p>
     </footer>
   </div>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
   </script>
   <script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js">
   </script>
-
-  <!-- Google Analytics -->
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-30972937-1', 'auto');
-ga('send', 'pageview');
-
-</script>
-<!-- End Google Analytics -->
-
 
 </body>
 

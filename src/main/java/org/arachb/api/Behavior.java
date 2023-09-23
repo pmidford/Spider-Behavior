@@ -64,7 +64,9 @@ public class Behavior extends HttpServlet {
 		response.setContentType(Util.SPARQLMIMETYPE);
 		Repository repo = null;
 		RepositoryConnection con = null;
-		LocalRepositoryManager manager = new LocalRepositoryManager(new File(Util.RDF4JHOME));
+		File baseDir = Util.getBaseDir(getServletContext());
+
+		LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
 
 		try {
 			System.out.println("About to query");
@@ -84,7 +86,7 @@ public class Behavior extends HttpServlet {
 					result.jsonFormatResultList();
 				}
 				else{
-					result.noResultsMsg();
+					result.noResultsError(taxonIdQueryString);
 				}
 			}
 		} catch (RepositoryException | RepositoryConfigException | MalformedQueryException | QueryEvaluationException e) {

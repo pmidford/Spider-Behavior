@@ -75,7 +75,7 @@ public class NarrativePage extends AbstractPage {
 
 
 	@Override
-	public String generateHTML() throws IOException  {
+	public String generateHTML() {
 		log.info("Starting to generate narrative page");
 		String result = "";
 		result += "<!DOCTYPE html>";
@@ -154,13 +154,7 @@ public class NarrativePage extends AbstractPage {
 			e.printStackTrace(ps);
 			log.error(String.format("Query evaluation problem: %s ",query),e);
 		}
-		catch(IOException e){
-			response.setStatus(500);
-			PrintStream ps = new PrintStream(response.getOutputStream());
-			e.printStackTrace(ps);
-			log.error("IOException",e);
-		}
-		
+
 		return "";
 	}
 

@@ -63,7 +63,7 @@ public class SparqlBuilder {
 
 
 	public void debug(){
-		log.info("SparqlBuilder buffer contains " + b.toString());
+		log.info("SparqlBuilder buffer contains " + b);
 	}
 
 

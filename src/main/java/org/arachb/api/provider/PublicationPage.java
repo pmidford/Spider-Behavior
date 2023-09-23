@@ -62,7 +62,7 @@ public class PublicationPage extends AbstractPage{
 
 
 	@Override
-	public String generateHTML() throws IOException{
+	public String generateHTML() {
 		String result = "";
 		result += "<!DOCTYPE html>";
 		result += "<html lang=\"en\">";

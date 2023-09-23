@@ -1,13 +1,3 @@
-const uricolumn = function (resultObj, column) {
-    "use strict";
-    for (let i = 0; i < resultObj.results.bindings.length; i += 1) {
-        let binding = resultObj.results.bindings[i];
-        if (binding[column].type !== 'uri'){
-            return false;
-        }
-    }
-    return true;
-};
 
 const taxoneventtable = function (resultObj) {
     "use strict";
@@ -21,7 +11,7 @@ const taxoneventtable = function (resultObj) {
         return "<p style='color:red'>" + resultObj.error +"</p>";
     }
     if (resultObj.results.bindings && resultObj.results.bindings.length > 0) {
-        var result, i, j, fieldname, nextfieldname, fielddatatype, nextfielddatatype;
+        let result, i, j, fieldname, nextfieldname, fielddatatype, nextfielddatatype;
         result = "<table class='table'>\n";
         result = result + "  <tr>\n";
         for (i = 0; i < resultObj.head.vars.length; i += 1) {

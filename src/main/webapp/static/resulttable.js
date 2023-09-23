@@ -1,14 +1,4 @@
 "use strict";
-function uricolumn(resultobj, column) {
-    for (let i = 0; i < resultobj.results.bindings.length; i += 1) {
-        let binding = resultobj.results.bindings[i];
-        let celltype = binding[column].type;
-        if (celltype !== 'uri') {
-            return false;
-        }
-    }
-    return true;
-}
 
 function resulttable(resultobj) {
     if (resultobj === 'no results') {
@@ -22,7 +12,7 @@ function resulttable(resultobj) {
     }
     const start_row = " <tr>\n";
     if (resultobj.results.bindings && resultobj.results.bindings.length > 0) {
-        var nextfieldname, nextfielddatatype;
+        let nextfieldname, nextfielddatatype;
         let result = "<table class='table'>\n";
         result = result + start_row;
         for (let i = 0; i < resultobj.head.vars.length; i += 1) {

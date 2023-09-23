@@ -85,7 +85,7 @@ public class ResultTable {
 	}
 
 	
-	public String htmlFormatPairedColumns(String[] queryKeys) throws IOException, QueryEvaluationException {
+	public String htmlFormatPairedColumns(String[] queryKeys) throws QueryEvaluationException {
 		final String ls = System.lineSeparator();
 		log.info("columns checkpoint 1, query_keys= " + Arrays.toString(queryKeys));
 		StringBuilder result = new StringBuilder();

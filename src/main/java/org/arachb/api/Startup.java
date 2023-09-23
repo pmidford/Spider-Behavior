@@ -31,16 +31,13 @@ public class Startup extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	final static private String RDF4JHOME = Util.USERHOME+"/.rdf4j/";
 	final static private String baseURI = "https://arachb.org/arachb/arachb.owl";
 
 	
 	@Override
     public void init(ServletConfig config) throws ServletException{
 		super.init(config);
-		getServletContext().log("Starting init process");
-		getServletContext().log("RDF4JHOME = " + RDF4JHOME);
-		File baseDir = new File(RDF4JHOME);
+		File baseDir = Util.getBaseDir(getServletContext());
 		String repositoryId = "test1";
 		LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
 		Repository repo = null;
@@ -58,6 +55,16 @@ public class Startup extends HttpServlet {
 				// create a configuration for the repository implementation
 				RepositoryImplConfig repositoryTypeSpec = new SailRepositoryConfig(backendConfig);
 				RepositoryConfig repConfig = new RepositoryConfig(repositoryId, repositoryTypeSpec);
+				File dataDir = manager.getRepositoryDir(repConfig.getID());
+				//getServletContext().log("dataDir is  " + dataDir);
+				System.out.println("dataDir is  " + dataDir);
+				if (!dataDir.exists()) {
+					boolean mkResult = dataDir.mkdirs();
+					if (!mkResult){
+						throw new RuntimeException("Tried to create dirs for " + dataDir);
+					}
+				}
+
 				manager.addRepositoryConfig(repConfig);
 				repo = manager.getRepository(repositoryId);
 				needsLoading = true;

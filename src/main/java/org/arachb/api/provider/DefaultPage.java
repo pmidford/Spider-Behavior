@@ -1,6 +1,5 @@
 package org.arachb.api.provider;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,7 +51,7 @@ public class DefaultPage extends AbstractPage {
 	}
 
 	@Override
-	public String generateHTML() throws IOException{
+	public String generateHTML(){
 		String result = "";
 		result += "<!DOCTYPE html>";
 		result += "<html lang=\"en\">";

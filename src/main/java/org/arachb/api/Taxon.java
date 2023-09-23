@@ -22,6 +22,8 @@ import org.eclipse.rdf4j.repository.manager.LocalRepositoryManager;
 
 
 
+
+
 /**
  * This servlet should handle URIs starting with api.arachb.org/taxon
  * @author pmidford
@@ -79,9 +81,12 @@ public class Taxon extends HttpServlet {
 	void getTaxonGeneralClaims(String taxonName, HttpServletResponse response) throws IOException{
 		Repository repo = null;
 		RepositoryConnection con = null;
-		log.warn("BASEDIR= " + BASEDIR);
-		getServletContext().log("BASEDIR= " + BASEDIR);
-		final LocalRepositoryManager manager = new LocalRepositoryManager(BASEDIR);
+		File baseDir = Util.getBaseDir(getServletContext());
+
+		String repositoryId = "test1";
+
+		getServletContext().log("BASEDIR= " + baseDir);
+		final LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
 		try {
 			manager.init();
 			repo = manager.getRepository(Util.REPONAME);
@@ -127,7 +132,8 @@ public class Taxon extends HttpServlet {
 	void getTaxonEvents(String taxonName, HttpServletResponse response) throws IOException{
 		Repository repo = null;
 		RepositoryConnection con = null;
-		final LocalRepositoryManager manager = new LocalRepositoryManager(BASEDIR);
+		File baseDir = Util.getBaseDir(getServletContext());
+		final LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
 		try {
 			manager.init();
 			repo = manager.getRepository(Util.REPONAME);

@@ -2,7 +2,7 @@
       padding-top: 70px; 
       margin-top: 1.0em;
       background-color: #FFFFFF;
-      font-family: Helvetica, Arial, FreeSans, san-serif;
+      font-family: Helvetica, Arial, FreeSans, sans-serif;
       color: #000000;
     }
     #header {
@@ -13,7 +13,6 @@
         border: 0;
         width: 800px;
         left: 10%;
-        border: 0;
         border-top: 0.1em solid #aaa;
         border-bottom: 0.1em solid #aaa;
     }
@@ -26,7 +25,7 @@
     }
     #tb_about{
         position:absolute;
-        left: 0px;
+        left: 0;
     }
     #tb_taxonomy{
         position:absolute;
@@ -55,17 +54,15 @@
         position: absolute;
         top: 0;
         border: 1px solid #aaa;
-        margin: 1em;
         width: 20%;
-        margin-left: 25%;
+        margin: 1em 1em 1em 25%;
     }
     #participant_box{
         position: absolute;
         top: 0;
         border: 1px solid #aaa;
-        margin: 1em;
         width: 20%;
-        margin-left: 50%;
+        margin: 1em 1em 1em 50%;
     }
 
     .arachb_header{

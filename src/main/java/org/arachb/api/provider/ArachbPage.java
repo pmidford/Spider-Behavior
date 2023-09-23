@@ -4,9 +4,9 @@ import java.io.IOException;
 
 public interface ArachbPage {
 	
-	String generateHTML() throws IOException;
+	String generateHTML();
 	
-	String generatejson() throws IOException;
+	String generatejson();
 
 
 
