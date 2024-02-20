@@ -1,108 +1,131 @@
-    body {
-      padding-top: 70px; 
-      margin-top: 1.0em;
-      background-color: #FFFFFF;
-      font-family: Helvetica, Arial, FreeSans, sans-serif;
-      color: #000000;
-    }
-    #header {
-    }
-    #toolbar{
-        position: relative;
-        background: #72C0DC;
-        border: 0;
-        width: 800px;
-        left: 10%;
-        border-top: 0.1em solid #aaa;
-        border-bottom: 0.1em solid #aaa;
-    }
-    #main{
-        position: relative;
-        left: 10%;
-    }
-    #resources{
-        position:relative;
-    }
-    #tb_about{
-        position:absolute;
-        left: 0;
-    }
-    #tb_taxonomy{
-        position:absolute;
-        left: 160px;
-    }
-    #tb_ontology{
-        position:absolute;
-        left: 320px
-    }
-    #tb_curation{
-        position:absolute;
-        left: 480px        
-    }
-    #tb_testing{
-	position:relative;
-        left: 640px
-    }
-    #ethogram_box{
-        position: absolute;
-        top: 0;
-        border: 1px solid #aaa;
-        margin: 1em;
-        width: 20%;
-    }
-    #function_box{
-        position: absolute;
-        top: 0;
-        border: 1px solid #aaa;
-        width: 20%;
-        margin: 1em 1em 1em 25%;
-    }
-    #participant_box{
-        position: absolute;
-        top: 0;
-        border: 1px solid #aaa;
-        width: 20%;
-        margin: 1em 1em 1em 50%;
+body {
+    padding-top: 70px;
+    margin-top: 1.0em;
+    background-color: #F1EBE9;
+    font-family: Helvetica, Arial, FreeSans, sans-serif;
+    color: #031927;
+}
+
+#header {
+}
+
+#toolbar{
+    position: relative;
+    background: #72C0DC;
+    border: 0;
+    width: 800px;
+    left: 10%;
+    border-top: 0.1em solid #aaa;
+    border-bottom: 0.1em solid #aaa;
+}
+
+.arachb_header {
+    color: #424874; /*#3960c6; */
+}
+
+.arachb_headline{
+    color: #424874;
+    text-align: center;
+}
+
+#main{
+    position: relative;
+    left: 10%;
+}
+
+#resources{
+    position:relative;
+}
+
+#tb_about{
+    position:absolute;
+    left: 0;
+}
+
+#tb_taxonomy{
+    position:absolute;
+    left: 160px;
+}
+
+#tb_ontology{
+    position:absolute;
+    left: 320px
+}
+
+#tb_curation{
+    position:absolute;
+    left: 480px
+}
+
+#tb_testing{
+    position:relative;
+    left: 640px
+}
+
+#ethogram_box{
+    position: absolute;
+    top: 0;
+    border: 1px solid #aaa;
+    margin: 1em;
+    width: 20%;
+}
+
+#function_box{
+    position: absolute;
+    top: 0;
+    border: 1px solid #aaa;
+    width: 20%;
+    margin: 1em 1em 1em 25%;
+}
+
+#participant_box{
+    position: absolute;
+    top: 0;
+    border: 1px solid #aaa;
+    width: 20%;
+    margin: 1em 1em 1em 50%;
+}
+
+
+.navbar-brand {
+    float: left;
+    height: 50px;
+    padding: 10px 10px;
+    font-size: 18px;
+    line-height: 30px;
+}
+
+.navbar-image {
+    width: 48px;
+    height: 30px;
     }
 
-    .arachb_header{
-       color: #3960c6;
-    }
+.taxon_name{
+    font-style: italic;
+}
 
-    .arachb_headline{
-       color: #3960c6;
-       text-align: center;
-    }
-    
-    .navbar-brand {
-       float: left;
-       height: 50px;
-       padding: 10px 10px;
-       font-size: 18px;
-       line-height: 30px;
-    }
+.taxon_urn{
+    font-weight: bold;
+}
 
-    .navbar-image {
-        width: 48px;
-        height: 30px;
-    }
-    
-    .taxon_name{
-        font-style: italic;
-    }
-    
-    .taxon_urn{
-        font-weight: bold;
-    }
+h1 { font-size: 3.8em; margin-bottom: 3px; }
 
-    h1 { font-size: 3.8em; margin-bottom: 3px; }
-    h1 .small { font-size: 0.4em; }
-    h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; }
-    h3 { text-align: center; }
-    a { color: #3960c6; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
+h1 .small { font-size: 0.4em; }
+
+h1 a { text-decoration: none }
+
+h2 { font-size: 1.5em; }
+
+h3 { text-align: center; }
+
+a { color: #3960c6; }
+
+.description { font-size: 1.2em;
+	       margin-bottom: 30px;
+	       margin-top: 30px;
+	       font-style: italic;}
+
+.download { float: right; }
     pre { background: #000; color: #fff; padding: 15px;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
