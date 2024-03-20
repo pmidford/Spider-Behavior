@@ -69,6 +69,7 @@ public abstract class AbstractPage implements ArachbPage {
 		result += "</ul>";
 		result += "</div>";
 		result += "</nav>";
+		result += "</div>";
 		return result;
 	}
 	
@@ -81,10 +82,11 @@ public abstract class AbstractPage implements ArachbPage {
 	}
 
 	String addFooter(){
-		String current = DateFormat.getDateInstance().format(new Date());
-		String result = "   <footer>" + System.lineSeparator();
-		result += String.format("      <p>Last update %s</p>",current) + System.lineSeparator();
-		result += "   </footer>" + System.lineSeparator();
+		final String current = DateFormat.getDateInstance().format(new Date());
+		final String ls = System.lineSeparator();
+		String result = "   <footer>" + ls;
+		result += String.format("      <p>Last update %s</p>",current) + ls;
+		result += "   </footer>" + ls;
 		return result;
 	}
 
