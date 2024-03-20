@@ -5,8 +5,7 @@ import java.util.Date;
 
 public abstract class AbstractPage implements ArachbPage {
 
-	final static String JQUERYSTRING = "https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js";
-	final static String BOOTSTRAPSTRING = "../static/bootstrap/js/bootstrap.min.js";
+	final static String BOOTSTRAPSTRING = "../static/bootstrap/js/bootstrap.bundle.min.js";
 	final static String ENVSTRING = "../static/env.js";
 	
 	final MetaDataSummary  metadata;
@@ -39,38 +38,37 @@ public abstract class AbstractPage implements ArachbPage {
 	
 	String addNavBar(){
 		String result = "";
-		result += "<nav class=\"navbar navbar-inverse navbar-fixed-top\">";
-		result += "   <div class=\"container-fluid\">";
-		result += "      <div class=\"navbar-header\">";
-		result += "         <button type=\"button\" class=\"navbar-toggle collapsed\" data-toggle=\"collapse\" data-target=\"#projectpage-navbar-collapse\" aria-expanded=\"false\">";
-		result += "            <span class=\"sr-only\">Toggle navigation</span>";
-		result += "            <span class=\"icon-bar\"></span>";
-		result += "            <span class=\"icon-bar\"></span>";
-		result += "            <span class=\"icon-bar\"></span>";
-		result += "        </button>";
-		result += "        <a class=\"navbar-brand\" href=\"https://arachb.org\">";
-		result += "          <img class=\"navbar-image\" src=\"../static/spiderwords_small.jpg\"  alt=\"spider words\"/>";
-		result += "        </a>";
-		result += "      </div>";
-		result += "      <ul class=\"nav navbar-nav navbar-right\">";        
-		result += "      </ul>";
-		result += "      <div class= \"collapse navbar-collapse\" id=\"projectpage-navbar-collapse\">";
-		result += "      <ul class=\"nav navbar-nav\">";        
-		result += "        <li>";
-		result += "           <a href=\"../index.html\">Home</a>";
-		result += "        </li>";
-		result += "        <li>";
-		result += "           <a href=\"../pages/project.html\">About</a>";
-		result += "        </li>";
-		result += "        <li>";
-		result += "           <a href=\"../pages/taxonomy.html\">Taxonomy Status</a>";
-		result += "        </li>";
-		result += "        <li>";
-		result += "          <a href=\"../pages/curation.html\">Curation</a>";
-		result += "        </li>";
-		result += "      </ul>";
-		result += "    </div>";
-		result += "  </div>";
+		result += "<div class=\"container\">";
+		result += "<nav class=\"navbar fixed-top navbar-expand-lg navbar-dark bg-dark\">";
+		result += "<a class=\"navbar-brand\" href=\"https://arachb.org\">";
+		result += "<img class=\"navbar-image\"";
+		result += "src=\"static/spiderwords_small.jpg\"";
+		result += "alt=\"Spider standing on an Anglo-Saxon glossary\"/>";
+		result += "</a>";
+		result += "<button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\":";
+		result += " data-target=\"#navbarNavDropdown\" aria-controls=\"navbarNavDropdown\"";
+		result += " aria-expanded=\"false\" aria-label=\"Toggle navigation\">";
+		result += " <span class=\"navbar-toggler-icon\"></span>";
+		result += "</button>";
+		result += "<div class=\"collapse navbar-collapse\" id=\"navbarNavDropdown\">";
+		result += "<ul class=\"navbar-nav\">";
+		result += "<li class=\"nav-item\">";
+		result += "<a class=\"nav-link\" href=\"#\">Home</a>";
+		result += "</li>";
+		result += "<li class=\"nav-item\">";
+		result += "<a class=\"nav-link\" href=\"pages/about.html\">About</a>";
+		result += "</li>";
+		result += "<li class=\"nav-item\">";
+		result += "<a class=\"nav-link\" href=\"pages/taxonomy.html\">Taxonomy Status</a>";
+		result += "</li>";
+		result += "<li class=\"nav-item\">";
+		result += "<a class=\"nav-link\" href=\"pages/ontology.html\">Ontology Resources</a>";
+		result += "</li>";
+		result += "<li class=\"nav-item\">";
+		result += "<a class=\"nav-link\" href=\"pages/curation.html\">Curation</a>";
+		result += "</li>";
+		result += "</ul>";
+		result += "</div>";
 		result += "</nav>";
 		return result;
 	}
