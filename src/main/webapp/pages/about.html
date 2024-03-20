@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>About Arachnolingua</title>
   <meta name="description" content=""/>
@@ -23,41 +22,39 @@
 </script>
 
 <body>
-  <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#projectpage-navbar-collapse" aria-expanded="false">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="https://arachb.org">
-          <img class="navbar-image" src="../static/spiderwords_small.jpg"  alt="spider words"/>
-        </a>
-      </div>
-      <ul class="nav navbar-nav navbar-right">
-        
-      </ul>
-      <div class= "collapse navbar-collapse" id="projectpage-navbar-collapse">
-        <ul class="nav navbar-nav">        
-          <li>
-            <a href="../index.html">Home</a>
+
+  <div class="container">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="https://arachb.org">
+        <img class="navbar-image"
+             src="../static/spiderwords_small.jpg"
+             alt="Spider standing on an Anglo-Saxon glossary"/>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+              aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#">Home</a>
           </li>
-          <li class="active">
-            <a href="#">About</a>
+          <li class="nav-item">
+            <a class="nav-link" href="about.html">About</a>
           </li>
-          <li>
-            <a href="taxonomy.html">Taxonomy Status</a>
+          <li class="nav-item">
+            <a class="nav-link" href="taxonomy.html">Taxonomy Status</a>
           </li>
-          <li>
-            <a href="curation.html">Curation</a>
+          <li class="nav-item">
+            <a class="nav-link" href="ontology.html">Ontology Resources</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="curation.html">Curation</a>
           </li>
         </ul>
       </div>
-    </div>
-  </nav>
-  
+    </nav>
+  </div>
 
   <div class="container">
     <div class="page-header">
@@ -188,9 +185,7 @@
       <p>Last update 19 September 2023</p>
     </footer>
   </div>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
-  </script>
-  <script type="text/javascript" src="../static/bootstrap/js/bootstrap.min.js">
+  <script type="text/javascript" src="../static/bootstrap/js/bootstrap.bundle.min.js">
   </script>
 
 </body>
