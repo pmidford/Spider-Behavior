@@ -18,7 +18,6 @@ public abstract class AbstractPage implements ArachbPage {
 		final String ls = System.lineSeparator();
 		String result = "";
 		result += "   <meta charset=\"utf-8\"/>" + ls;
-		result += "   <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" + ls;
 		result += "   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>" +ls;
 		String titleTemplate = "   <title>%s</title>\n";
 		if (metadata.contains("title")){
