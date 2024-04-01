@@ -7,11 +7,14 @@ import java.io.PrintStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.eclipse.rdf4j.query.MalformedQueryException;
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.repository.Repository;
@@ -31,18 +34,17 @@ public class Behavior extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	private static final Logger log = Logger.getLogger(Behavior.class);
 
+	final Logger logger = LoggerFactory.getLogger(Behavior.class);
 
 	@Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
 		final OutputStream os = response.getOutputStream();
+		final ServletContext context = getServletContext();
 
 		String name = request.getQueryString();
-		log.warn("raw string is: |" + name);
 		name = name.substring("behavior=".length()).trim();
 		final String[] components = name.split("\\+");
 		if (components.length>1){
@@ -56,9 +58,9 @@ public class Behavior extends HttpServlet {
 		if (!validateBehaviorName(name)){
 			final PrintStream ps = new PrintStream(response.getOutputStream());
 			response.setStatus(500);
-			String errorStr = "Failed to validate behavior Name %s"; 
-			ps.printf(errorStr, name);
-			log.error(String.format(errorStr, name));
+			String errorStr = "Failed to validate behavior " + name;
+			ps.print(errorStr);
+			logger.debug(errorStr);
 			return;
 		}
 		response.setContentType(Util.SPARQLMIMETYPE);
@@ -69,7 +71,7 @@ public class Behavior extends HttpServlet {
 		LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
 
 		try {
-			System.out.println("About to query");
+			context.log("About to query");
 			manager.init();
 			repo = manager.getRepository(Util.REPONAME);
 			con = repo.getConnection();
@@ -77,13 +79,13 @@ public class Behavior extends HttpServlet {
 			ResultTable result = new ResultTable(response);
 			result.tryAndAccumulateQueryResult(behaviorQueryString,con);
 			if (!result.isEmpty()){
-				result.jsonFormatResultList();
+				result.jsonFormatResultList(context);
 			}
 			else{
 				String taxonIdQueryString = getName2BehaviorIdQuery(name);
 				result.tryAndAccumulateQueryResult(taxonIdQueryString, con);
 				if (!result.isEmpty()){
-					result.jsonFormatResultList();
+					result.jsonFormatResultList(context);
 				}
 				else{
 					result.noResultsError(taxonIdQueryString);
@@ -91,7 +93,7 @@ public class Behavior extends HttpServlet {
 			}
 		} catch (RepositoryException | RepositoryConfigException | MalformedQueryException | QueryEvaluationException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			context.log("Exception in behavior query", e);
 		} finally {
 			try{
 				if (con != null){
@@ -101,13 +103,8 @@ public class Behavior extends HttpServlet {
 					repo.shutDown();
 				}
 			}
-			catch (NullPointerException e){
-				System.out.println("Error trying to close null repository");
-				e.printStackTrace();
-			}
-			catch (RepositoryException e){
-				System.out.println("Error while trying to close repository");
-				e.printStackTrace();
+			catch (NullPointerException | RepositoryException e){
+				context.log("Error closing repository after behavior query", e);
 			}
 		}
 		os.flush();
