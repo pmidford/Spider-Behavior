@@ -1,12 +1,12 @@
 package org.arachb.api.provider;
 
-import java.io.IOException;
+import javax.servlet.ServletContext;
 
-public interface ArachbPage {
+public interface ArachbPage{
 	
-	String generateHTML();
+	String generateHTML(ServletContext servletContext);
 	
-	String generatejson();
+	String generatejson(ServletContext servletContext);
 
 
 
