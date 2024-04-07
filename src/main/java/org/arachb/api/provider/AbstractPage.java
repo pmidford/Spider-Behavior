@@ -1,5 +1,7 @@
 package org.arachb.api.provider;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServlet;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -109,7 +111,7 @@ public abstract class AbstractPage implements ArachbPage {
 	
 	//Probably not really this simple
 	@Override
-	public String generatejson(){
+	public String generatejson(ServletContext servletContext){
 		return metadata.raw();
 	}
 
