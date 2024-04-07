@@ -21,8 +21,6 @@ public class Util {
 	final static String REPONAME = "test1";
 
 
-
-
 	public static boolean askQuery(String queryString, RepositoryConnection con)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException{
 		final BooleanQuery bQuery = con.prepareBooleanQuery(QueryLanguage.SPARQL, queryString);
