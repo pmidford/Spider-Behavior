@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <web-app mlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         xsi:schemaLocation="http://www.w3.org/2001/XMLSchema-instance
+                             http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
   <display-name>Arachnolingua Web Application</display-name>
 
@@ -26,8 +27,24 @@
     <servlet-class>org.arachb.api.Behavior</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>publication</servlet-name>
-    <servlet-class>org.arachb.api.Publication</servlet-class>
+    <servlet-name>publications</servlet-name>
+    <servlet-class>org.arachb.api.Publications</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>curation</servlet-name>
+    <servlet-class>org.arachb.api.CurationStatus</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>curated_taxa</servlet-name>
+    <servlet-class>org.arachb.api.CuratedTaxa</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>taxon_coverage</servlet-name>
+    <servlet-class>org.arachb.api.TaxonCoverageReport</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>anatomy</servlet-name>
+    <servlet-class>org.arachb.api.Anatomy</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>arachb</servlet-name>
@@ -51,12 +68,28 @@
     <url-pattern>/taxon/events</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
+    <servlet-name>taxon_coverage</servlet-name>
+    <url-pattern>/taxon_coverage</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
     <servlet-name>behavior</servlet-name>
     <url-pattern>/behavior</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>publication</servlet-name>
-    <url-pattern>/publication</url-pattern>
+    <servlet-name>publications</servlet-name>
+    <url-pattern>/publications</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>curation</servlet-name>
+    <url-pattern>curation</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>curated_taxa</servlet-name>
+    <url-pattern>taxon_list</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>anatomy</servlet-name>
+    <url-pattern>/anatomy</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>arachb</servlet-name>
