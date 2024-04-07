@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Arachnolingua</title>
+  <meta name="description"
+  content="Landing page for spider behavior ontology project"/>
+  <meta name="author" content="Peter E. Midford"/>
+  <link href="../static/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+  <link type="text/css" rel="stylesheet" href="../static/spider-behavior.css"/>
+</head>
+
+<!-- Probably obsoleted by vocabulary.html -->
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N1V5P8V6E0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-N1V5P8V6E0');
+</script>
+
+<body>
+  <div class="container">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="/index.html">
+        <img class="navbar-image"
+             src="../static/spiderwords_small.jpg"
+             alt="Spider standing on an Anglo-Saxon glossary"/>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+              aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Publications</a>
+            <ul class="dropdown-menu translucent-dropdown">
+              <li><a class="dropdown-item" href="publication_curation.html">Curation Queue</a></li>
+              <li><a class="dropdown-item" href="publications.html">Publication Status</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Taxonomy</a>
+            <ul class="dropdown-menu translucent-dropdown">
+              <li><a class="dropdown-item" href="taxon_coverage.html">Taxon Coverage Report</a></li>
+              <li><a class="dropdown-item" href="taxon_list.html">Curated Taxa</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Vocabulary</a>
+            <ul class="dropdown-menu translucent-dropdown">
+              <li><a class="dropdown-item" href="vocabulary.html">Vocabulary for Behavior</a></li>
+              <li><a class="dropdown-item" href="admin_ontology.html">Arachnolingua Ontology</a></li>   <!-- maybe just the owl file -->
+              <li><a class="dropdown-item" href="ontologies.html">Supporting Ontologies and Vocabularies</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">About</a>
+            <ul class="dropdown-menu translucent-dropdown">
+              <li><a class="dropdown-item" href="quick_start.html">Quick Start</a></li>
+              <li><a class="dropdown-item" href="faq.html">FAQ</a></li>
+              <li><a class="dropdown-item" href="other_resources.html">Other Resources</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+  </div>
+
+  <section id="imports">
+    <div class="row-fluid">
+      <div class="col-md-12">
+        <h3>OWL source (RDF/XML) for current KB</h3>
+        <p>
+          <a href="../ontologies/arachb.owl">here</a>
+          <br/>
+          Note: this will dump rdf-xml format directly to your browser so you may want to have a plugin installed for formatting all that xml.
+        </p>
+        <h3>Arachnolingua imports terms from these Ontologies </h3>
+        <dl>
+          <dt>
+            <a href="https://obofoundry.org/ontology/nbo.html">
+              NeuroBehavior Ontology
+            </a>
+          </dt>
+          <dd>OBO ontology for behavior</dd>
+          <dt>
+            <a href="https://obofoundry.org/ontology/ncbitaxon.html">
+              NCBI taxonomy (generated OWL file in OBO foundry)
+            </a>
+          </dt>
+          <dd>Taxonomy (only Arachnid taxa and the path to 'root')</dd>
+          <dt>
+            <a href="https://obofoundry.org/ontology/spd.html">
+              Spider Biology Ontology
+            </a>
+          </dt>
+          <dd>Mostly anatomy of spiders</dd>
+          <dt>
+            <a href="https://obofoundry.org/ontology/iao.html">
+              Information Artifact Ontology
+            </a>
+          </dt>
+          <dd>Vocubulary used for talking about descriptions of behavior</dd>
+          <dt>
+            <a href="https://obofoundry.org/ontology/ro.html">
+              Relations Ontology
+            </a>
+          </dt>
+          <dd>Vocabulary of relations among and between entities and processes</dd>
+          <dt>
+            <a href="https://obofoundry.org/ontology/bfo.html">
+              Basic Formal Ontology
+            </a>
+          </dt>
+          <dd>Root terms for all OBO ontologies</dd>
+        </dl>
+        <p>
+          In addition, several other ontologies (ECO, GO, PATO, CHEBI, UBERON, ENVO, PCO) provide terms available to curators.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <br>
+  <footer>
+    <div class="container-fluid">
+      <hr/>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-2">
+          <p>Last update 19 February 2024</p>
+          <p>Technical Problems: <a href="mailto:admin@arachb.org?Subject=FrontPage%20query" target="_top">admin</a>&nbsp; &nbsp;
+            Comments, suggestions: <a href="mailto:curation@arachb.org?Subject=FrontPage%20query" target="_top">curation</a></p>
+          </div>
+        </div>
+        <br/>
+      </div>
+    </footer>
+
+
+  <script type="text/javascript" src="../static/bootstrap/js/bootstrap.bundle.min.js">
+  </script>
+
+  <script type="text/javascript" src="../static/env.js">
+  </script>
+
+  </body>
+  </html>
