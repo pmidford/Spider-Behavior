@@ -2,7 +2,6 @@ package org.arachb.api;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +40,7 @@ public class Behavior extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-		final OutputStream os = response.getOutputStream();
+
 		final ServletContext context = getServletContext();
 
 		String name = request.getQueryString();
@@ -107,8 +106,6 @@ public class Behavior extends HttpServlet {
 				context.log("Error closing repository after behavior query", e);
 			}
 		}
-		os.flush();
-		os.close();
     }
     
     

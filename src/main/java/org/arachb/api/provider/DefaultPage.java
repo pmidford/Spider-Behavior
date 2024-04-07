@@ -1,5 +1,6 @@
 package org.arachb.api.provider;
 
+import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +52,7 @@ public class DefaultPage extends AbstractPage {
 	}
 
 	@Override
-	public String generateHTML(){
+	public String generateHTML(ServletContext servletContext){
 		String result = "";
 		result += "<!DOCTYPE html>";
 		result += "<html lang=\"en\">";
@@ -60,7 +61,7 @@ public class DefaultPage extends AbstractPage {
 		result += "</head>";
 		result += "<body>";
 
-		result += addNavBar();
+		result += navBar;
 		result += "   <div class=\"container\">";
 		if (metadata.contains("title")){
 			result += String.format("      <h3>%s</h3>",metadata.get("title"));
@@ -78,7 +79,6 @@ public class DefaultPage extends AbstractPage {
 		result += "   </div>";
 		result += "   <hr/>";
 		result += addFooter();
-		result += addScript(JQUERYSTRING);
 		result += addScript(BOOTSTRAPSTRING);
 		result += addScript(ENVSTRING);
 		result += "</body>";
