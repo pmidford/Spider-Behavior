@@ -100,6 +100,10 @@ body {
     height: 30px;
     }
 
+.translucent-dropdown{
+    opacity: 0.75;
+}
+
 .taxon_name{
     font-style: italic;
 }
