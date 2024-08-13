@@ -27,8 +27,8 @@
     <servlet-class>org.arachb.api.Behavior</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>publications</servlet-name>
-    <servlet-class>org.arachb.api.Publications</servlet-class>
+    <servlet-name>publication_list</servlet-name>
+    <servlet-class>org.arachb.api.PublicationList</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>curation</servlet-name>
@@ -37,10 +37,6 @@
   <servlet>
     <servlet-name>curated_taxa</servlet-name>
     <servlet-class>org.arachb.api.CuratedTaxa</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>taxon_coverage</servlet-name>
-    <servlet-class>org.arachb.api.TaxonCoverageReport</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>anatomy</servlet-name>
@@ -68,16 +64,12 @@
     <url-pattern>/taxon/events</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>taxon_coverage</servlet-name>
-    <url-pattern>/taxon_coverage</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
     <servlet-name>behavior</servlet-name>
     <url-pattern>/behavior</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>publications</servlet-name>
-    <url-pattern>/publications</url-pattern>
+    <servlet-name>publication_list</servlet-name>
+    <url-pattern>/publication_list</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>curation</servlet-name>
