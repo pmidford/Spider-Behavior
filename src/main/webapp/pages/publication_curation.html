@@ -52,9 +52,8 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Vocabulary</a>
           <ul class="dropdown-menu translucent-dropdown">
-            <li><a class="dropdown-item" href="vocabulary.html">Vocabulary for Behavior</a></li>
-            <li><a class="dropdown-item" href="admin_ontology.html">Arachnolingua Ontology</a></li>   <!-- maybe just the owl file -->
-            <li><a class="dropdown-item" href="ontologies.html">Supporting Ontologies and Vocabularies</a></li>
+            <li><a class="dropdown-item" href="vocabulary.html">Vocabulary for Spider (eventually Arachnid) Behavior</a></li>
+            <li><a class="dropdown-item" href="ontologies.html">Ontologies</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -72,17 +71,60 @@
 
 <div class="container">
   <div class="page-header">
-    <h1 class="arachb_headline">Admin Ontology</h1>
+    <h2 class="arachb_headline">Publications in Active Curation</h2>
+  </div>
+  <div class="row-fluid">
+    <div class="col-md-12">
+      <p id="results">Working...</p>
+    </div>
   </div>
 
 </div>
 
 <hr>
 <footer>
-  <p>Last update 3 October 2015</p>
+  <p>Last update 10 April 2024</p>
 </footer>
 
 <script type="text/javascript" src="../static/bootstrap/js/bootstrap.bundle.min.js">
+</script>
+
+<script type="text/javascript" src="../static/env.js">
+</script>
+
+<script type="text/javascript" src="../static/resulttable.js">
+</script>
+
+<script type="text/javascript" src="../static/utils.js">
+</script>
+
+<script>
+  const SPARQL_bad_query = '{error: No results Unexpected empty result from query';
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const query_str = window.location.search;
+    const url_str = myhost + "curation";
+    const results_ele = document.getElementById("results");
+    fetch(url_str, {})
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Error in curation results")
+              }
+              return response.text();
+            })
+            .then((text) => {
+              if (text.startsWith(SPARQL_bad_query)) {
+                results_ele.innerHTML =
+                        "No publications under active curation " + query_str.substring(7);
+              }
+              else {
+                results_ele.innerHTML = resulttable(JSON.parse(text));
+              }
+            })
+            .catch((error) => {
+              results_ele.innerHTML = error;
+            })
+  })
 </script>
 
 </body>

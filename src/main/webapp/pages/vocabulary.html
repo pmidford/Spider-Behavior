@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Curation Status</title>
+  <meta name="description" content="Curation status page for arachnolingua project"/>
+  <meta name="author" content="Peter E. Midford"/>
+  <link href="../static/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+  <link type="text/css" rel="stylesheet" href="../static/spider-behavior.css"/>
+</head>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-N1V5P8V6E0"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-N1V5P8V6E0');
+</script>
+
+<body>
+
+<div class="container">
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/index.html">
+      <img class="navbar-image"
+           src="../static/spiderwords_small.jpg"
+           alt="Spider standing on an Anglo-Saxon glossary"/>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Publications</a>
+          <ul class="dropdown-menu translucent-dropdown">
+            <li><a class="dropdown-item" href="publication_curation.html">Curation Queue</a></li>
+            <li><a class="dropdown-item" href="publications.html">Publication Status</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Taxonomy</a>
+          <ul class="dropdown-menu translucent-dropdown">
+            <li><a class="dropdown-item" href="taxon_coverage.html">Taxon Coverage Report</a></li>
+            <li><a class="dropdown-item" href="taxon_list.html">Curated Taxa</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Vocabulary</a>
+          <ul class="dropdown-menu translucent-dropdown">
+            <li><a class="dropdown-item" href="vocabulary.html">Vocabulary for Spider (eventually Arachnid) Behavior</a></li>
+            <li><a class="dropdown-item" href="ontologies.html">Ontologies</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">About</a>
+          <ul class="dropdown-menu translucent-dropdown">
+            <li><a class="dropdown-item" href="quick_start.html">Quick Start</a></li>
+            <li><a class="dropdown-item" href="faq.html">FAQ</a></li>
+            <li><a class="dropdown-item" href="other_resources.html">Other Resources</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="page-header">
+  <h3 class="arachb_headline">
+    Spider Behavior Vocabulary
+  </h3>
+</div>
+
+<div class="container">
+  <div class="col-md11 col-md-offset-1">
+    <h4>
+      Resources
+    </h4>
+    <br/>
+    <ul>
+      <li>Current work area: data cleanup and grouping/sorting of terms
+        in progress.
+        <a href="https://goo.gl/b61YIW">Current List</a>.
+      </li>
+      <li>
+        Original set of collected terms, ordered by location in source volumes.
+        Minimal data cleaning:
+        <a href="https://bit.ly/1WZ2koJ">Raw Source List</a>.
+      </li>
+    </ul>
+    <br/>
+    <h4>
+      Notes
+    </h4>
+    Each notebook has multiple sheets (tabs).
+    <ul>
+      <li><strong>Behavior</strong> contains terms that are the main focus</li>
+      <li><strong>Web Morphology</strong> terms for web shapes and parts - maybe
+        a separate vocabulary.
+      </li>
+      <li><strong>Not Spider Specific</strong> behavior terms that are more general,
+        should be terms in more general ontologies.
+      </li>
+      <li><strong>Chemistry</strong> mostly spider pheromones, should be added to
+        the ChEBI ontology.
+      </li>
+      <li><strong>Qualities</strong> terms that are not processes or independent continuents, but their placement is still
+        controversial.
+      </li>
+    </ul>
+  </div>
+
+</div>
+
+<hr>
+<footer>
+  <p>Last update 3 October 2015</p>
+</footer>
+
+<script type="text/javascript" src="../static/bootstrap/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>
