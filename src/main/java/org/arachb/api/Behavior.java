@@ -125,9 +125,9 @@ public class Behavior extends HttpServlet {
 		}
     }
 
-    
-    
-    String getName2BehaviorReportQuery(String name){
+
+
+	public String getName2BehaviorReportQuery(String name){
     	SparqlBuilder b = SparqlBuilder.startSparql();
     	String selectLine = "SELECT ?behavior ?taxon ?anatomy\n";
     	b.addText(selectLine);
