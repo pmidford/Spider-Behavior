@@ -1,13 +1,11 @@
 package org.arachb.api.provider;
 
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.arachb.api.ResultTable;
 import org.arachb.api.SparqlBuilder;
 import org.eclipse.rdf4j.query.MalformedQueryException;
