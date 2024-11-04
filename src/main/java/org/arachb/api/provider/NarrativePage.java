@@ -60,15 +60,15 @@ public class NarrativePage extends AbstractPage {
 	String eventsTableString;
 	private static final Logger log = Logger.getLogger(NarrativePage.class);
 
-	public NarrativePage(MetaDataSummary mds, RepositoryConnection c, HttpServletResponse response)
+	public NarrativePage(MetaDataSummary mds, RepositoryConnection c, HttpServletResponse response, ServletContext servletContext)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException, IOException{
 		super(mds);
-		log.info("Creating Narrative Page");
+		servletContext.log("Creating Narrative Page");
 		con = c;
-		eventsTableString = queryEvents(response);
-		log.info("Narrative page checkpoint 1");
+		eventsTableString = queryEvents(response, servletContext);
+		servletContext.log("Narrative page checkpoint 1");
 		updateLabel(mds, response);
-		log.info("Finished creating narrative page");
+		servletContext.log("Finished creating narrative page");
 	}
 
 
@@ -114,7 +114,7 @@ public class NarrativePage extends AbstractPage {
 	private final String[] eventsSelectVars = //{"narrative","event","behavior","behavior_id","anatomy","anatomy_id","individual","subject"};
 	                                          {"narrative_id","narrative","behavior_id","behavior","anatomy_id","anatomy","subject_id","subject"};
 
-	private String queryEvents(HttpServletResponse response) throws IOException{
+	private String queryEvents(HttpServletResponse response, ServletContext servletContext) {
 		String target = metadata.get("localIdentifier");
 		String query = narrativeEventsQuery(target);
 		ResultTable resultTable = new ResultTable(response);
@@ -122,35 +122,29 @@ public class NarrativePage extends AbstractPage {
 		System.out.println("narrative query = " + query);
 		try {
 			resultTable.tryAndAccumulateQueryResult(query, con);
-			log.info("Return from tryAndAccumulateQuery result" + resultTable.getContents());
+			servletContext.log("Return from tryAndAccumulateQuery result" + resultTable.getContents());
 			if (resultTable.isEmpty()){
 				return "";
 			}
 			else{
-				log.info("Trying to format columns");
+				servletContext.log("Trying to format columns");
 				String foo = resultTable.htmlFormatPairedColumns(eventsSelectVars);
-				log.info("Have formatted columns " + foo);
+				servletContext.log("Have formatted columns " + foo);
 				return foo;
 			}
 		}
 		catch(RepositoryException e){
 			response.setStatus(500);
-			PrintStream ps = new PrintStream(response.getOutputStream());
-			e.printStackTrace(ps);
-			log.error("Repository Exception: ",e);
+			servletContext.log("Repository Exception: ",e);
 		}
 		catch(MalformedQueryException e){
 			response.setStatus(500);
-			PrintStream ps = new PrintStream(response.getOutputStream());
-			e.printStackTrace(ps);
-			log.error(String.format("Malformed query: %s ",query),e);
+			servletContext.log(String.format("Malformed query: %s ",query),e);
 			
 		}
 		catch(QueryEvaluationException e){
 			response.setStatus(500);
-			PrintStream ps = new PrintStream(response.getOutputStream());
-			e.printStackTrace(ps);
-			log.error(String.format("Query evaluation problem: %s ",query),e);
+			servletContext.log(String.format("Query evaluation problem: %s ",query),e);
 		}
 
 		return "";
