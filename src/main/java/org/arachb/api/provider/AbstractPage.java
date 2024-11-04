@@ -9,13 +9,13 @@ public abstract class AbstractPage implements ArachbPage {
 
 	final static String BOOTSTRAPSTRING = "../static/bootstrap/js/bootstrap.bundle.min.js";
 	final static String ENVSTRING = "../static/env.js";
-	
+
 	final MetaDataSummary  metadata;
-	
+
 	protected AbstractPage(MetaDataSummary mds){
 		metadata = mds;
 	}
-	
+
 	String generateHeader(String content){
 		final String ls = System.lineSeparator();
 		String result = "";
@@ -26,7 +26,7 @@ public abstract class AbstractPage implements ArachbPage {
 			result += String.format(titleTemplate,metadata.get("title"));
 		}
 		else {
-			result += String.format(titleTemplate,metadata.get("localIdentifier"));			
+			result += String.format(titleTemplate,metadata.get("localIdentifier"));
 		}
 		result += "   <meta http-equiv=\"content-type\" content=\"text/html;charset=UTF-8\" />";
 		String generatedtemplate = "   <meta name=\"description\" content=\"generated %s page\"/>";
@@ -92,7 +92,7 @@ public abstract class AbstractPage implements ArachbPage {
 		return result;
 	}
 
-	
+
 	String addStartScript(String target){
 		String ls = System.lineSeparator();
 		String result = "   <script>" + ls;
