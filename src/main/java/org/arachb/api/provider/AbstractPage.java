@@ -110,7 +110,7 @@ public abstract class AbstractPage implements ArachbPage {
 		result += "   </script>" + ls;
 		return result;
 	}
-	
+
 	//Probably not really this simple
 	@Override
 	public String generatejson(ServletContext servletContext){
