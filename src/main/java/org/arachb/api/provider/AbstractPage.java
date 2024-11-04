@@ -36,46 +36,48 @@ public abstract class AbstractPage implements ArachbPage {
 		result += "   <link type=\"text/css\" rel=\"stylesheet\" href=\"../static/spider-behavior.css\"/>";
 		return result;
 	}
-	
-	String addNavBar(){
-		String result = "";
-		result += "<div class=\"container\">";
-		result += "<nav class=\"navbar fixed-top navbar-expand-lg navbar-dark bg-dark\">";
-		result += "<a class=\"navbar-brand\" href=\"https://arachb.org\">";
-		result += "<img class=\"navbar-image\"";
-		result += "src=\"static/spiderwords_small.jpg\"";
-		result += "alt=\"Spider standing on an Anglo-Saxon glossary\"/>";
-		result += "</a>";
-		result += "<button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\":";
-		result += " data-target=\"#navbarNavDropdown\" aria-controls=\"navbarNavDropdown\"";
-		result += " aria-expanded=\"false\" aria-label=\"Toggle navigation\">";
-		result += " <span class=\"navbar-toggler-icon\"></span>";
-		result += "</button>";
-		result += "<div class=\"collapse navbar-collapse\" id=\"navbarNavDropdown\">";
-		result += "<ul class=\"navbar-nav\">";
-		result += "<li class=\"nav-item\">";
-		result += "<a class=\"nav-link\" href=\"#\">Home</a>";
-		result += "</li>";
-		result += "<li class=\"nav-item\">";
-		result += "<a class=\"nav-link\" href=\"pages/about.html\">About</a>";
-		result += "</li>";
-		result += "<li class=\"nav-item\">";
-		result += "<a class=\"nav-link\" href=\"pages/taxonomy.html\">Taxonomy Status</a>";
-		result += "</li>";
-		result += "<li class=\"nav-item\">";
-		result += "<a class=\"nav-link\" href=\"pages/ontology.html\">Ontology Resources</a>";
-		result += "</li>";
-		result += "<li class=\"nav-item\">";
-		result += "<a class=\"nav-link\" href=\"pages/curation.html\">Curation</a>";
-		result += "</li>";
-		result += "</ul>";
-		result += "</div>";
-		result += "</nav>";
-		result += "</div>";
-		return result;
-	}
-	
-	
+
+		final static String navBar =
+			"<div class=\"container\">" +
+					"<nav class=\"navbar fixed-top navbar-expand-lg navbar-dark bg-dark\">" +
+					"<a class=\"navbar-brand\" href=\"https://arachb.org\">" +
+					"<img class=\"navbar-image\""+
+					"src=\"static/spiderwords_small.jpg\"" +
+					"alt=\"Spider standing on an Anglo-Saxon glossary\"/>" +
+					"</a>" +
+					"<button class=\"navbar-toggler\" type=\"button\" data-toggle=\"collapse\":" +
+					" data-target=\"#navbarNavDropdown\" aria-controls=\"navbarNavDropdown\"" +
+					" aria-expanded=\"false\" aria-label=\"Toggle navigation\">" +
+					" <span class=\"navbar-toggler-icon\"></span>" +
+					"</button>" +
+					"<div class=\"collapse navbar-collapse\" id=\"navbarNavDropdown\">" +
+					"<ul class=\"navbar-nav\">" +
+					"<li class=\"nav-item\">" +
+					"<a class=\"nav-link\" href=\"#\">Home</a>" +
+					"</li>" +
+					"<li class=\"nav-item\">" +
+					"<a class=\"nav-link\" href=\"pages/faq.html\">About</a>" +
+					"</li>" +
+					"<li class=\"nav-item\">" +
+					"<a class=\"nav-link\" href=\"pages/taxonomy.html\">Taxonomy Status</a>" +
+					"</li>" +
+					"<li class=\"nav-item\">" +
+					"<ul>" +
+					"<a class=\"nav-link\" href=\"pages/ontology.html\">Ontology Resources</a>" +
+					"<li><a class=\"dropdown-item\" href=\"vocabulary.html\">Vocabulary for Spider (eventually Arachnid) Behavior</a></li>" +
+					"<li><a class=\"dropdown-item\" href=\"ontologies.html\">Ontologies</a></li>" +
+					"</ul>" +
+					"</li>" +
+					"<li class=\"nav-item\">" +
+					"<a class=\"nav-link\" href=\"pages/curation.html\">Curation</a>" +
+					"</li>" +
+					"</ul>" +
+					"</div>" +
+					"</nav>" +
+					"</div>";
+
+
+
 	String addScript(String script_url){
 		String result = "   <script type=\"text/javascript\" ";
 		result += String.format("           src=\"%s\"> \n", script_url);
