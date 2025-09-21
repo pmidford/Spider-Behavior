@@ -94,19 +94,26 @@
   <build>
     <finalName>spider-behavior</finalName>
     <plugins>
-      <plugin>
-	    <artifactId>maven-compiler-plugin</artifactId>
-	    <configuration>
-	      <source>11</source>
-	      <target>11</target>
-	    </configuration>
-        <version>2.3.2</version>
-      </plugin>
-      <plugin>
-  		<groupId>org.eclipse.jetty</groupId>
-  		<artifactId>jetty-maven-plugin</artifactId>
-  		<version>9.4.30.v20200611</version>
-	  </plugin>
+        <plugin>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.4.0</version>
+            <configuration>
+                <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+            </configuration>
+        </plugin>
+        <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+                <source>11</source>
+                <target>11</target>
+            </configuration>
+            <version>2.3.2</version>
+        </plugin>
+        <plugin>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <version>9.4.30.v20200611</version>
+        </plugin>
     </plugins>
   </build>
 </project>
