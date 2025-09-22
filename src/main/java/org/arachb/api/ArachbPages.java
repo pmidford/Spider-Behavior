@@ -16,12 +16,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.arachb.api.provider.ArachbPage;
 import org.arachb.api.provider.DefaultPage;
 import org.arachb.api.provider.MetaDataSummary;
@@ -69,9 +69,6 @@ public class ArachbPages extends HttpServlet {
 
 	private final static File BASEDIR = new File(Util.RDF4JHOME);
 
-	private static final Logger log = Logger.getLogger(ArachbPages.class);
-
-
 	/**
 	 *
 	 * Note- In testing environments, urls may contain /spider-behavior at the end,
@@ -85,20 +82,21 @@ public class ArachbPages extends HttpServlet {
 			throws IOException {
 
 		final ServletOutputStream os = response.getOutputStream();
+		final ServletContext servletContext = request.getServletContext();
 		boolean writeHTML;
 		String target;
 		String requestStr = request.getRequestURI();
-		log.info("RequestStr: " + requestStr);
+		servletContext.log("RequestStr: " + requestStr);
 		if (requestStr.contains(TOSTRIP)) {  // strip out extra /spider-behavior in path
 			requestStr = requestStr.substring(TOSTRIP.length());
 		}
 		final String[] targetComponents = requestStr.split("\\.");
-		log.info("targetComponents: " + targetComponents[0]);
+		servletContext.log("targetComponents: " + targetComponents[0]);
 		if (targetComponents.length > 2){
 			final PrintStream ps = new PrintStream(response.getOutputStream());
 			//response.setStatus(500);
 			ps.printf("Dubious request %s", Arrays.toString(targetComponents));
-			log.error(String.format("Dubious request %s", Arrays.toString(targetComponents)));
+			servletContext.log(String.format("Error: Dubious request %s", Arrays.toString(targetComponents)));
 		}
 		else{
 			target = ARACHBPREFIX + targetComponents[0];
@@ -131,7 +129,7 @@ public class ArachbPages extends HttpServlet {
 					mds.add("localIdentifier", target);
 				}
 
-				PageType thisType = identifyPage(target,con);
+				PageType thisType = identifyPage(target,con, servletContext);
 				ArachbPage thisPage = null;
 				switch (thisType){
 					case PUBLICATION: {
@@ -139,7 +137,7 @@ public class ArachbPages extends HttpServlet {
 						break;
 					}
 					case NARRATIVE: {
-						thisPage = new NarrativePage(mds,con,response);
+						thisPage = new NarrativePage(mds,con,response, servletContext);
 						break;
 					}
 					case ONTOLOGY: {
@@ -152,10 +150,10 @@ public class ArachbPages extends HttpServlet {
 				}
 				if (thisPage != null){
 					if (writeHTML){
-						msgBuffer.append(thisPage.generateHTML());
+						msgBuffer.append(thisPage.generateHTML(servletContext));
 					}
 					else {
-						msgBuffer.append(thisPage.generatejson());
+						msgBuffer.append(thisPage.generatejson(servletContext));
 					}
 				}
 
@@ -181,26 +179,26 @@ public class ArachbPages extends HttpServlet {
 	 * @param con the connection to the respository
 	 * @return a PageType enumeration member
 	 */
-	private PageType identifyPage(String target, RepositoryConnection con)
+	private PageType identifyPage(String target, RepositoryConnection con, ServletContext servletContext)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException {
 		if (ontologyTest(target)){
 			return PageType.ONTOLOGY;
 		}
 		String publicationTest = getURI2PublicationTest(target);
-		if (checkType(publicationTest,con))
+		if (checkType(publicationTest,con, servletContext))
 			return PageType.PUBLICATION;
 		String narrativeTest = getURI2NarrativeTest(target);
-		if (checkType(narrativeTest,con))
+		if (checkType(narrativeTest,con, servletContext))
 			return PageType.NARRATIVE;
 		//String taxonTest = getURI2TaxonTest(target);
 		return PageType.UNKNOWN;
 	}
 
-	private boolean checkType(String testQuery, RepositoryConnection con)
+	private boolean checkType(String testQuery, RepositoryConnection con, ServletContext servletContext)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException {
-		log.info("Query String is: " + testQuery);
+		servletContext.log("Query String is: " + testQuery);
 		boolean result = Util.askQuery(testQuery, con);
-		log.info("Result is " + result);
+		servletContext.log("Result is " + result);
 		return result;
 	}
 
