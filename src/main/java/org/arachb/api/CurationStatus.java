@@ -1,6 +1,5 @@
 package org.arachb.api;
 
-import org.apache.log4j.Logger;
 import org.eclipse.rdf4j.query.*;
 import org.eclipse.rdf4j.query.resultio.QueryResultFormat;
 import org.eclipse.rdf4j.query.resultio.QueryResultIO;
@@ -27,16 +26,11 @@ public class CurationStatus extends HttpServlet {
 
 	final static private String QUERY =
 			"prefix obo:<http://purl.obolibrary.org/obo/> " +
-					"SELECT ?publication ?publication_id " +
-					"WHERE { ?publication_id rdf:type obo:IAO_0000312. " +
-                     "?publication_id rdfs:label ?publication}";
-
-	private final static File BASEDIR = new File(Util.RDF4JHOME);
-
-	final static private String USERHOME = System.getProperty("user.home");
-	final static private String baseURI = "https://arachb.org/arachb/arachb.owl";
-
-
+					"prefix arachb:<http://arachb.org/arachb/> " +
+					"SELECT ?publication ?publication_id ?curation_status " +
+					"WHERE {?publication_id rdf:type obo:IAO_0000312. " +
+					"?publication_id rdfs:label ?publication. " +
+					"?curation_status arachb:curation_status ?publication_id} ";
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -44,10 +38,9 @@ public class CurationStatus extends HttpServlet {
 		response.setContentType("application/json");
 		Repository repo = null;
 		RepositoryConnection con = null;
-		getServletContext().log("In curation status doGet");
+		//getServletContext().log("In curation status doGet");
 		File baseDir = Util.getBaseDir(getServletContext());
 		LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
-
 		try {
 			manager.init();
 			repo = manager.getRepository(Util.REPONAME);
@@ -67,7 +60,6 @@ public class CurationStatus extends HttpServlet {
 			}
 		} catch (RepositoryException | RepositoryConfigException | MalformedQueryException |
 				 QueryEvaluationException | TupleQueryResultHandlerException e) {
-			// TODO Auto-generated catch block
 			StackTraceElement[] st = e.getStackTrace();
 			String stCl = st[0].getClassName();
 			String stMtd = st[0].getMethodName();
@@ -83,8 +75,12 @@ public class CurationStatus extends HttpServlet {
 				}
 			}
 			catch (RepositoryException e){
-				System.out.println("Error while trying to close repository");
-				e.printStackTrace();
+				StackTraceElement[] st = e.getStackTrace();
+				String stCl = st[0].getClassName();
+				String stMtd = st[0].getMethodName();
+				getServletContext().log("Error while trying to close repository:");
+				getServletContext().log(e.getLocalizedMessage());
+				getServletContext().log("In: " + stCl + "." + stMtd);
 			}
 		}
 		os.flush();
