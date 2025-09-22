@@ -160,8 +160,14 @@ public class ArachbPages extends HttpServlet {
 				response.getOutputStream().write(msgBuffer.toString().getBytes(StandardCharsets.UTF_8));
             //TODO - make these return meaningful JSON strings
 			} catch (RepositoryException | RepositoryConfigException | MalformedQueryException | QueryEvaluationException e) {
-				e.printStackTrace();
-				//response.setStatus(500);
+                StackTraceElement[] st = e.getStackTrace();
+                String stCl = st[0].getClassName();
+                String stMtd = st[0].getMethodName();
+                ServletContext context = getServletContext();
+                context.log("Error while trying to open a results page:");
+                context.log(e.getLocalizedMessage());
+                context.log("In: " + stCl + "." + stMtd);
+                // Something to display to the user w/o a stack trace
 				response.getOutputStream().write(e.getMessage().getBytes(StandardCharsets.UTF_8));
 			}
 			finally {
