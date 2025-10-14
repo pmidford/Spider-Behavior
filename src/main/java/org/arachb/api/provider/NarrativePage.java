@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.arachb.api.ResultTable;
@@ -58,7 +59,6 @@ public class NarrativePage extends AbstractPage {
 
 	final RepositoryConnection con;
 	String eventsTableString;
-	private static final Logger log = Logger.getLogger(NarrativePage.class);
 
 	public NarrativePage(MetaDataSummary mds, RepositoryConnection c, HttpServletResponse response, ServletContext servletContext)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException, IOException{
@@ -73,8 +73,8 @@ public class NarrativePage extends AbstractPage {
 
 
 	@Override
-	public String generateHTML() {
-		log.info("Starting to generate narrative page");
+	public String generateHTML(ServletContext servletContext) {
+		servletContext.log("Starting to generate narrative page");
 		String result = "";
 		result += "<!DOCTYPE html>";
 		result += "<html lang=\"en\">";
@@ -83,7 +83,7 @@ public class NarrativePage extends AbstractPage {
 		result += "</head>";
 		result += "<body>";
 
-		result += addNavBar();
+		result += navBar;
 		result += "   <div class=\"container\">";
 		result += String.format("      <h3>%s</h3>",metadata.get("label"));
 		result += "   </div>";
@@ -103,7 +103,6 @@ public class NarrativePage extends AbstractPage {
 		result += "   </div>";
 		result += "   <hr/>";
 		result += addFooter();
-		result += addScript(JQUERYSTRING);
 		result += addScript(BOOTSTRAPSTRING);
 		result += addScript(ENVSTRING);
 		result += "</body>";
