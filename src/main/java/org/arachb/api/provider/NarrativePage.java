@@ -1,6 +1,5 @@
 package org.arachb.api.provider;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,18 +17,16 @@ import org.eclipse.rdf4j.repository.RepositoryException;
 public class NarrativePage extends AbstractPage {
 
 	enum Field implements PageField{
-		LOCALID("localIdentifier","local identifier","");
+		LOCAL_ID("localIdentifier","local identifier","");
 
 		private final String key;
 		private final String displayStr;
-		private final String separator;
-		static final Map<String,Field> keylookup = new HashMap<>();
+        static final Map<String,Field> key_lookup = new HashMap<>();
 
 		Field(String k,String ds,String s){
 			this.key = k;
 			this.displayStr = ds;
-			this.separator = s;
-		}
+        }
 
 		@Override
 		public String displayString(){
@@ -38,13 +35,8 @@ public class NarrativePage extends AbstractPage {
 
 		@Override
 		public String formatValue(String fieldValue){
-			if ("".equals(separator)){
-				return fieldValue;
-			}
-			else {
-				return fieldValue;
-			}
-		}
+            return fieldValue;
+        }
 
 		@Override
 		public String keyString() {
@@ -61,7 +53,7 @@ public class NarrativePage extends AbstractPage {
 	String eventsTableString;
 
 	public NarrativePage(MetaDataSummary mds, RepositoryConnection c, HttpServletResponse response, ServletContext servletContext)
-			throws RepositoryException, MalformedQueryException, QueryEvaluationException, IOException{
+			throws RepositoryException, MalformedQueryException, QueryEvaluationException{
 		super(mds);
 		servletContext.log("Creating Narrative Page");
 		con = c;
