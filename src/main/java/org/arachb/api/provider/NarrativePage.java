@@ -45,12 +45,12 @@ public class NarrativePage extends AbstractPage {
 
 		@Override
 		public PageField lookupKey(String key) {
-			return Field.keylookup.get(key);
+			return Field.key_lookup.get(key);
 		}
 	}
 
 	final RepositoryConnection con;
-	String eventsTableString;
+	final String eventsTableString;
 
 	public NarrativePage(MetaDataSummary mds, RepositoryConnection c, HttpServletResponse response, ServletContext servletContext)
 			throws RepositoryException, MalformedQueryException, QueryEvaluationException{
