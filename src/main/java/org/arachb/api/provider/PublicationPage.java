@@ -1,5 +1,6 @@
 package org.arachb.api.provider;
 
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +63,7 @@ public class PublicationPage extends AbstractPage{
 
 
 	@Override
-	public String generateHTML() {
+	public String generateHTML(ServletContext servletContext) {
 		String result = "";
 		result += "<!DOCTYPE html>";
 		result += "<html lang=\"en\">";
@@ -71,7 +72,7 @@ public class PublicationPage extends AbstractPage{
 		result += "</head>";
 		result += "<body>";
 		
-		result += addNavBar();
+		result += navBar;
 		result += "   <div class=\"container\">";
 		if (metadata.contains("title")){
 			result += String.format("      <h3>%s</h3>",metadata.get("title"));
@@ -89,7 +90,6 @@ public class PublicationPage extends AbstractPage{
 		result += "   </div>";
 		result += "   <hr/>";
 		result += addFooter();
-		result += addScript(JQUERYSTRING);
 		result += addScript(BOOTSTRAPSTRING);
 		result += addScript(ENVSTRING);
 		result += "</body>";

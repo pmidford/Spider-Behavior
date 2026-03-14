@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
 import org.eclipse.rdf4j.query.Binding;
 import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.MalformedQueryException;
@@ -23,12 +23,14 @@ import org.eclipse.rdf4j.query.resultio.QueryResultIO;
 import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriter;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.RepositoryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ResultTable {
 
 	private final List<TupleQueryResult> contents;
 	private final HttpServletResponse response;
-	private static final Logger log = Logger.getLogger(ResultTable.class);
+	final Logger logger = LoggerFactory.getLogger(ResultTable.class);
 
 	
 	public ResultTable(HttpServletResponse r){
@@ -58,7 +60,7 @@ public class ResultTable {
 
 	final static QueryResultFormat JSONFORMAT = QueryResultIO.getWriterFormatForMIMEType(Util.SPARQLMIMETYPE).orElse(null);
 
-	public void jsonFormatResultList() throws IOException{
+	public void jsonFormatResultList(ServletContext context) throws IOException{
 		final ServletOutputStream os = response.getOutputStream();
 		final TupleQueryResultWriter jsonResults = (TupleQueryResultWriter) QueryResultIO.createWriter(JSONFORMAT, os);
 		try {
@@ -74,37 +76,37 @@ public class ResultTable {
 			response.setStatus(500);
 			PrintStream ps = new PrintStream(os);
 			e.printStackTrace(ps);
-			log.error("Query evaluation problem",e);
+			logger.error("Query evaluation problem",e);
 		}
 		catch (TupleQueryResultHandlerException e) {
 			response.setStatus(500);
 			PrintStream ps = new PrintStream(os);
 			e.printStackTrace(ps);
-			log.error("Json formatting problem",e);
+			logger.error("Json formatting problem",e);
 		}
 	}
 
 	
 	public String htmlFormatPairedColumns(String[] queryKeys) throws QueryEvaluationException {
 		final String ls = System.lineSeparator();
-		log.info("columns checkpoint 1, query_keys= " + Arrays.toString(queryKeys));
+        logger.info("columns checkpoint 1, query_keys= {}", Arrays.toString(queryKeys));
 		StringBuilder result = new StringBuilder();
 		result.append("<table class=\"table\">").append(ls);
 		List<String> headers = new ArrayList<>();
 		for (int i=0;i < queryKeys.length;i+=2){
 			int next = i+1;
-			log.info("query: " + next);
+			logger.info("query: " + next);
 			headers.add(queryKeys[next]);
 		}
-		log.info("columns checkpoint 2");
+		logger.info("columns checkpoint 2");
 		StringBuilder headerRow = new StringBuilder();
 		headerRow.append("   <tr>").append(ls);
 		for (String name : headers){
 			headerRow.append(String.format("    <th>%s</th>\n",name));
-			log.info("columns checkpoint 2x: " + name);
+			logger.info("columns checkpoint 2x: " + name);
 		}
 		headerRow.append("   </tr>").append(ls);
-		log.info("Header row is: " + headerRow);
+        logger.info("Header row is: {}", headerRow);
 		result.append(headerRow);
 		try {
 			for(TupleQueryResult rn : contents){
@@ -113,7 +115,7 @@ public class ResultTable {
 					StringBuilder rowBuilder = new StringBuilder(100);
 					result.append("   <tr>").append(ls);
 					for (int i=0; i<queryKeys.length;i+=2){
-						log.info("Trying key: " + queryKeys[i] + " and link: " + queryKeys[i+1]);
+                        logger.info("Trying key: {} and link: {}", queryKeys[i], queryKeys[i + 1]);
 						final Binding nameBinding = bSet.getBinding(queryKeys[i]);
 						final Binding linkBinding = bSet.getBinding(queryKeys[i+1]);
 						if (nameBinding != null && linkBinding != null){
@@ -129,7 +131,7 @@ public class ResultTable {
 							rowBuilder.append("      <td></td>").append(ls);
 						}
 					}
-					log.info("table row is " + rowBuilder);
+                    logger.info("table row is {}", rowBuilder);
 					result.append(rowBuilder).append("   </tr>").append(ls);
 				}
 			}
@@ -155,13 +157,13 @@ public class ResultTable {
 			response.setStatus(500);
 			PrintStream ps = new PrintStream(os);
 			e.printStackTrace(ps);
-			log.error("Query evaluation problem",e);
+			logger.error("Query evaluation problem",e);
 		}
 		catch (TupleQueryResultHandlerException e) {
 			response.setStatus(500);
 			PrintStream ps = new PrintStream(os);
 			e.printStackTrace(ps);
-			log.error("Json formatting problem",e);
+			logger.error("Json formatting problem",e);
 		}
 	}
 

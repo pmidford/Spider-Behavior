@@ -31,59 +31,65 @@ public class PublicationList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	final static private String QUERY =
-			"prefix obo:<https://purl.obolibrary.org/obo/> select ?publication WHERE{?publication rdf:type obo:IAO_0000312 .}";
-
-	private final static File BASEDIR = new File(Util.RDF4JHOME);
-
-	final static private String USERHOME = System.getProperty("user.home");
-	final static private String baseURI = "https://arachb.org/arachb/arachb.owl";
-
-
+			"prefix obo:<http://purl.obolibrary.org/obo/> " +
+					"SELECT ?publication ?publication_id ?curated_statements " +
+					"WHERE {?publication_id rdf:type obo:IAO_0000312. " +
+					"?publication_id rdfs:label ?publication. " +
+					"?curated_statements obo:BFO_0000050 ?publication_id} ";
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    		final OutputStream os = response.getOutputStream();
-            response.setContentType("application/json");
-			Repository repo = null;
-			RepositoryConnection con = null;
-    		LocalRepositoryManager manager = new LocalRepositoryManager(BASEDIR);
-    		try {
-				manager.init();
-				repo = manager.getRepository(Util.REPONAME);
-				con = repo.getConnection();
-    			TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, QUERY);
-				try (TupleQueryResult result = tupleQuery.evaluate()) {
-					QueryResultFormat jsonFormat =
-							QueryResultIO.getWriterFormatForMIMEType("application/sparql-results+json").orElse(null);
-					if (jsonFormat != null) {
-						TupleQueryResultWriter jsonResults = (TupleQueryResultWriter) QueryResultIO.createWriter(jsonFormat, os);
-						jsonResults.startQueryResult(result.getBindingNames());
-						while (result.hasNext()) {
-							jsonResults.handleSolution(result.next());
-						}
-						jsonResults.endQueryResult();
+		final OutputStream os = response.getOutputStream();
+		response.setContentType("application/json");
+		Repository repo = null;
+		RepositoryConnection con = null;
+		//getServletContext().log("In publication list doGet");
+		File baseDir = Util.getBaseDir(getServletContext());
+		LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
+		try {
+			manager.init();
+			repo = manager.getRepository(Util.REPONAME);
+			con = repo.getConnection();
+			TupleQuery tupleQuery = con.prepareTupleQuery(QueryLanguage.SPARQL, QUERY);
+			try (TupleQueryResult result = tupleQuery.evaluate()) {
+				QueryResultFormat jsonFormat =
+						QueryResultIO.getWriterFormatForMIMEType("application/sparql-results+json").orElse(null);
+				if (jsonFormat != null) {
+					TupleQueryResultWriter jsonResults = (TupleQueryResultWriter) QueryResultIO.createWriter(jsonFormat, os);
+					jsonResults.startQueryResult(result.getBindingNames());
+					while (result.hasNext()) {
+						jsonResults.handleSolution(result.next());
 					}
+					jsonResults.endQueryResult();
 				}
-			} catch (RepositoryException | RepositoryConfigException | MalformedQueryException |
-					 QueryEvaluationException | TupleQueryResultHandlerException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		} finally {
-    			try{
-    				if (con != null){
-    					con.close();
-    				}
-    				if (repo != null){
-    					repo.shutDown();
-    				}
-    			}
-    			catch (RepositoryException e){
-    				System.out.println("Error while trying to close repository");
-    				e.printStackTrace();
-    			}
-    		}
-            os.flush();
-            os.close();
-        }
+			}
+		} catch (RepositoryException | RepositoryConfigException | MalformedQueryException |
+				 QueryEvaluationException | TupleQueryResultHandlerException e) {
+			StackTraceElement[] st = e.getStackTrace();
+			String stCl = st[0].getClassName();
+			String stMtd = st[0].getMethodName();
+			getServletContext().log("Error: " + e.getLocalizedMessage());
+			getServletContext().log("In: " + stCl + "." + stMtd);
+		} finally {
+			try{
+				if (con != null){
+					con.close();
+				}
+				if (repo != null){
+					repo.shutDown();
+				}
+			}
+			catch (RepositoryException e){
+				StackTraceElement[] st = e.getStackTrace();
+				String stCl = st[0].getClassName();
+				String stMtd = st[0].getMethodName();
+				getServletContext().log("Error while trying to close repository:");
+				getServletContext().log(e.getLocalizedMessage());
+				getServletContext().log("In: " + stCl + "." + stMtd);
+			}
+		}
+		os.flush();
+		os.close();
+	}
 
 }
