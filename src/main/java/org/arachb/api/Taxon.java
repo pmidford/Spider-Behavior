@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,15 +39,14 @@ public class Taxon extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private final static File BASEDIR = new File(Util.RDF4JHOME);
-	private static final Logger log = Logger.getLogger(Taxon.class);
-
 
 
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
-		getServletContext().log("Got doGet for Taxon servlet");
+		ServletContext context = getServletContext();
+		context.log("Got doGet for Taxon servlet");
 
 		String path = request.getRequestURI();
 		path = path.substring(path.indexOf("/taxon"));
@@ -56,12 +56,12 @@ public class Taxon extends HttpServlet {
 		response.setContentType(Util.SPARQLMIMETYPE);
 
 		if (!validateTaxonName(taxonName)){
-			final PrintStream ps = new PrintStream(response.getOutputStream());
 			String errorStr = String.format("{\"error\": \"Failed to validate Taxon Name %s\"}", taxonName);
+			response.setStatus(400);
 			response.getOutputStream().write(errorStr.getBytes(StandardCharsets.UTF_8));
 		}
 		else{
-			log.warn("path: " +  path);
+			context.log("path: " +  path);
 			switch (path){
 			case "/taxon/events":
 				getTaxonEvents(taxonName,response);
@@ -70,6 +70,7 @@ public class Taxon extends HttpServlet {
 				getTaxonGeneralClaims(taxonName,response);
 				break;
 			default:
+				response.setStatus(400);
 				response.getOutputStream().write(('"' + "Path is: " + path + '"').getBytes(StandardCharsets.UTF_8));
 			}
 		}
@@ -81,7 +82,8 @@ public class Taxon extends HttpServlet {
 	void getTaxonGeneralClaims(String taxonName, HttpServletResponse response) throws IOException{
 		Repository repo = null;
 		RepositoryConnection con = null;
-		File baseDir = Util.getBaseDir(getServletContext());
+		ServletContext context = getServletContext();
+		File baseDir = Util.getBaseDir(context);
 
 		String repositoryId = "test1";
 
@@ -97,14 +99,14 @@ public class Taxon extends HttpServlet {
 			resultTable.tryAndAccumulateQueryResult(ethogramQueryString, con);
 			if (!resultTable.isEmpty()){
 				getServletContext().log("First query was successful");
-				resultTable.jsonFormatResultList();
+				resultTable.jsonFormatResultList(context);
 			}
 			else{
 				getServletContext().log("First query was empty");
 				final String taxonIdQueryString = getName2TaxonNameAndId(taxonName);
 				resultTable.tryAndAccumulateQueryResult(taxonIdQueryString, con);
 				if (!resultTable.isEmpty()){
-					resultTable.jsonFormatResultList();
+					resultTable.jsonFormatResultList(context);
 				}
 				else{
 					getServletContext().log("Second query was empty");
@@ -114,12 +116,12 @@ public class Taxon extends HttpServlet {
 		} catch (RepositoryException | RepositoryConfigException | MalformedQueryException e) {
 			//TODO - make these return meaningful JSON strings
 			//response.setStatus(400);
-			log.error(e.toString());
+			context.log(e.toString());
 			e.printStackTrace();
 		} catch (QueryEvaluationException e) {
 			// TODO Auto-generated catch block
 			//response.setStatus(400);
-			e.printStackTrace();
+			context.log(e.toString());
 		}
 		finally {
 			cleanupResources(repo,con);
@@ -132,7 +134,8 @@ public class Taxon extends HttpServlet {
 	void getTaxonEvents(String taxonName, HttpServletResponse response) throws IOException{
 		Repository repo = null;
 		RepositoryConnection con = null;
-		File baseDir = Util.getBaseDir(getServletContext());
+		ServletContext context = getServletContext();
+		File baseDir = Util.getBaseDir(context);
 		final LocalRepositoryManager manager = new LocalRepositoryManager(baseDir);
 		try {
 			manager.init();
@@ -143,13 +146,13 @@ public class Taxon extends HttpServlet {
 			final String eventQueryString = getName2EventQuery(taxonName);
 			resultTable.tryAndAccumulateQueryResult(eventQueryString, con);
 			if (!resultTable.isEmpty()){
-				resultTable.jsonFormatResultList();
+				resultTable.jsonFormatResultList(context);
 			}
 			else{
 				final String taxonIdQueryString = getName2TaxonNameAndId(taxonName);
 				resultTable.tryAndAccumulateQueryResult(taxonIdQueryString, con);
 				if (!resultTable.isEmpty()){
-					resultTable.jsonFormatResultList();
+					resultTable.jsonFormatResultList(context);
 				}
 				else{
 					resultTable.noResultsError(taxonIdQueryString);
@@ -169,12 +172,8 @@ public class Taxon extends HttpServlet {
 	private String getTaxonFromQuery(HttpServletRequest request){
 		String name = request.getQueryString();
 		name = name.substring("taxon=".length()).trim();
-		StringBuilder b = new StringBuilder();  //remove when upgrade to java 8 happens
-		for (String Component : name.split("\\+")){
-			b.append(Component);
-			b.append(" ");
-		}
-		return b.toString().trim();
+		StringBuilder b = new StringBuilder();  //TODO remove when upgrade to java 8 happens
+		return name.replace('+',' ').trim();
 	}
 
 
@@ -185,7 +184,7 @@ public class Taxon extends HttpServlet {
 	 *
 	 */
     public boolean validateTaxonName(String name) {
-		Pattern pattern = Pattern.compile("%3A|%7B|%7D|\\{|\\}", Pattern.CASE_INSENSITIVE);
+		Pattern pattern = Pattern.compile("%3A|%7B|%7D|\\{|}", Pattern.CASE_INSENSITIVE);
 		Matcher matcher = pattern.matcher(name);
 		if (matcher.find()) {
 			return false;
