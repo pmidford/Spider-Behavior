@@ -73,11 +73,11 @@
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>curation</servlet-name>
-    <url-pattern>curation</url-pattern>
+    <url-pattern>/curation</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>curated_taxa</servlet-name>
-    <url-pattern>taxon_list</url-pattern>
+    <url-pattern>/taxon_list</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>anatomy</servlet-name>
