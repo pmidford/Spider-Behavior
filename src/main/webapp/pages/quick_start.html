@@ -30,7 +30,7 @@
              src="../static/spiderwords_small.jpg"
              alt="Spider standing on an Anglo-Saxon glossary"/>
       </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
               aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -72,13 +72,43 @@
 
   <div class="container">
     <div class="page-header">
-      <h1 class="arachb_headline">About Arachnolingua</h1>
+      <h2 class="arachb_headline">About Arachnolingua</h2>
     </div>
  
     <section id="How To">
       <div class="row-fluid">
         <div class="col-md-12">
           <h3>How to use this site</h3>
+            <p>The main page provides two search boxes:</p>
+            <ul>
+                <li>The <strong>taxonomy search</strong>, which searches for all behaviors and narratives annotated to members of the
+                taxon</li>
+                <li>The <strong>behavior search</strong>, which searches for annotations involving the behavior across all species in the KB.
+                </li>
+            </ul>
+            <p>The <strong>publication drop-down</strong> provides lists of publications queued for curation activity, which may be either
+                initial curation or review, or the list of curated publications with the number of associated statements
+                (which are not equivalent to RDF triples).
+            </p>
+            <p>The <strong>taxonomy drop-down</strong> provides two reports. The taxonomy coverage report  compares taxon counts in NCBI
+                Taxonomy, the World Catalog of Arachnids, and Catalog of Life.  NCBI is updated weekly, the WCA monthly,
+                and CoL approximately monthly.  The other report lists curated (or potentially curated) taxa that are
+                not in NCBI but have alternate identifiers in WCA or CoL (e.g., for non-Arachnids).  Not all taxa listed
+                here appear in curated publications.</p>
+            <p>The <strong>vocabulary drop-down</strong> provides a link to the developing spider behavior vocabulary,
+                which has been developed from multiple sources and is undergoing refinement.  There is also a page
+                describing the other ontologies and vocabularies used in this knowledge base.
+            </p>
+
+            <h3>Behaviors and Narratives</h3>
+            <p>Behaviors are the smallest unit of behavior recorded in an annotation.  Although they commonly refer to
+            a simple motion of a single body part, that is always the case.  Each will refer to an action/process from
+            the spider behavior ontology, the Neuro-Behavior Ontology (NBO), or less frequently, the Gene Ontology (GO).
+            Most behaviors will also refer to one or more anatomical or substrate entities, most commonly from the Spider
+            biology ontology (SPD), Uberon (from non-spider animals), or Plant Ontology (PO) for substrate entities.
+            </p>
+
+
         </div>
       </div>
     </section>
@@ -86,7 +116,7 @@
 
     <hr/>
     <footer>
-      <p>Last update 6 April 2024</p>
+      <p>Last update 21 September 2025</p>
     </footer>
   </div>
   <script type="text/javascript" src="../static/bootstrap/js/bootstrap.bundle.min.js">
