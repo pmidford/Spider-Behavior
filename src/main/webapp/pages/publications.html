@@ -29,7 +29,7 @@
            src="../static/spiderwords_small.jpg"
            alt="Spider standing on an Anglo-Saxon glossary"/>
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -84,7 +84,7 @@
 
 <hr>
 <footer>
-  <p>Last update 3 October 2015</p>
+  <p>Last update 18 August 2024</p>
 </footer>
 
 <script type="text/javascript" src="../static/bootstrap/js/bootstrap.bundle.min.js">
@@ -100,26 +100,32 @@
 </script>
 
 <script>
-  const SPARQL_bad_query = '{error: No results Unexpected empty result from query';
+  const SPARQL_bad_query = '{Error: No results Unexpected empty result from query';
 
   document.addEventListener("DOMContentLoaded", function() {
     const query_str = window.location.search;
-    const url_str = myhost + "curation";
+    const url_str = myhost + "publication_list";
     const results_ele = document.getElementById("results");
     fetch(url_str, {})
             .then((response) => {
               if (!response.ok) {
-                throw new Error("Error in curation results")
+                throw new Error("Error in Publication List")
               }
               return response.text();
             })
             .then((text) => {
               if (text.startsWith(SPARQL_bad_query)) {
                 results_ele.innerHTML =
-                        "No publications under active curation " + query_str.substring(7);
+                        "No publications found!" + query_str.substring(7);
               }
               else {
-                results_ele.innerHTML = resulttable(JSON.parse(text));
+                const result_obj = JSON.parse(text);
+                let result_head = result_obj['head'];
+                let result_body = result_obj['results'];
+                let var_list = result_head['vars'];
+                let bindings = result_body['bindings'];
+                let binding1 = bindings[0];
+                results_ele.innerHTML = publication_table(result_obj);
               }
             })
             .catch((error) => {
