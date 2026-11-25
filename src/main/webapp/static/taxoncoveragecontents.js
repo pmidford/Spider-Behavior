@@ -27,27 +27,56 @@ long_names.set("COL", "Catalogue Of Life")
 
 
 const cites = new Map();
-cites.set("NCBI",
-    "Conrad L Schoch, Stacy Ciufo, Mikhail Domrachev, Carol L Hotton, <br>" +
-    "Sivakumar Kannan, Rogneda Khovanskaya, Detlef Leipe, Richard Mcveigh, <br>" +
-    "Kathleen O’Neill, Barbara Robbertse, Shobha Sharma, Vladimir Soussov, <br>" +
-    "John P Sullivan, Lu Sun, Seán Turner, Ilene Karsch-Mizrachi, <br>" +
-    "NCBI Taxonomy: a comprehensive update on curation, resources and tools, <br>" +
-    "Database, Volume 2020, 2020, baaa062 <br>" +
-    "<a href='https://doi.org/10.1093/database/baaa062'>https://doi.org/10.1093/database/baaa062</a>. <br>" +
-    "Accessed ")
-cites.set("WCA",
-    "World Arachnida Catalog (2024) World Arachnida Catalog. <br>" +
-    "Natural History Museum Bern, online at http://wac.nmbe.ch <br>" +
-    "Accessed ")
-cites.set("COL",
-    "Bánki, O., Roskov, Y., Döring, M., Ower, G., Hernández Robles, D. R.,<br>" +
-    "Plata Corredor, C. A., Stjernegaard Jeppesen, T., Örn, A., Vandepitte, L., <br>" +
-    "Hobern, D., Schalk, P., DeWalt, R. E., Ma, K., Miller, J., Orrell, T., <br" +
-    "Aalbu, R., Abbott, J., Adlard, R., Aedo, C., et al. (2024). <br>" +
-    "Catalogue of Life (Version current as of date below). Catalogue of Life, <br>" +
-    "Amsterdam, Netherlands. https://doi.org/10.48580/dgbqz <br>" +
-    "Accessed ")
+const NCBI_str =
+      "Conrad L Schoch, Stacy Ciufo, Mikhail Domrachev, Carol L Hotton, <br>" +
+      "Sivakumar Kannan, Rogneda Khovanskaya, Detlef Leipe, Richard Mcveigh, <br>" +
+      "Kathleen O’Neill, Barbara Robbertse, Shobha Sharma, Vladimir Soussov, <br>" +
+      "John P Sullivan, Lu Sun, Seán Turner, Ilene Karsch-Mizrachi, <br>" +
+      "NCBI Taxonomy: a comprehensive update on curation, resources and tools, <br>" +
+      "Database, Volume 2020, 2020, baaa062 <br>" +
+      "<a href='https://doi.org/10.1093/database/baaa062'>https://doi.org/10.1093/database/baaa062</a>. <br>" +
+      "Values are number of species level taxa considered usable for behavior, with raw taxa in parens <br><br>" +
+      "Accessed ";
+
+cites.set("NCBI", NCBI_str)
+
+const WCA_str = 
+      "World Arachnida Catalog (2024) World Arachnida Catalog. <br>" +
+      "Natural History Museum Bern, online at <a href='https://wac.nmbe.ch'>https://wac.nmbe.ch</a>  <br><br>" +
+      "Accessed ";
+
+
+cites.set("WCA", WCA_str)
+
+const COL_str =
+      "Bánki, O., Roskov, Y., Döring, M., Ower, G., Hernández Robles, D. R.,<br>" +
+      "Plata Corredor, C. A., Stjernegaard Jeppesen, T., Örn, A., Vandepitte, L., <br>" +
+      "Hobern, D., Schalk, P., DeWalt, R. E., Ma, K., Miller, J., Orrell, T., <br>" +
+      "Aalbu, R., Abbott, J., Adlard, R., Aedo, C., et al. (2026). <br>" +
+      "Catalogue of Life (<strong>Base</strong> version current as of date below),<br>" +
+      "Amsterdam, Netherlands. <a href='https://www.catalogueoflife.org/data/download'>https://www.catalogueoflife.org/data/download</a> <br><br>" +
+      "Accessed "
+
+cites.set("COL",COL_str)
+
+const taxon_coverage_DOMContentListener = function() {
+    const url_str = "https://arachb.org/report/"
+    const results_ele = document.getElementById("results");
+    fetch(url_str, {})
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Error in retrieving taxon coverage stats")
+            }
+            return response.text();
+        })
+        .then((text) => {
+            results_ele.innerHTML = taxon_coverage_contents(JSON.parse(text));
+        })
+        .catch((error) => {
+            results_ele.innerHTML = error;
+        })
+}
+
 
 
 const taxon_coverage_contents = function(statsObj) {
@@ -74,7 +103,6 @@ const taxon_coverage_contents = function(statsObj) {
     results = results + "</dl>"
 
     return results
-
 }
 
 const taxon_coverage_table = function (statsObj) {
