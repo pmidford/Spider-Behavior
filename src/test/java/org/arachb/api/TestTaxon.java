@@ -22,7 +22,7 @@ public class TestTaxon {
 
 	/**
 	 * Tests monomial and binomial taxa are accepted (no trinomials currently).
-	 * Now checks  strings that might attack via CVE-2021-44228 - log4j vulnerability
+	 * Now checks strings that might attack via CVE-2021-44228 - log4j vulnerability
 	 */
 	@Test
 	public void testValidateTaxonName(){

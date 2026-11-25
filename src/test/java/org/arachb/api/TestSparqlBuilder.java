@@ -94,4 +94,45 @@ public class TestSparqlBuilder {
 		assertEquals("", b1.finish());
 	}
 
+
+
+	String getName2GeneralQuery(String name){
+		SparqlBuilder b = SparqlBuilder.startSparqlWithOBO();
+		b.addText("SELECT ?taxon ?child_taxon ?behavior ?behavior_id ?anatomy ?anatomy_id ?publication ?pubid \n", true);
+		String line1 = String.format("WHERE { ?parent_taxon rdfs:label \"%s\"^^xsd:string . \n",name);
+		b.addText(line1,true);
+		b.addClause("?child_taxon rdfs:subClassOf* ?parent_taxon",true);
+		b.addClause("?r1 owl:someValuesFrom ?child_taxon",true);
+		b.addClause("?res1 rdf:first ?r1",true);
+		b.addClause("?n3 rdf:rest ?res1",true);
+		b.addClause("?n3 rdf:first ?anatomy_id",true);
+		b.addClause("?anatomy_id rdfs:label ?anatomy",true);
+		b.addClause("?s5 owl:intersectionOf ?n3",true);
+		b.addClause("?s6 owl:someValuesFrom ?s5",true);
+		b.addClause("?s7 rdf:first ?s6",true);
+		b.addClause("?s8 rdf:rest ?s7",true);
+		b.addClause("?s8 rdf:first ?behavior_id",true);
+		b.addClause("?behavior_id rdfs:label ?behavior",true);
+		b.addClause("?s10 owl:intersectionOf ?s8",true);   //should be intersectionOf?
+		b.addClause("?s11 owl:someValuesFrom ?s10 ",true);
+		b.addClause("?s12 rdf:first ?s11",true);
+		b.addClause("?s13 rdf:rest ?s12",true);
+		b.addClause("?s13 rdf:first <http://purl.obolibrary.org/obo/IAO_0000300>", true);
+		b.addClause("?s15 owl:intersectionOf ?s13",true);
+		b.addClause("?s16 rdf:type ?s15",true);
+		b.addClause("?s16 obo:BFO_0000050 ?pubid",true);
+		b.addClause("?pubid rdfs:label ?publication",true);
+		b.addClause("?child_taxon rdfs:label ?taxon",true);
+		b.addText("} \n", true);
+		//b.debug();
+		return b.finish();
+	}
+
+
+	@Test
+	public void testBehaviorQuery() {
+		String Demo = getName2GeneralQuery("Tetragnatha");
+		System.out.println(Demo);
+	}
+
 }
