@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Curation Status</title>
+  <title>Taxonomy Coverage Report</title>
   <meta name="description" content="Curation status page for arachnolingua project"/>
   <meta name="author" content="Peter E. Midford"/>
   <link href="../static/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
@@ -84,7 +84,7 @@
 
 <hr>
 <footer>
-  <p>Software updated 13 Oct 2025</p>
+  <p>Software updated 14 Nov 2026</p>
 </footer>
 
 <script type="text/javascript" src="../static/bootstrap/js/bootstrap.bundle.min.js">
@@ -103,23 +103,7 @@
 </script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const url_str = "https://arachb.org/report/"
-    const results_ele = document.getElementById("results");
-    fetch(url_str, {})
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error("Error in retrieving taxon coverage stats")
-              }
-              return response.text();
-            })
-            .then((text) => {
-                results_ele.innerHTML = taxon_coverage_contents(JSON.parse(text));
-            })
-            .catch((error) => {
-              results_ele.innerHTML = error;
-            })
-  })
+  document.addEventListener("DOMContentLoaded", taxon_coverage_DOMContentListener)
 </script>
 </body>
 </html>
